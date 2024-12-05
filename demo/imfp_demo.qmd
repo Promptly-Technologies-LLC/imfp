@@ -1,0 +1,710 @@
+---
+title: "imfp demo"
+---
+
+This data analysis project aims to explore the relationship between economic growth and gender equality using `imfp`, which allows us to download data from IMF (International Monetary Fund). `imfp` can be integrated with other python tools to streamline the computational process. To demonstrate its functionality, the project experimented with a variety of visualization and analysis methods. 
+
+Ready for some insights about if a stronger economy mean more equal opportunities for all genders? Let’s dive in!
+
+## Executive Summary
+
+In this project, we explored the following:
+
+1. **Data Fetching**
+* Make API call to fetch 4 datasets: GII (Gender Inequality Index), Nominal GDP, GDP Deflator Index, Population series
+
+2. **Feature Engineering**
+* Cleaning: Convert GDP Deflator Index to a yearly basis and variables to numeric
+* Dependent Variable: Percent Change of Gender Inequality Index
+* Independent Variable: Percent Change of Real GDP per Capita 
+* Transform variables to display magnitude of change 
+* Merge the datasets
+
+3. **Data Visualization**
+* Scatterplot
+* Time Series Line Plots
+* Barplot
+* Boxplot
+* Heatmap
+
+4. **Statistical Analysis**
+* Descriptive Statistics
+* Regression Analysis
+* Time Series Analysis
+
+## Suggested packages
+`pandas`: view and manipulate data frame;
+`matplotlib.pyplot`: make plots;
+`seaborn`: make plots;
+`numpy`: computation;
+`LinearRegression`: implement linear regression;
+`tabulate`: format data into tables;
+
+A custom module is written to simplify the process of making API calls and fetching information with imfp library. `load_or_fetch_databases`, `load_or_fetch_parameters` `load_or_fetch_dataset` load and retreive database, parameters, and dataset from a local or remote source. `view_dataframe_in_browser` displays dataframe in a web browser.
+
+`statsmodels.api`, `adfuller`, `ARIMA`,`VAR`,`plot_acf`,`plot_pacf`,`mean_absolute_error`,`mean_squared_error`, and`grangercausalitytests` are specifically used for time series analysis. 
+
+```{python}
+import os
+import pickle
+from tempfile import NamedTemporaryFile
+import pandas as pd
+import imfp
+import webbrowser
+
+
+# Function to display a DataFrame in a web browser
+def view_dataframe_in_browser(df):
+    html = df.to_html()
+    with NamedTemporaryFile(delete=False, mode="w", suffix=".html") as f:
+        url = "file://" + f.name
+        f.write(html)
+    webbrowser.open(url)
+
+
+# Function to load databases from CSV or fetch from API
+def load_or_fetch_databases():
+    csv_path = os.path.join("data", "databases.csv")
+
+    # Try to load from CSV
+    if os.path.exists(csv_path):
+        try:
+            return pd.read_csv(csv_path)
+        except Exception as e:
+            print(f"Error loading CSV: {e}")
+
+    # If CSV doesn't exist or couldn't be loaded, fetch from API
+    print("Fetching databases from IMF API...")
+    databases = imfp.imf_databases()
+
+    # Save to CSV for future use
+    databases.to_csv(csv_path, index=False)
+    print(f"Databases saved to {csv_path}")
+
+    return databases
+
+
+def load_or_fetch_parameters(database_name):
+    pickle_path = os.path.join("data", f"{database_name}.pickle")
+
+    # Try to load from pickle file
+    if os.path.exists(pickle_path):
+        try:
+            with open(pickle_path, "rb") as f:
+                return pickle.load(f)
+        except Exception as e:
+            print(f"Error loading pickle file: {e}")
+
+    # If pickle doesn't exist or couldn't be loaded, fetch from API
+    print(f"Fetching parameters for {database_name} from IMF API...")
+    parameters = imfp.imf_parameters(database_name)
+
+    # Save to pickle file for future use
+    os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
+    with open(pickle_path, "wb") as f:
+        pickle.dump(parameters, f)
+    print(f"Parameters saved to {pickle_path}")
+
+    return parameters
+
+
+def load_or_fetch_dataset(database_id, indicator):
+    file_name = f"{database_id}.{indicator}.csv"
+    csv_path = os.path.join("data", file_name)
+
+    # Try to load from CSV file
+    if os.path.exists(csv_path):
+        try:
+            return pd.read_csv(csv_path)
+        except Exception as e:
+            print(f"Error loading CSV file: {e}")
+
+    # If CSV doesn't exist or couldn't be loaded, fetch from API
+    print(f"Fetching dataset for {database_id}.{indicator} from IMF API...")
+    dataset = imfp.imf_dataset(database_id=database_id, indicator=[indicator])
+
+    # Save to CSV file for future use
+    os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
+    dataset.to_csv(csv_path, index=False)
+    print(f"Dataset saved to {csv_path}")
+
+    return dataset
+
+```
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from tabulate import tabulate
+import statsmodels.api as sm
+from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.vector_ar.var_model import VAR
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_squared_error
+from statsmodels.tsa.stattools import grangercausalitytests
+```
+
+## Data Fetching
+In this section, we extracted four datasets through API calls: Gender Inequality Index(GII), GDP Deflator, Nominal GDP, and Population. Two databases were used: Gender Equality and International Financial Statistics (IFS). 
+
+```{python}
+from pathlib import Path
+Path("data").mkdir(exist_ok=True)
+```
+
+```{python}
+# Load or fetch databases
+databases = load_or_fetch_databases()
+
+# Filter out databases that contain a year in the description
+databases[
+  ~databases['description'].str.contains(r"[\d]{4}", regex=True)
+]
+
+# view_dataframe_in_browser(databases)
+```
+
+
+```{python}
+datasets = ["GENDER_EQUALITY", "IFS"]
+params = {}
+
+# Fetch valid parameters for two datasets
+for dataset in datasets:
+    params[dataset] = load_or_fetch_parameters(dataset)
+
+    valid_keys = list(params[dataset].keys())
+    print(f"Parameters for {dataset}: ", valid_keys)
+
+# view_dataframe_in_browser(params.get("IFS").get("indicator"))
+```
+
+
+```{python}
+datasets = {}
+dsets = [("GENDER_EQUALITY", "GE_GII"), ("IFS", "NGDP_D_SA_IX"), ("IFS", "NGDP_XDC"), ("IFS", "LP_PE_NUM")]
+
+for dset in dsets:
+    datasets[dset[0] + "." + dset[1]] = load_or_fetch_dataset(dset[0], dset[1])
+```
+
+
+```{python}
+# "Gender Inequality Index"
+GII = "GENDER_EQUALITY.GE_GII"
+
+# "Gross Domestic Product, Deflator, Seasonally Adjusted, Index"
+GDP_deflator = "IFS.NGDP_D_SA_IX"
+
+# "Gross Domestic Product, Nominal, Domestic Currency"
+GDP_nominal = "IFS.NGDP_XDC"
+
+# "Population, Persons, Number of"
+GDP_population = "IFS.LP_PE_NUM"
+
+# Assign the datasets to new variables so we don't change the originals
+GII_data = datasets[GII]
+GDP_deflator_data = datasets[GDP_deflator]
+GDP_nominal_data = datasets[GDP_nominal]
+GDP_population_data = datasets[GDP_population]
+```
+
+## Feature Engineering
+### Data Cleaning
+Since the GDP deflator is reported on a quarterly basis, we need to convert it to a yearly basis.
+
+
+```{python}
+# Filter to keep only rows with a partial string match for "Q4" in the time_period column
+GDP_deflator_data = GDP_deflator_data[GDP_deflator_data['time_period'].str.contains("Q4")]
+
+```
+
+```{python}
+# Split the time_period into year and quarter and keep the year only
+GDP_deflator_data.loc[:, 'time_period'] = GDP_deflator_data['time_period'].str[0:4]
+
+```
+
+
+```{python}
+datasets = [GII_data, GDP_deflator_data, GDP_nominal_data, GDP_population_data]
+
+for i, dataset in enumerate(datasets):    
+    # Use .loc to modify the columns
+    datasets[i].loc[:, 'obs_value'] = pd.to_numeric(datasets[i]['obs_value'], errors='coerce')
+    datasets[i].loc[:, 'time_period'] = pd.to_numeric(datasets[i]['time_period'], errors='coerce')
+    datasets[i].loc[:, 'unit_mult'] = pd.to_numeric(datasets[i]['unit_mult'], errors='coerce')
+```
+
+```{python}
+# Calculate percent change for each ref_area
+GII_data[f'pct_change'] = GII_data.sort_values(['ref_area', 'time_period']).groupby('ref_area')['obs_value'].pct_change()
+
+# Display the first few rows of the updated dataset
+GII_data.head()
+```
+
+```{python}
+# Create a new dataframe with only the required columns
+GII_data = GII_data[['ref_area', 'time_period', 'pct_change']].copy()
+
+# Display the first few rows of the new dataset
+GII_data.head()
+```
+
+
+
+```{python}
+# GDP Deflator Dataset
+# Create a new dataframe with only the required columns
+GDP_deflator_data = GDP_deflator_data[['ref_area', 'time_period', 'unit_mult', 'obs_value']].copy()
+
+# Divide obs_value by 100
+GDP_deflator_data['obs_value'] = GDP_deflator_data['obs_value'] / 100
+
+# Display the first few rows of the new dataset
+GDP_deflator_data.head()
+```
+
+```{python}
+# GDP Nominal Data
+# Create a new dataframe with only the required columns
+GDP_nominal_data = GDP_nominal_data[['ref_area', 'time_period', 'unit_mult','obs_value']].copy()
+
+# Display the first few rows of the new dataset
+GDP_nominal_data.head()
+```
+
+```{python}
+# GDP Population Data 
+# Create a new dataframe with only the required columns
+GDP_population_data = GDP_population_data[['ref_area', 'time_period', 'unit_mult','obs_value']].copy()
+
+# Display the first few rows of the new dataset
+GDP_population_data.head()
+```
+
+
+```{python}
+# Combine all the datasets above for further calculation
+merged_df = pd.merge(pd.merge(GDP_deflator_data,GDP_nominal_data, on=['time_period', 'ref_area'], suffixes=('_index', '_nominal'), how='inner'), GDP_population_data, on=['time_period', 'ref_area'], how='inner')
+
+# Display the GDP data in a web browser
+# view_dataframe_in_browser(merged_df)
+
+# Display the first few rows of the dataset
+merged_df.head()
+```
+
+
+```{python}
+merged_df['adjusted_index'] = merged_df['obs_value_index'] * (10 ** (merged_df['unit_mult_index']))
+merged_df['adjusted_nominal'] = merged_df['obs_value_nominal'] * (10 ** (merged_df['unit_mult_nominal']))
+merged_df['adjusted_population'] = merged_df['obs_value'] * (10 ** (merged_df['unit_mult']))
+```
+
+
+```{python}
+# Merged dataset
+# Create a new dataframe with only the required columns
+merged_df = merged_df[['ref_area', 'time_period','adjusted_nominal', 'adjusted_index', 'adjusted_population']].copy()
+
+# Display the first few rows of the dataset
+merged_df.head()
+```
+
+
+```{python}
+# Step 1: Real GDP = (Nominal GDP / GDP Deflator Index)
+merged_df['Real_GDP_domestic'] = (merged_df['adjusted_nominal'] / merged_df['adjusted_index'])
+
+# Step 2: Real GDP per Capita = Real GDP / Population
+merged_df['Real_GDP_per_capita'] = merged_df['Real_GDP_domestic'] / merged_df['adjusted_population']
+
+# Check the results
+merged_df.head()
+```
+
+
+```{python}
+# Calculate percent change for each ref_area
+merged_df[f'GDP_change'] = merged_df.sort_values(['ref_area', 'time_period']).groupby('ref_area')['Real_GDP_per_capita'].pct_change()
+
+# Rename dataset
+GDP_data = merged_df
+
+# Display the first few rows of the dataset
+GDP_data.head()
+```
+
+
+```{python}
+# GII and GDP
+# Merge the datasets
+combined_data = pd.merge(GII_data, GDP_data, on=["ref_area", "time_period"], how = "inner")
+
+# Check the combined dataset
+combined_data.head()
+```
+
+
+```{python}
+# GII and GDP
+# Rename columns
+combined_data = combined_data.rename(columns = {
+    "ref_area": "Country",
+    "time_period": "Time",
+    "pct_change": "GII_change"
+})
+
+# Display the GDP data in a web browser
+# view_dataframe_in_browser(combined_data)
+
+# Check the combined dataset
+combined_data.head()
+```
+
+## Data Visualization
+### Scatterplot
+Scatterplot use dots to represent values of two numeric variables. The horizontal axis is the percent change in Real GDP per capita. The vertical axis is the percent change in Gender Inequality Index(GII). Different colors represent different countries. We used a linear regression line to display the overall pattern. 
+
+Based on the scatterplot, it seems like there is a slight positive relationship between GDP change and GII change as shown by the flat regression line. Gender inequality is decreasing (gender equality is improving) a little faster in country-years with low GDP growth and a little slower in country-years with high GDP growth.
+
+```{python}
+# Drop NAs
+combined_data = combined_data.dropna(subset=['GDP_change', 'GII_change'])
+
+# Plot the data points
+plt.figure(figsize=(18, 10))
+for country in combined_data['Country'].unique():
+    country_data = combined_data[combined_data['Country'] == country]
+    plt.scatter(country_data['GDP_change'], country_data['GII_change'],
+             marker='o',linestyle='-', label=country)
+plt.title('Country-Year Analysis of GDP Change vs. GII Change')
+plt.xlabel('Percent Change in Real GDP per Capita (Country-Year)')
+plt.ylabel('Percent Change in GII (Country-Year)')
+plt.grid(True)
+
+# Prepare data for linear regression
+X = combined_data['GDP_change'].values.reshape(-1, 1)
+y = combined_data['GII_change'].values
+
+# Perform linear regression
+reg = LinearRegression().fit(X, y)
+y_pred = reg.predict(X)
+
+# Plot the regression line
+plt.plot(combined_data['GDP_change'], y_pred, color='red', linewidth=2)
+
+plt.show()
+
+```
+
+### Time Series Line Plot
+Create separate line plots for GDP change and GII change over time for a few key countries might show the trends more clearly. 
+
+US: United States
+JP: Japan
+GB: United Kindom
+FR: France
+MX: Mexico
+
+Based on the line plots, we see GDP change and GII change have different patterns. For example, in Mexico, when there is a big change in real GDP per captia in 1995, the change in GII is pretty stable. 
+```{python}
+# Time Series Line plot for a few key countries
+selected_countries  = ['US', 'JP', 'GB', 'FR', 'MX']
+combined_data_selected = combined_data[combined_data['Country'].isin(selected_countries)]
+
+# Set up the Plot Structure
+fig, ax = plt.subplots(2, 1, figsize=(18, 10), sharex=True)
+
+# Plot change in real GDP per capita over time
+sns.lineplot(data = combined_data_selected, x = "Time", y = "GDP_change", hue = "Country", ax = ax[0])
+ax[0].set_title("Percent Change in Real GDP per Capita Over Time")
+ax[0].set_ylabel("Percent Change in Real GDP per Capita")
+
+# Plot change in GII over time
+sns.lineplot(data = combined_data_selected, x = "Time", y = "GII_change", hue = "Country", ax = ax[1])
+ax[1].set_title("Percent Change in GII over Time")
+ax[1].set_xlabel("Time")
+ax[1].set_ylabel("GII")
+
+plt.tight_layout
+plt.show()
+```
+
+### Barplot
+Use a barplot to show average changes in GII and GDP percent change for each country to visualize regions where inequality is improving or worsening. 
+
+This plot supports our previous observation how GII change seems to be not be correlated with GDP change. We also saw that, for country SI, Solvenia, there seems to be a large improvement in gender inequality.  
+
+```{python}
+# Barplot using average GII and GDP change
+# Calculate average change for each country
+combined_data_avg = combined_data.groupby('Country')[['GII_change','GDP_change']].mean().reset_index()
+
+# Prepare to plot structure 
+plt.figure(figsize = (18,10))
+
+# Create the barplot
+combined_data_avg.plot(kind = 'bar', x = 'Country')
+plt.ylabel('Average Change')
+plt.xlabel('Country')
+plt.legend(['GII change', 'GDP change'])
+plt.grid(axis = 'y')
+
+# Show the plot
+plt.show()
+```
+
+### Boxplot
+Use boxplot to visualize the distribution of GDP and GII change by country, providing information about spread, median, and potential outliers. To provide a more informative view, we sequence countries in an ascending order by the median of percent change in GDP.
+
+The boxplot displays a slight upward trend with no obvious pattern between GDP and GII change. In coutries with higher GDP change median, they also tend to have a larger spread of the GDP change. The median of GII change remains stable regardless of the magnitude of GDP change, implying weak or no association between GDP and GII change. We observe a potential outlier for country SI, Solvenia, which may explains its large improvement in Gender inequality. 
+
+```{python}
+# Box plot for GII and GDP change
+# Melt the dataframe to long format for combined boxplot
+combined_data_melted = combined_data.melt(id_vars=['Country'], value_vars=['GII_change', 'GDP_change'], 
+                                          var_name='Change_Type', value_name='Value')
+
+gdp_medians = combined_data.groupby('Country')['GDP_change'].median().sort_values()
+
+combined_data_melted['Country'] = pd.Categorical(combined_data_melted['Country'], categories=gdp_medians.index, ordered= True)
+
+# Prepare the plot structure
+plt.figure(figsize=(18, 10))
+sns.boxplot(data = combined_data_melted, x = "Country", y = 'Value', hue = 'Change_Type')
+plt.title('Distribution of GII and GDP change by Country')
+plt.xlabel('Country')
+plt.ylabel('Change')
+plt.legend(title = 'Change Type')
+
+# Show the plot
+plt.show()
+```
+
+### Correlation Matrix
+Create a heatmap to show the relationship between GII and GDP change.
+
+A positive correlation coefficient indicates a positive relationship: the larger the GDP change, the larger the GII change. A negative correlation coefficient indicates a negative relationship: the larger the GDP change, the smaller the GII change. A correlation coefficient closer to 0 indicates there is weak or no relationship. 
+
+Based on the numeric values in the plot, there is a moderately strong positive correlation between GII and GDP change for country Estonia(EE) and Ireland(IE). 
+
+```{python}
+# Calculate the correlation
+country_correlation = combined_data.groupby('Country')[['GII_change', 'GDP_change']].corr().iloc[0::2, -1].reset_index(name='Correlation')
+
+# Put the correlation value in a matrix format
+correlation_matrix = country_correlation.pivot(index='Country', columns='level_1', values='Correlation')
+
+# Check for NaN values in the correlation matrix
+correlation_matrix.fillna(0, inplace=True)  # Replace NaNs with 0 or another value as appropriate
+
+# Set up the plot structure
+plt.figure(figsize=(18, 12))  # Adjust height to give more space for y-axis labels
+
+# Plot the heatmap
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', center=0, cbar_kws={"shrink": .8}, linewidths=.5)
+
+# Enhance axis labels and title
+plt.title('Heatmap for GII and GDP Change', fontsize=20)
+plt.xlabel('Variables', fontsize=16)
+plt.ylabel('Country', fontsize=16)
+
+# Improve readability of y-axis labels
+plt.yticks(fontsize=12)  # Adjust the font size for y-axis labels
+
+# Show the plot
+plt.show()
+```
+
+## Statistical Analysis 
+### Descriptive Statistics
+There is a total of 915 data points. The mean of the GII change in -0.0314868, which indicates the overall grand mean percent change in gender inequality index is -3.15%. The mean of the GDP change is 0.0234633, showing the overall grand mean percent change in real GDP per capita is 2.35%. 
+```{python}
+# Generate summary statistics
+descriptive_stats = combined_data.describe()
+print(tabulate(descriptive_stats, headers='keys', tablefmt='github'))
+```
+
+### Regression Analysis
+Simple linear regression as a foundational approach provide us with a basic understanding of the relationship between GDP change and GII change. 
+
+Based on the summary, we can conclude the following:
+* Becasue p-value = 0.057, if we set alpha, the significance level, to be 0.05, we fail to reject the null hypothesis and conclude there is no significant relationship between percent change in real GDP per capita and gender inequality index. 
+
+* R-squared = 0.004. Only 0.4% of the variance in GII change can be explained by GDP change.
+
+* We are 95% confident that the interval from -0.003 to 0.169 captures the true slope of GDP change. Because 0 is included, we are uncertain about the effect of GDP change on GII chnage.
+
+```{python}
+# Define independent and depenent variables
+X = combined_data['GDP_change']
+y = combined_data['GII_change']
+
+# Add a constant to indepdent variable to include an intercept
+X = sm.add_constant(X)
+
+# Fit a simple linear regresion model and print out the summary
+model = sm.OLS(y, X).fit()
+print(model.summary())
+```
+
+### Time Series Analysis
+Time series analysis allows us to explore how the relationship between GII and GDP change vary across different time periods, accounting for lagged effects. 
+
+Here is a quick summary of the result:
+* Both GII and GDP change time series are stationary.
+
+* Past GII change values significantly influence cuurent GII change values.
+
+* VAR model has good model performance on forecasting future values based on historical data. 
+
+* Changes in GDP does not cause/precde the changes in GII. 
+
+#### ADF Test: Stationality Assumption Check
+We want to use Augmented Dickey-Fuller (ADF) test to check whether a time series is stationary, which is the model assumption for many time series models. 
+
+Stationarity implies constant mean and variance over time, making it more predictable and stable for forecasting. 
+
+Based on the ADF test output, both GII and GDP change time series are stationary. We can proceed to the time series modeling section. 
+```{python}
+# Augmented Dickey-Fuller (ADF) test for stationarity check
+# Create melted datasets
+combined_data_time = combined_data.melt(id_vars=['Time', 'Country'], value_vars=['GII_change','GDP_change'], var_name = 'Change_Type', value_name = 'Value')
+GII = combined_data_time[(combined_data_time['Change_Type'] == 'GII_change')]                         
+
+GDP = combined_data_time[(combined_data_time['Change_Type'] == 'GDP_change')]
+
+# Stationary Check
+def adf_test(series):
+    result = adfuller(series.dropna())
+    print(f'ADF Statistic: {result[0]}')
+    print(f'p-value: {result[1]}')
+    if result[1] < 0.05:
+        print("Series is stationary")
+    else:
+        print("Series is not stationary")
+
+# Output the result
+adf_test(GII['Value'])
+adf_test(GDP['Value'])
+```
+
+#### VAR model: Examine variables separately
+We fit a VAR (Vector Autoreression) model to see the relationship between GII and GDP change. VAR is particularly useful when dealing with multivariate time series data and allows us to examine the interdependence between variables. 
+
+Based on summary, here are several interpretations we can make:
+- We used AIC as the criteria for model selection. Lower value suggests a better fit. 
+- Given that we want to predict GII change, we will focus on the first set "Results for equation GII_change."
+- Past GII_change values significantly influence current GII_change, as shown in the small p-values of lags 1 and 2. 
+- Lag 2 of GDP_change has a relatively low p-value but is not statistically significant.
+
+```{python}
+# Split the dataset into training and testing sets
+split_ratio = 0.7
+split_index = int(len(combined_data) * split_ratio)
+
+# Training set is used to fit the model
+train_data = combined_data.iloc[:split_index]
+
+# Testing set is used for validation
+test_data = combined_data.iloc[split_index:]
+
+print(f"Training data: {train_data.shape}")
+print(f"Test data: {test_data.shape}")
+```
+
+```{python}
+# Fit a VAR model 
+time_model = VAR(train_data[['GII_change', 'GDP_change']])
+time_model_fitted = time_model.fit(maxlags = 15, ic="aic")
+
+# Print out the model summary
+print(time_model_fitted.summary())
+```
+
+#### VAR Model: Forecasting
+We apply the model learned above to the test data. Based on the plot, the forecast values seem to follow the actual data well, indicating a good model fit caputuring the underlying trends.
+```{python}
+# Number of steps to forecast (length of the test set)
+n_steps = len(test_data)
+
+# Get the last values from the training set for forecasting
+forecast_input = train_data[['GII_change', 'GDP_change']].values[-time_model_fitted.k_ar:]
+
+# Forecasting
+forecast = time_model_fitted.forecast(y=forecast_input, steps=n_steps)
+
+# Create a DataFrame for the forecasted values
+forecast_df = pd.DataFrame(forecast, index=test_data.index, columns=['GII_forecast', 'GDP_forecast'])
+
+# Ensure the index of the forecast_df matches the test_data index
+forecast_df.index = test_data.index
+```
+
+```{python}
+plt.figure(figsize=(12, 6))
+plt.plot(train_data['GII_change'], label='Training GII', color='blue')
+plt.plot(test_data['GII_change'], label='Actual GII', color='orange')
+plt.plot(forecast_df['GII_forecast'], label='Forecasted GII', color='green')
+plt.title('GII Change Forecast vs Actual')
+plt.legend()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+plt.plot(train_data['GDP_change'], label='Training GDP', color='blue')
+plt.plot(test_data['GDP_change'], label='Actual GDP', color='orange')
+plt.plot(forecast_df['GDP_forecast'], label='Forecasted GDP', color='green')
+plt.title('GDP Change Forecast vs Actual')
+plt.legend()
+plt.show()
+```
+
+#### VAR Model: Model Performance
+Low values of both MAE and RMSE indicate good model performance with small average errors in predictions. 
+```{python}
+mae_gii = mean_absolute_error(test_data['GII_change'], forecast_df['GII_forecast'])
+mae_gdp = mean_absolute_error(test_data['GDP_change'], forecast_df['GDP_forecast'])
+
+print(f'Mean Absolute Error for GII: {mae_gii}')
+print(f'Mean Absolute Error for GDP: {mae_gdp}')
+```
+
+
+```{python}
+rmse_gii = np.sqrt(mean_squared_error(test_data['GII_change'], forecast_df['GII_forecast']))
+rmse_gdp = np.sqrt(mean_squared_error(test_data['GDP_change'], forecast_df['GDP_forecast']))
+
+print(f'RMSE for GII: {rmse_gii}')
+print(f'RMSE for GDP: {rmse_gdp}')
+```
+
+#### VAR Model: Granger causality test
+Granger causality test evaluates whether one time series can predict another. 
+
+Based on the output, the lowest p-value is when lag = 2. However, because p-value > 0.05, we fail to reject the null hypothesis and conclude the GDP_change does not Granger-cause the GII_change.
+```{python}
+# Perform the Granger causality test
+max_lag = 3
+test_result = grangercausalitytests(train_data[['GII_change', 'GDP_change']], max_lag, verbose=True)
+
+```
+
+## Conclusion
+In wrapping up our analysis, we found no evidence to support a significant relationship between the Change in Real GDP per capita and the Change in the Gender Inequality Index (GII). This suggests that economic growth may not have a direct impact on gender equality. However, our findings open the door to questions for future research.
+
+## Future Directions
+* Additional Predictors: Gender Inequality Index (GII) is a composite measure shaped by a mariad of social factors. What about culture, policy, and environment?
+* Specific Country: Are there any specific historical contexts that sparked economic growth and improvement in gender equality?
+* Opposite causation: Women entering workforce boost GDP?
+* Predictive Power of VAR model: Our model performed well in forecasting trends for both variables independently. 
+
+Let's keep our curiosity alive and our questions flowing!
