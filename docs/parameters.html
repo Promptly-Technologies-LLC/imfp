@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="filtering-imf-dataset-requests-with-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="filtering-imf-dataset-requests-with-parameters">Filtering IMF Dataset Requests with Parameters</h2>
 <p>Once you have a <code>database_id</code>, it’s possible to make a call to <code>imf_dataset</code> to fetch the entire database:</p>
-<div id="5452ea5e" class="cell" data-execution_count="1">
+<div id="f272499e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -244,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="discovering-available-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="discovering-available-parameters">Discovering Available Parameters</h2>
 <p>To get started, you’ll need to know what parameters are available for your chosen database. Use <code>imf_parameters()</code> to get this information:</p>
-<div id="c79c935f" class="cell" data-execution_count="2">
+<div id="b8da3e03" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters for the Primary Commodity Price System database</span></span>
@@ -263,7 +263,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>description</code>: A short text description of what each code represents</li>
 </ul>
 <p>For example, to see the valid codes for the <code>freq</code> (frequency) parameter:</p>
-<div id="57dfcc7c" class="cell" data-execution_count="3">
+<div id="05d38d77" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'freq'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -304,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="parameter-definitions" class="level2">
 <h2 class="anchored" data-anchor-id="parameter-definitions">Parameter Definitions</h2>
 <p>If the parameter name is not self-explanatory, you can use the <code>imf_parameter_defs()</code> function to get a text description of what each parameter represents.</p>
-<div id="083ba4ee" class="cell" data-execution_count="4">
+<div id="09c0e6f1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get descriptions of what each parameter means</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params_defs <span class="op">=</span> imfp.imf_parameter_defs(<span class="st">"PCPS"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>To make a request to fetch data from the IMF API, just call <code>imf_dataset</code> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
 <p>For instance, on exploring the <code>freq</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imf_dataset</code> with <code>freq = ["A"]</code>.</p>
 <p>Here’s a complete example that fetches annual coal prices for the years 2000 through 2015:</p>
-<div id="aa8b330c" class="cell" data-execution_count="5">
+<div id="44363bd7" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Get annual coal prices</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
@@ -373,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="list-arguments-with-parameter-filtering" class="level4">
 <h4 class="anchored" data-anchor-id="list-arguments-with-parameter-filtering">1. List Arguments with Parameter Filtering</h4>
 <p>This approach uses string matching to find the correct parameter codes before passing them to <code>imf_dataset</code>:</p>
-<div id="ebb882cb" class="cell" data-execution_count="6">
+<div id="7d1d00fe" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the freq parameter...</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>selected_freq <span class="op">=</span> <span class="bu">list</span>(</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'freq'</span>][<span class="st">'input_code'</span>][</span>
@@ -493,7 +493,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="parameters-dictionary-approach" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-dictionary-approach">2. Parameters Dictionary Approach</h4>
 <p>This approach modifies the parameters dictionary directly and passes the entire filtered dictionary to <code>imf_dataset</code> as a single <code>parameters</code> keyword argument. This is more concise but requires understanding how the parameters dictionary works:</p>
-<div id="be8a63bf" class="cell" data-execution_count="7">
+<div id="7c24735e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the params dictionary</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>modified_params <span class="op">=</span> params.copy()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>

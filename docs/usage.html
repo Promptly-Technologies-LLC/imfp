@@ -235,7 +235,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="inspecting-data">Inspecting Data</h3>
 <p><code>imfp</code> outputs data in <code>pandas</code> DataFrames, so you will want to use the <code>pandas</code> package for its functions for viewing and manipulating this object type.</p>
 <p>For large datasets, you can use the <code>pandas</code> library’s <code>info()</code> method to get a quick summary of the data frame, including the number of rows and columns, the count of non-missing values, the column names, and the data types.</p>
-<div id="f935b4b1" class="cell" data-execution_count="1">
+<div id="b123011e" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -270,7 +270,7 @@ memory usage: 2.4+ KB</code></pre>
 </div>
 </div>
 <p>Alternatively, you can use the <code>head()</code> method to view the first 5 rows of the data frame.</p>
-<div id="da91e547" class="cell" data-execution_count="2">
+<div id="9ac4b6fd" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows of DataFrame</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -359,7 +359,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="numeric-conversion" class="level4">
 <h4 class="anchored" data-anchor-id="numeric-conversion">Numeric Conversion</h4>
 <p>All data is returned from the IMF API as a text (object) data type, so you will want to cast numeric columns to numeric.</p>
-<div id="de0e0259" class="cell" data-execution_count="3">
+<div id="1cc350a5" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric columns</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>numeric_cols <span class="op">=</span> [<span class="st">"unit_mult"</span>, <span class="st">"obs_value"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -370,7 +370,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="categorical-conversion" class="level4">
 <h4 class="anchored" data-anchor-id="categorical-conversion">Categorical Conversion</h4>
 <p>You can also convert string columns to categorical types for better memory usage.</p>
-<div id="fbbc8c19" class="cell" data-execution_count="4">
+<div id="fd8ee109" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert categorical columns like ref_area and indicator to category type</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"freq"</span>,</span>
@@ -386,7 +386,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="na-removal" class="level4">
 <h4 class="anchored" data-anchor-id="na-removal">NA Removal</h4>
 <p>After conversion, you may want to drop any rows with missing values.</p>
-<div id="1e3f1b64" class="cell" data-execution_count="5">
+<div id="0f74fae0" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing values</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -397,7 +397,7 @@ memory usage: 2.4+ KB</code></pre>
 <p>Annual data will be formatted as a four-digit year, such as “2000”, which can be trivially converted to numeric.</p>
 <p>However, quarterly data will be formatted as “2000-Q1”, and monthly data will be formatted like “2000-01”.</p>
 <p>You can use the <code>pandas</code> library’s <code>to_datetime()</code> method with the <code>format="mixed"</code> argument to convert this column to a datetime object in a format-agnostic way:</p>
-<div id="5f437b7d" class="cell" data-execution_count="6">
+<div id="ec727bde" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time_period to datetime</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"datetime"</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">"time_period"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"mixed"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"freq"</span>, <span class="st">"datetime"</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -446,7 +446,7 @@ memory usage: 2.4+ KB</code></pre>
 </div>
 </div>
 <p>Alternatively, you can split the <code>time_period</code> column into separate columns for year, quarter, and month, and then convert each to a numeric value:</p>
-<div id="6b500436" class="cell" data-execution_count="7">
+<div id="eb7a361e" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split time_period into separate columns</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"year"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{4}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"quarter"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"Q</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{1}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
@@ -519,7 +519,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="summarizing-data" class="level3">
 <h3 class="anchored" data-anchor-id="summarizing-data">Summarizing Data</h3>
 <p>After converting columns to numeric, you can use the <code>describe()</code> function to get a quick summary of the statistical properties of these, including the count of rows, the mean, the standard deviation, the minimum and maximum values, and the quartiles.</p>
-<div id="8bbb38e4" class="cell" data-execution_count="8">
+<div id="cf64d501" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistical summary</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
@@ -621,7 +621,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="viewing-data" class="level3">
 <h3 class="anchored" data-anchor-id="viewing-data">Viewing Data</h3>
 <p>For large data frames, it can be useful to view the data in a browser window. To facilitate this, you can define a <code>View()</code> function as follows. This function will save the data frame to a temporary HTML file and open it in your default web browser.</p>
-<div id="c857e74c" class="cell" data-execution_count="9">
+<div id="0447bbea" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> webbrowser</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -653,7 +653,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="fetching-ifs-adjusters" class="level3">
 <h3 class="anchored" data-anchor-id="fetching-ifs-adjusters">Fetching IFS Adjusters</h3>
 <p>First, let’s retrieve the key adjustment variables from the IFS database:</p>
-<div id="1dde1af0" class="cell" data-execution_count="10">
+<div id="f22b57cb" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch GDP Deflator (Index, Annual)</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> imfp.imf_dataset(</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>,</span>
@@ -679,7 +679,7 @@ memory usage: 2.4+ KB</code></pre>
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’ll also retireve a nominal GDP series to be adjusted:</p>
-<div id="5e5e1423" class="cell" data-execution_count="11">
+<div id="80826bd4" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Nominal GDP (Domestic currency, annual)</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>nominal_gdp <span class="op">=</span> imfp.imf_dataset(</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>, </span>
@@ -702,7 +702,7 @@ memory usage: 2.4+ KB</code></pre>
 <ol type="1">
 <li>Using Q4 values: This approach is often used for stock variables (measurements taken at a point in time) and when you want to align with end-of-year values:</li>
 </ol>
-<div id="5a02e633" class="cell" data-execution_count="12">
+<div id="d8150bd4" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only Q4 observations for annual comparisons</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator[deflator[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> exchange_rate[exchange_rate[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
@@ -714,7 +714,7 @@ memory usage: 2.4+ KB</code></pre>
 <ol start="2" type="1">
 <li>Calculating annual averages: This approach is more appropriate for flow variables (measurements over a period) and when you want to smooth out seasonal variations:</li>
 </ol>
-<div id="0308e720" class="cell" data-execution_count="14">
+<div id="487ee348" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative: Calculate annual averages</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator.groupby(</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'ref_area'</span>, deflator[<span class="st">'time_period'</span>]], </span>
@@ -728,7 +728,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="unit-multiplier-adjustment" class="level3">
 <h3 class="anchored" data-anchor-id="unit-multiplier-adjustment">Unit Multiplier Adjustment</h3>
 <p>IMF data often includes a <code>unit_mult</code> column that indicates the scale of the values (e.g., millions, billions). We can write a helper function to apply these scaling factors:</p>
-<div id="9997a4e0" class="cell" data-execution_count="15">
+<div id="f479aef8" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_unit_multiplier(df):</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Convert to numeric, adjust values using IMF's scaling factors, and drop</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">    missing values"""</span></span>
@@ -748,7 +748,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="merging-datasets" class="level3">
 <h3 class="anchored" data-anchor-id="merging-datasets">Merging Datasets</h3>
 <p>After harmonizing unit scales, we can combine the datasets using <code>pd.DataFrame.merge()</code> with <code>ref_area</code> and <code>time_period</code> as keys:</p>
-<div id="aee67820" class="cell" data-execution_count="16">
+<div id="c1c4209e" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> (</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    nominal_gdp.merge(</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        deflator,</span>
@@ -770,7 +770,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="calculating-real-values" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-real-values">Calculating Real Values</h3>
 <p>With the merged dataset, we can now calculate real GDP and per capita values:</p>
-<div id="592223a4" class="cell" data-execution_count="17">
+<div id="e36d3165" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert nominal to real GDP</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">'real_gdp'</span>] <span class="op">=</span> (</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    (merged[<span class="st">'adjusted_value_gdp'</span>] <span class="op">/</span> merged[<span class="st">'adjusted_value_deflator'</span>]) <span class="op">*</span> <span class="dv">100</span></span>
@@ -835,7 +835,7 @@ memory usage: 2.4+ KB</code></pre>
 <section id="exchange-rate-adjustment" class="level3">
 <h3 class="anchored" data-anchor-id="exchange-rate-adjustment">Exchange Rate Adjustment</h3>
 <p>Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the IFS database.</p>
-<div id="77ea2846" class="cell" data-execution_count="18">
+<div id="22f8c16a" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Because 'adjusted_value_exrate' is local-currency-per-USD,</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing local-currency real GDP by it yields GDP in USD.</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">"real_gdp_usd"</span>] <span class="op">=</span> (</span>

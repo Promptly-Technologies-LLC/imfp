@@ -212,7 +212,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="making-a-request" class="level2">
 <h2 class="anchored" data-anchor-id="making-a-request">Making a Request</h2>
 <p>To retrieve data from an IMF database, you’ll need the database ID and any relevant <a href="../docs/parameters.html">filter parameters</a>. Here’s a basic example using the Primary Commodity Price System (PCPS) database:</p>
-<div id="4d2bf4a1" class="cell" data-execution_count="1">
+<div id="3dfb0600" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get parameters and their valid codes</span></span>
@@ -238,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="decoding-returned-data">Decoding Returned Data</h2>
 <p>When you retrieve data using <code>imf_dataset</code>, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from <code>imf_parameters</code>, so that codes like “A” (Annual) or “W00” (World) become self-explanatory labels.</p>
 <p>For example, suppose we want to decode the <code>freq</code> (frequency), <code>ref_area</code> (geographical area), and <code>unit_measure</code> (unit) columns in our dataset. We’ll merge the parameter descriptions into our data frame:</p>
-<div id="50a26893" class="cell" data-execution_count="2">
+<div id="047eca62" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode frequency codes (e.g., "A" → "Annual")</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.merge(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select code-description pairs</span></span>

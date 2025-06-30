@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The IMF API has an application-based rate limit of 50 requests per second. Each application is identified by the “user_agent” variable in the request header. By default, all <code>imfp</code> users share the same application name, which could lead to rate limit issues if many users are making requests simultaneously.</p>
 <p>This could prove problematic if the <code>imfp</code> library became too popular and too many users tried to make simultaneous API requests using the default app name. By setting a custom application name, users can avoid hitting this rate limit and being blocked by the API. To solve this problem, <code>imfp</code> supplies the <code>set_imf_app_name()</code> function to set a custom application name.</p>
 <p><code>set_imf_app_name()</code> sets the application name by changing the <code>IMF_APP_NAME</code> variable in the environment. If this variable doesn’t exist, <code>set_imf_app_name()</code> will create it. To set a custom application name, simply call the <code>set_imf_app_name()</code> function with your desired application name as an argument:</p>
-<div id="ddbc746c" class="cell" data-execution_count="1">
+<div id="40a5acff" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set custom app name as an environment variable</span></span>
@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="managing-request-timing" class="level3">
 <h3 class="anchored" data-anchor-id="managing-request-timing">Managing Request Timing</h3>
 <p>If making multiple requests in a short period of time, you may want to increase the wait time between requests to avoid hitting the API’s rate limits. This is done with the <code>set_imf_wait_time()</code> function:</p>
-<div id="60c1fc9b" class="cell" data-execution_count="2">
+<div id="8fedc37a" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Increase wait time to 5 seconds</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>imfp.set_imf_wait_time(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -245,7 +245,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Stops after 3 attempts (default)</li>
 </ol>
 <p>You can modify retry behavior:</p>
-<div id="e4e6855b" class="cell" data-execution_count="3">
+<div id="1aff11ea" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retry 4 times rather than the default 3</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(<span class="st">"IFS"</span>, <span class="st">"NGDP_D_SA_IX"</span>, times<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -254,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="caching-strategy">Caching Strategy</h3>
 <p>To reduce API calls, you can cache frequently accessed data. For instance, in a Jupyter or Quarto notebook that you run multiple times, you can wrap each <code>imfp</code> function call in an <code>if</code> statement that checks if the returned data has already been saved to a file. If it has, it loads the data from the file. If it hasn’t, it fetches the data from the API and saves it to a file.</p>
 <p>Note that to run this code, you will need to install the <code>pyarrow</code> library, which <code>pandas</code> uses as its engine for reading and writing parquet files (but which is not installed with <code>pandas</code> or <code>imfp</code> by default). Use <code>pip install pyarrow</code> to install it.</p>
-<div id="37870e3c" class="cell" data-execution_count="4">
+<div id="8a51358e" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>

@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fetching-an-index-of-databases-with-the-imf_databases-function" class="level3">
 <h3 class="anchored" data-anchor-id="fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <code>imf_databases</code> Function</h3>
 <p>To obtain the list of available databases and their corresponding IDs, use <code>imf_databases</code>:</p>
-<div id="189d80f6" class="cell" data-execution_count="1">
+<div id="753c0944" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Fetch the list of databases available through the IMF API</span></span>
@@ -284,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exploring-the-database-list" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-the-database-list">Exploring the Database List</h2>
 <p>To view and explore the database list, it’s possible to explore subsets of the data frame by row number with <code>databases.loc</code>:</p>
-<div id="bed06368" class="cell" data-execution_count="2">
+<div id="81c7945b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using <code>str.contains</code> and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:</p>
-<div id="baa411b6" class="cell" data-execution_count="3">
+<div id="82fe59c0" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -348,12 +348,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">305</td>
+<td data-quarto-table-cell-role="th">304</td>
 <td>PCPS</td>
 <td>Primary Commodity Price System (PCPS)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">306</td>
+<td data-quarto-table-cell-role="th">320</td>
 <td>PCTOT</td>
 <td>Commodity Terms of Trade</td>
 </tr>
