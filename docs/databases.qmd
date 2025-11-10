@@ -26,7 +26,7 @@ databases.head()
 ```
 
 
-This function returns the IMF’s listing of 259 databases available through the API. (In reality, a few of the listed databases are defunct and not actually available. The databases FAS_2015, GFS01, FM202010, APDREO202010, AFRREO202010, WHDREO202010, BOPAGG_2020, and DOT_2020Q1 were unavailable as of last check.)
+This function returns the IMF’s listing of 71 databases available through the API.
 
 ## Exploring the Database List
 

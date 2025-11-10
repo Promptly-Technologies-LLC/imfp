@@ -1,0 +1,26 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/data/dataflow/IMF.WHD/WHDREO/+/*.*.M?dimensionAtObservation=TIME_PERIOD&attributes=dsd&measures=all",
+  "status_code": 200,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 20:55:27 GMT",
+    "Content-Type": "application/json",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "a0c10403bfae6f6e9d4dcf8611a462af",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "vary": "accept-encoding",
+    "content-encoding": "gzip",
+    "x-envoy-upstream-service-time": "75",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"meta\":{},\"data\":{\"dataSets\":[{\"structure\":0,\"action\":\"Replace\",\"dimensionGroupAttributes\":{\":0::\":[null,null,0,null,null,0,null,null,null,0,0],\":1::\":[0,null,null,null,null,null,null,null,null,0,0],\":2::\":[null,null,1,null,null,0,null,null,null,0,0],\":3::\":[null,null,null,0,null,null,0,null,null,1,0],\":4::\":[null,null,2,null,null,0,null,null,null,0,0],\":5::\":[null,0,null,null,null,null,null,0,null,2,0]}}],\"structures\":[{\"dataSets\":[0],\"links\":[{\"urn\":\"urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=IMF.WHD:WHDREO(5.0.0)\",\"title\":\"Dataflow\"},{\"urn\":\"urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=IMF.WHD:DSD_WHDREO(5.0.0)\",\"title\":\"DataStructureDefinition\"}],\"dimensions\":{\"series\":[{\"id\":\"COUNTRY\",\"keyPosition\":0,\"roles\":[],\"values\":[]},{\"id\":\"INDICATOR\",\"keyPosition\":1,\"roles\":[],\"values\":[{\"id\":\"GGXWDG_GDP\"},{\"id\":\"BCA_GDP_BP6\"},{\"id\":\"GGXGGEI_GDP\"},{\"id\":\"PCPIE_PCH\"},{\"id\":\"GGXONLB_GDP\"},{\"id\":\"NGDP_RPCH\"}]},{\"id\":\"FREQUENCY\",\"keyPosition\":2,\"roles\":[\"FREQ\"],\"values\":[]}],\"observation\":[{\"id\":\"TIME_PERIOD\",\"keyPosition\":3,\"values\":[]}]},\"measures\":{\"observation\":[{\"id\":\"OBS_VALUE\",\"roles\":[]}]},\"attributes\":{\"dimensionGroup\":[{\"id\":\"INT_ACC_ITEM\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"CAB\"}]},{\"id\":\"NA_STO\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"B1GQ\"}]},{\"id\":\"GFS_STO\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"G63G\"},{\"id\":\"G2MXG24\"},{\"id\":\"GPB\"}]},{\"id\":\"COICOP_1999\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"_T\"}]},{\"id\":\"SOC_CONCEPTS\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[]},{\"id\":\"SECTOR\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"S13\"}]},{\"id\":\"INDEX_TYPE\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"CPI\"}]},{\"id\":\"PRICES\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"Q\"}]},{\"id\":\"STATISTICAL_MEASURES\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[]},{\"id\":\"TRANSFORMATION\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"POGDP\"},{\"id\":\"PCH_EOP\"},{\"id\":\"YOY_PCH_EOP\"}]},{\"id\":\"UNIT\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"INDICATOR\"]},\"values\":[{\"id\":\"PT\"}]}],\"series\":[{\"id\":\"SCALE\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"COUNTRY\",\"INDICATOR\",\"FREQUENCY\"]},\"values\":[]},{\"id\":\"DECIMALS_DISPLAYED\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"COUNTRY\",\"INDICATOR\",\"FREQUENCY\"]},\"values\":[]},{\"id\":\"OVERLAP\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"dimensions\":[\"COUNTRY\",\"INDICATOR\",\"FREQUENCY\"]},\"values\":[]}],\"observation\":[{\"id\":\"PRECISION\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"observation\":{}},\"values\":[]},{\"id\":\"DERIVATION_TYPE\",\"roles\":[],\"isMandatory\":false,\"relationship\":{\"observation\":{}},\"values\":[]}]},\"annotations\":[]}]}}",
+  "encoding": "utf-8"
+}

@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/codelist/IMF.STA/CL_GFS_GRP/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 20:52:37 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "cac6f5d2c443bb76d540573adae530e1",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "20",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"data\":{\"codelists\":[{\"annotations\":[{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-05-29T15:13:02.579902Z\"}],\"id\":\"CL_GFS_GRP\",\"name\":\"Government Finance Statistics (GFS) Indicator group\",\"names\":{\"en\":\"Government Finance Statistics (GFS) Indicator group\"},\"descriptions\":{},\"version\":\"1.2.0\",\"agencyID\":\"IMF.STA\",\"isPartial\":false,\"codes\":[{\"annotations\":[],\"id\":\"BSA\",\"name\":\"Balance Sheet: Assets\",\"names\":{\"en\":\"Balance Sheet: Assets\"},\"description\":\"Balance Sheet: Assets\",\"descriptions\":{\"en\":\"Balance Sheet: Assets\"}},{\"annotations\":[],\"id\":\"BSL\",\"name\":\"Balance Sheet: Liabilities\",\"names\":{\"en\":\"Balance Sheet: Liabilities\"},\"description\":\"Balance Sheet: Liabilities\",\"descriptions\":{\"en\":\"Balance Sheet: Liabilities\"}},{\"annotations\":[],\"id\":\"BI\",\"name\":\"Balancing Items\",\"names\":{\"en\":\"Balancing Items\"},\"description\":\"Balancing Items\",\"descriptions\":{\"en\":\"Balancing Items\"}},{\"annotations\":[],\"id\":\"OEF\",\"name\":\"Other economic flows\",\"names\":{\"en\":\"Other economic flows\"},\"description\":\"Other economic flows\",\"descriptions\":{\"en\":\"Other economic flows\"}},{\"annotations\":[],\"id\":\"TFAL\",\"name\":\"Transactions in financial assets and liabilities\",\"names\":{\"en\":\"Transactions in financial assets and liabilities\"},\"description\":\"Transactions in financial assets and liabilities\",\"descriptions\":{\"en\":\"Transactions in financial assets and liabilities\"}},{\"annotations\":[],\"id\":\"TNFA\",\"name\":\"Transactions in nonfinancial assets\",\"names\":{\"en\":\"Transactions in nonfinancial assets\"},\"description\":\"Transactions in nonfinancial assets\",\"descriptions\":{\"en\":\"Transactions in nonfinancial assets\"}},{\"annotations\":[],\"id\":\"G2\",\"name\":\"Expense\",\"names\":{\"en\":\"Expense\"},\"description\":\"Expense\",\"descriptions\":{\"en\":\"Expense\"}},{\"annotations\":[],\"id\":\"BSN\",\"name\":\"Balance Sheet: Net items\",\"names\":{\"en\":\"Balance Sheet: Net items\"},\"description\":\"Balance Sheet: Net items\",\"descriptions\":{\"en\":\"Balance Sheet: Net items\"}},{\"annotations\":[],\"id\":\"G2MF\",\"name\":\"Expenditure by function\",\"names\":{\"en\":\"Expenditure by function\"},\"description\":\"Expenditure by function.\",\"descriptions\":{\"en\":\"Expenditure by function.\"}},{\"annotations\":[],\"id\":\"G1\",\"name\":\"Revenue\",\"names\":{\"en\":\"Revenue\"},\"description\":\"Revenue\",\"descriptions\":{\"en\":\"Revenue\"}},{\"annotations\":[],\"id\":\"BS\",\"name\":\"Balance Sheet\",\"names\":{\"en\":\"Balance Sheet\"},\"description\":\"Balance Sheet\",\"descriptions\":{\"en\":\"Balance Sheet\"}},{\"annotations\":[],\"id\":\"HGL\",\"name\":\"Holding gains and losses in assets and liabilities\",\"names\":{\"en\":\"Holding gains and losses in assets and liabilities\"},\"description\":\"Holding gains and losses in assets and liabilities\",\"descriptions\":{\"en\":\"Holding gains and losses in assets and liabilities\"}},{\"annotations\":[],\"id\":\"OCVA\",\"name\":\"Other volume changes in assets and liabilities\",\"names\":{\"en\":\"Other volume changes in assets and liabilities\"},\"description\":\"Other volume changes in assets and liabilities\",\"descriptions\":{\"en\":\"Other volume changes in assets and liabilities\"}},{\"annotations\":[],\"id\":\"G2M\",\"name\":\"Expenditure\",\"names\":{\"en\":\"Expenditure\"},\"description\":\"Expenditure\",\"descriptions\":{\"en\":\"Expenditure\"}}],\"codelistExtensions\":[]}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF8435\",\"test\":false,\"prepared\":\"2025-11-09T20:52:37.523501266Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"unknown\"}}}",
+  "encoding": null
+}

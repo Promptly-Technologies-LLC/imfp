@@ -1,0 +1,23 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/dataflow/all/not_a_real_database/+",
+  "status_code": 204,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 15:33:45 GMT",
+    "Content-Length": "0",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "3e9f5f2785231ff1528244e1fdaa8941",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "59",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "",
+  "encoding": null
+}

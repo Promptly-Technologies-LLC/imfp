@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/conceptscheme/IMF.STA/CS_FD/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 20:55:29 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "7445c6839cbcef7dc26ec6bc5428aec5",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "21",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"data\":{\"conceptSchemes\":[{\"annotations\":[{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-03-29T18:39:25.225360Z\"}],\"id\":\"CS_FD\",\"name\":\"Fiscal Decentralization (FD)\",\"names\":{\"en\":\"Fiscal Decentralization (FD)\"},\"descriptions\":{},\"version\":\"4.0.0\",\"agencyID\":\"IMF.STA\",\"concepts\":[{\"annotations\":[],\"id\":\"INDICATOR\",\"name\":\"Indicator\",\"names\":{\"en\":\"Indicator\"},\"description\":\"A variable that sheds light on some phenomenon or situation.\",\"descriptions\":{\"en\":\"A variable that sheds light on some phenomenon or situation.\"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.STA:CL_FD_INDICATOR(2.0+.0)\"}}],\"isPartial\":false}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF1053\",\"test\":false,\"prepared\":\"2025-11-09T20:55:29.186271358Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"unknown\"}}}",
+  "encoding": null
+}

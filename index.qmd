@@ -11,6 +11,8 @@ title: "imfp"
 
 `imfp`, created and maintained by [Promptly Technologies](https://promptlytechnologies.com), is a Python package for downloading data from the [International Monetary Fund's](http://data.imf.org/) [RESTful JSON API](http://datahelp.imf.org/knowledgebase/articles/667681-using-json-restful-web-service).
 
+**NOTE: The IMF recently discontinued their SDMX 2.0 API, which `imfp` used, and migrated to 3.0. Version 1.3.0 of `imfp` represents my best effort to make a semi-backward compatible version of the library. Function names remain the same, and I have added a few helpers to map old parameters to the new ones. But the honest truth is that the structure of the API and the data returned by it has changed very significantly, and your old code is very unlikely to work without some modifications. I apologize for the inconvenience. `imfp` version 2.0.0 will be released soon, and will rewrite the library more comprehensively to follow the patterns of the new API.**
+
 ## Installation
 
 To install the stable version of imfp from PyPi, use pip.
@@ -66,30 +68,29 @@ To access the data frame containing valid values for each parameter, subset the 
 
 ``` {python}
 # View the data frame of valid input codes for the frequency parameter
-params['freq']
+params['frequency']
 ```
 
 ### Supplying Parameter Arguments to `imf_dataset`
 
 To make a request to fetch data from the IMF API, just call `imfp.imf_dataset` with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.
 
-For instance, on exploring the `freq` parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imfp.imf_dataset` with `freq = ["A"]`.
+For instance, on exploring the `frequency` parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imfp.imf_dataset` with `frequency = ["A"]`.
 
-Similarly, we might search the dataframes of valid input codes for the `commodity` and `unit_measure` parameters to find the input codes for coal and index:
+Similarly, we might search the dataframes of valid input codes for the `indicator` and `data_transformation` parameters to find the input codes for coal and index:
 
 ``` {python}
-# Find the 'commodity' input code for coal
-params['commodity'].loc[
-    params['commodity']['description'].str.contains("Coal")
+# Find the 'indicator' input code for coal
+params['indicator'].loc[
+    params['indicator']['description'].str.contains("Coal")
 ]
 ```
 
 ``` {python}
-# Find the 'unit_measure' input code for index
-params['unit_measure'].loc[
-    params['unit_measure']['description'].str.contains("Index")
+# Find the 'data_transformation' input code for index
+params['data_transformation'].loc[
+    params['data_transformation']['description'].str.contains("Index")
 ]
-
 ```
 
 Finally, we can use the information we've gathered to make the request to fetch the data:
@@ -97,15 +98,12 @@ Finally, we can use the information we've gathered to make the request to fetch 
 ``` {python}
 # Request data from the API
 df = imfp.imf_dataset(database_id = "PCPS",
-         freq = ["A"], commodity = ["PCOAL", "PCOALAU", "PCOALSA"],
-         unit_measure = ["IX"],
-         start_year = 2000, end_year = 2015)
+         frequency = ["A"], indicator = ["PCOAL"],
+         data_transformation = ["INDEX"])
 
 # Display the first few entries in the retrieved data frame
 df.head()
 ```
-
-The returned data frame has a `time_format` column that contains ISO 8601 duration codes. In this case, “P1Y” means “periods of 1 year.” The `unit_mult` column represents the power of 10 to which the value column should be raised. For instance, if value is in millions, then the unit multiplier will be 6 (meaning 10^6). If in billions, then the unit multiplier will be 9 (meaning 10^9). For more information on interpreting the returned data frame, see [Understanding the Data Frame](docs/usage.qmd#understanding-the-data-frame).
 
 ## Working with the Returned Data Frame
 
@@ -122,7 +120,7 @@ Then, using `seaborn` with `hue`, we can plot different indicators in different 
 import seaborn as sns
 
 # Plot prices of different commodities in different colors with seaborn
-sns.lineplot(data=df, x='time_period', y='obs_value', hue='commodity');
+sns.lineplot(data=df, x='time_period', y='obs_value', hue='indicator');
 ```
 
 ## Contributing
@@ -141,72 +139,3 @@ We welcome contributions to improve `imfp`! Here's how you can help:
 Note that if you want to change and preview the documentation, you will need to install the [Quarto CLI tool](https://quarto.org/docs/download/).
 
 Version incrementing, package building, testing, changelog generation, documentation rendering, publishing to PyPI, and Github release creation is handled automatically by the GitHub Actions workflow based on the commit messages.
-
-## Working with LLMs
-
-In line with the [llms.txt standard](https://llmstxt.org/), we have exposed the full Markdown-formatted project documentation as a [single text file](docs/static/llms.txt) to make it more usable by LLM agents.
-
-``` {python}
-#| echo: false
-#| include: false
-import re
-from pathlib import Path
-
-def extract_file_paths(quarto_yml_path):
-    """
-    Extract href paths from _quarto.yml file.
-    Returns a list of .qmd file paths.
-    """
-    with open(quarto_yml_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    # Find all href entries that point to .qmd files
-    pattern = r'href:\s*(.*?\.qmd)'
-    matches = re.findall(pattern, content, re.MULTILINE)
-    return matches
-
-
-def process_qmd_content(file_path):
-    """
-    Process a .qmd file by converting YAML frontmatter to markdown heading.
-    Returns the processed content as a string.
-    """
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-
-    # Replace YAML frontmatter with markdown heading
-    pattern = r'^---\s*\ntitle:\s*"([^"]+)"\s*\n---'
-    processed_content = re.sub(pattern, r'# \1', content)
-    return processed_content
-
-
-# Get the current working directory
-base_dir = Path.cwd()
-quarto_yml_path = base_dir / '_quarto.yml'
-
-print(quarto_yml_path)
-
-# Extract file paths from _quarto.yml
-qmd_files = extract_file_paths(quarto_yml_path)
-print(qmd_files)
-
-# Process each .qmd file and collect contents
-processed_contents = []
-for qmd_file in qmd_files:
-    file_path = base_dir / qmd_file
-    if file_path.exists():
-        processed_content = process_qmd_content(file_path)
-        processed_contents.append(processed_content)
-
-# Concatenate all contents with double newline separator
-final_content = '\n\n'.join(processed_contents)
-
-# Ensure the output directory exists
-output_dir = base_dir / 'docs' / 'static'
-output_dir.mkdir(parents=True, exist_ok=True)
-
-# Write the concatenated content to the output file
-output_path = output_dir / 'llms.txt'
-with open(output_path, 'w', encoding='utf-8') as f:
-    f.write(final_content)
-```
