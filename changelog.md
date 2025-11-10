@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v1.3.0 (2025-11-10)
+
+### Chores
+
+- Move dev deps to correct group
+  ([`8883a0b`](https://github.com/Promptly-Technologies-LLC/imfp/commit/8883a0b6a45bf0b6addfdb2f04cc38bab124bfff))
+
+- Update dependencies
+  ([`54a8fc4`](https://github.com/Promptly-Technologies-LLC/imfp/commit/54a8fc4699de73c65e5d159de78f0e7fc6da9965))
+
+### Documentation
+
+- Documentation and testing for 3.0 API
+  ([`feb7c91`](https://github.com/Promptly-Technologies-LLC/imfp/commit/feb7c91a026cf7dd68e7b79da691d2d3a656a299))
+
+### Features
+
+- Migrate to new API
+  ([`9583248`](https://github.com/Promptly-Technologies-LLC/imfp/commit/9583248ddb856e93f9c4afd64b8fd7a9c15d47fe))
+
+
 ## v1.2.1 (2025-06-30)
 
 ### Bug Fixes
