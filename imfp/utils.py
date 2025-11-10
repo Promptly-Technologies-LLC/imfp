@@ -148,7 +148,9 @@ def _download_parse(
     if app_name:
         app_name = app_name[:255]
     else:
-        app_name = "imfp Python package (https://github.com/Promptly-Technologies-LLC/imfp)"
+        app_name = (
+            "imfp Python package (https://github.com/Promptly-Technologies-LLC/imfp)"
+        )
 
     headers = {
         "Accept": "application/json",
@@ -234,7 +236,7 @@ def _download_parse(
             content_type = ""
             if response is not None:
                 content_type = response.headers.get("content-type", "")
-            
+
             # Try to parse JSON first
             try:
                 json_parsed = loads(content)
@@ -306,7 +308,7 @@ def _load_cached_response(URL):
 
 def _extract_first(value):
     """Extract first element from list, or return value if not a list.
-    
+
     This matches R's [[1]] behavior for extracting scalar values from lists.
     """
     if isinstance(value, list) and len(value) > 0:
@@ -316,9 +318,9 @@ def _extract_first(value):
 
 def _parse_datastructure_urn(urn: str) -> dict[str, Optional[str]]:
     """Parse a datastructure URN into its components.
-    
+
     Matches the R implementation exactly.
-    
+
     Example: "urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=IMF:DSD(1.0)"
     Returns: {"agency": "IMF", "id": "DSD", "version": "1.0"}
     """
@@ -344,7 +346,7 @@ def _parse_datastructure_urn(urn: str) -> dict[str, Optional[str]]:
 
 def _parse_concept_urn(urn: str) -> dict[str, Optional[str]]:
     """Parse a concept URN into its components.
-    
+
     Example: "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF:CS_CONCEPT(1.0).CONCEPT_NAME"
     Returns: {"agency": "IMF", "scheme": "CS_CONCEPT", "version": "1.0", "concept": "CONCEPT_NAME"}
     """
@@ -372,9 +374,9 @@ def _parse_concept_urn(urn: str) -> dict[str, Optional[str]]:
 
 def _parse_codelist_urn(urn: str) -> dict[str, Optional[str]]:
     """Parse a codelist URN into its components.
-    
+
     Matches the R implementation exactly.
-    
+
     Example: "urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF:CL_FREQ(1.0)"
     Returns: {"agency": "IMF", "id": "CL_FREQ", "version": "1.0"}
     """
@@ -401,18 +403,18 @@ def _parse_codelist_urn(urn: str) -> dict[str, Optional[str]]:
 def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict:
     """
     (Internal) Retrieve raw datastructure components for a dataflow.
-    
+
     This function:
     1. Gets the dataflow to find its structure URN
     2. Parses the structure URN to get agency and ID
     3. Fetches the DSD (datastructure definition)
     4. Returns the dataStructureComponents
-    
+
     Args:
         dataflow_id (str): The ID of the dataflow (database_id).
         times (int, optional): The number of times to retry the request.
             Defaults to 3.
-    
+
     Returns:
         dict: The dataStructureComponents dictionary containing dimensionList,
             measureList, etc.
@@ -422,7 +424,7 @@ def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict:
     raw_dataflows = raw_dl.get("data", {}).get("dataflows")
     if raw_dataflows is None:
         raise ValueError("No dataflows found in API response.")
-    
+
     # Find the matching dataflow
     flow_row = None
     for flow in raw_dataflows:
@@ -430,35 +432,35 @@ def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict:
         if flow_id == dataflow_id:
             flow_row = flow
             break
-    
+
     if flow_row is None:
         raise ValueError(f"Dataflow not found or not unique: {dataflow_id}.")
-    
+
     # Extract structure URN
     structure_urn = _extract_first(flow_row.get("structure"))
     if not structure_urn:
         raise ValueError(f"Invalid structure URN for dataflow {dataflow_id}.")
-    
+
     # Step 2: Parse structure URN
     dsd_ref = _parse_datastructure_urn(structure_urn)
     if not dsd_ref.get("agency") or not dsd_ref.get("id"):
         raise ValueError(
             f"Invalid structure URN for dataflow {dataflow_id}: {structure_urn}"
         )
-    
+
     # Step 3: Fetch DSD
     dsd_path = f"structure/datastructure/{dsd_ref['agency']}/{dsd_ref['id']}/+"
     dsd_body = _download_parse(dsd_path, times=times)
-    
+
     dsds = dsd_body.get("data", {}).get("dataStructures")
     if not dsds or len(dsds) < 1:
         raise ValueError(f"No dataStructures found in DSD response for {dataflow_id}.")
-    
+
     # Step 4: Extract components
     components = dsds[0].get("dataStructureComponents")
     if components is None:
         raise ValueError(f"No dataStructureComponents found in DSD for {dataflow_id}.")
-    
+
     return components
 
 
@@ -480,29 +482,29 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
     """
     # Get DSD components
     components = _get_datastructure_components(database_id, times)
-    
+
     # Extract dimensions from dimensionList
     dimension_list = components.get("dimensionList", {})
     dimensions = dimension_list.get("dimensions", [])
     time_dimensions = dimension_list.get("timeDimensions", [])
-    
+
     # Extract measures from measureList (only when inputs_only=False)
     measures = []
     if not inputs_only:
         measure_list = components.get("measureList", {})
         measures = measure_list.get("measures", [])
-    
-    # Combine dimensions (always), time dimensions (only if inputs_only=False), 
+
+    # Combine dimensions (always), time dimensions (only if inputs_only=False),
     # and measures (only if inputs_only=False)
     dims_to_process = []
     time_dim_ids = set()
     measure_ids = set()
-    
+
     # Regular dimensions
     for d in dimensions:
         if d is not None:
             dims_to_process.append(("dimension", d))
-    
+
     # Time dimensions (only if inputs_only=False)
     if not inputs_only:
         for d in time_dimensions:
@@ -511,7 +513,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                 if dim_id:
                     time_dim_ids.add(dim_id)
                 dims_to_process.append(("time_dimension", d))
-        
+
         # Measures (only if inputs_only=False)
         for d in measures:
             if d is not None:
@@ -519,10 +521,10 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                 if dim_id:
                     measure_ids.add(dim_id)
                 dims_to_process.append(("measure", d))
-    
+
     if not dims_to_process:
         raise ValueError(f"No dimensions found for database {database_id}.")
-    
+
     # Build dimension map: dimension_id -> conceptIdentity, local enumeration, and type
     dim_map = {}
     for source_type, dim in dims_to_process:
@@ -536,7 +538,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                 local_enum = _extract_first(local_rep.get("enumeration"))
         except (AttributeError, KeyError, TypeError):
             pass
-        
+
         dim_map[dim_id] = {
             "concept_identity": concept_identity,
             "local_enum": local_enum,
@@ -544,7 +546,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
             "is_time_dimension": dim_id in time_dim_ids,
             "is_measure": dim_id in measure_ids,
         }
-    
+
     # For each dimension, resolve its codelist and get codes
     params = []
     codes = []
@@ -557,7 +559,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
         dim_type = dim_info["type"]
         is_time_dimension = dim_info["is_time_dimension"]
         is_measure = dim_info["is_measure"]
-        
+
         # Try to resolve codelist for this dimension/measure
         codelist_id = None
         codelist_agency = None
@@ -572,7 +574,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                     f"structure/conceptscheme/{cref['agency']}/{cref['scheme']}/+",
                     f"structure/conceptscheme/all/{cref['scheme']}/+",
                 ]
-                
+
                 cs_body = None
                 for cs_path in cs_paths:
                     try:
@@ -580,7 +582,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                         break
                     except ValueError:
                         continue
-                
+
                 if cs_body is not None:
                     # Find the concept in the concept scheme
                     cs_list = cs_body.get("data", {}).get("conceptSchemes", [])
@@ -596,14 +598,16 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                                 break
                         if concept:
                             break
-                    
+
                     # Get enumeration from concept or fall back to local enum
                     enum_from_concept = None
                     if concept:
                         core_rep = concept.get("coreRepresentation", {})
                         if core_rep:
-                            enum_from_concept = _extract_first(core_rep.get("enumeration"))
-                    
+                            enum_from_concept = _extract_first(
+                                core_rep.get("enumeration")
+                            )
+
                     enum_urn = enum_from_concept if enum_from_concept else local_enum
                 else:
                     # If concept scheme not found, try local enum directly
@@ -611,7 +615,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
             else:
                 # If concept URN parsing fails, try to use local enum directly
                 enum_urn = local_enum
-            
+
             # Try to parse and fetch codelist if we have an enum URN
             if enum_urn:
                 cl = _parse_codelist_urn(enum_urn)
@@ -622,7 +626,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                         f"structure/codelist/{cl['agency']}/{cl['id']}/+",
                         f"structure/codelist/all/{cl['id']}/+",
                     ]
-                    
+
                     cl_body = None
                     for cl_path in cl_paths:
                         try:
@@ -630,7 +634,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                             break
                         except ValueError:
                             continue
-                    
+
                     if cl_body is not None:
                         clists = cl_body.get("data", {}).get("codelists", [])
                         if clists and len(clists) > 0:
@@ -645,23 +649,27 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
                                 if not codelist_name:
                                     # Fallback to codelist ID if no name available
                                     codelist_name = codelist_id
-        
+
         # Add parameter (always add, even if no codelist found)
         # For inputs_only=True, skip dimensions without codelists
         # For inputs_only=False, include all dimensions/measures even without codelists
         if inputs_only and codelist_id is None:
             continue
-        
+
         # For time dimensions and measures without codelists, use their ID as the code
         # but leave description as None (this matches the expected behavior where
         # only descriptions are NA, not codes)
         if codelist_id is None and not inputs_only:
             # Check if this is a time dimension or measure
-            if is_time_dimension or is_measure or dim_type in ("TimeDimension", "Measure"):
+            if (
+                is_time_dimension
+                or is_measure
+                or dim_type in ("TimeDimension", "Measure")
+            ):
                 codelist_id = dim_id.lower()
                 # Ensure description is None (not a string)
                 codelist_name = None
-        
+
         params.append(dim_id.lower())
         codes.append(codelist_id)
         agencies.append(codelist_agency)
@@ -669,19 +677,21 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
 
     # Build DataFrames
     param_code_df = DataFrame({"parameter": params, "code": codes, "agency": agencies})
-    
+
     # Create codelist description DataFrame
     # Filter out None codes before creating codelist_df to avoid duplicates with None
-    codelist_df = DataFrame({
-        "code": [c for c in codes if c is not None],
-        "description": [d for c, d in zip(codes, descriptions) if c is not None],
-    })
+    codelist_df = DataFrame(
+        {
+            "code": [c for c in codes if c is not None],
+            "description": [d for c, d in zip(codes, descriptions) if c is not None],
+        }
+    )
     # Remove duplicates while preserving order
     codelist_df = codelist_df.drop_duplicates(subset=["code"], keep="first")
-    
+
     # Use left join to keep all parameters and fill in descriptions where available
     result_df = param_code_df.merge(codelist_df, on="code", how="left")
-    
+
     return result_df
 
 

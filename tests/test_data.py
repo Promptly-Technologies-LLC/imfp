@@ -103,7 +103,9 @@ def test_imf_parameters(set_options, use_saved_responses):
 
     params = imf_parameters("BOP")
     fk = _freq_key(params)
-    assert fk is not None, "Expected a frequency-like parameter in imf_parameters output"
+    assert (
+        fk is not None
+    ), "Expected a frequency-like parameter in imf_parameters output"
     available = set(params[fk]["input_code"])
     # Under SDMX 3.0, frequency sets may expand. Require at least Annual and Quarterly present.
     assert {"A", "Q"}.issubset(available)
@@ -118,7 +120,9 @@ def test_imf_dataset_error_handling(set_options, use_saved_responses):
 
     params = imf_parameters("FD")
     fk = _freq_key(params)
-    assert fk is not None, "Expected a frequency-like parameter in imf_parameters output"
+    assert (
+        fk is not None
+    ), "Expected a frequency-like parameter in imf_parameters output"
     # Keep frequency minimal, wildcard everything else to avoid over-restriction
     params[fk] = params[fk].head(1)
     for k in list(params.keys()):
@@ -194,7 +198,15 @@ def test_imf_dataset_params_list_request(set_options, use_saved_responses):
     )
     assert len(df) > 0
     assert "time_period" in df.columns
-    for col in ["country", "sector", "gfs_grp", "indicator", "type_of_transformation", "frequency", "obs_value"]:
+    for col in [
+        "country",
+        "sector",
+        "gfs_grp",
+        "indicator",
+        "type_of_transformation",
+        "frequency",
+        "obs_value",
+    ]:
         assert col in df.columns
 
 
@@ -285,7 +297,9 @@ def test_imf_dataset_include_metadata(set_options, use_saved_responses):
     assert all([not pd.isna(value) for value in output[0].values()])
 
 
-def test_imf_parameters_returns_iso3_codes_for_gfs_soo(set_options, use_saved_responses):
+def test_imf_parameters_returns_iso3_codes_for_gfs_soo(
+    set_options, use_saved_responses
+):
     """Test that imf_parameters returns ISO3 country codes for GFS_SOO database.
 
     This test ensures that we're getting the correct codelist from the IMF agency,
@@ -308,19 +322,39 @@ def test_imf_parameters_returns_iso3_codes_for_gfs_soo(set_options, use_saved_re
     country_codes = list(country_df["input_code"])
 
     # Should have a reasonable number of countries (IMF has data for many countries)
-    assert len(country_codes) > 100, f"Expected more than 100 countries, got {len(country_codes)}"
+    assert (
+        len(country_codes) > 100
+    ), f"Expected more than 100 countries, got {len(country_codes)}"
 
     # Check for known ISO3 codes that should be present
-    expected_iso3_codes = ["AFG", "ALB", "DZA", "ASM", "AND", "AGO", "AIA", "ATG", "ARG", "ARM"]
+    expected_iso3_codes = [
+        "AFG",
+        "ALB",
+        "DZA",
+        "ASM",
+        "AND",
+        "AGO",
+        "AIA",
+        "ATG",
+        "ARG",
+        "ARM",
+    ]
     for code in expected_iso3_codes:
-        assert code in country_codes, f"Expected ISO3 code '{code}' not found in country codes"
+        assert (
+            code in country_codes
+        ), f"Expected ISO3 code '{code}' not found in country codes"
 
     # Check that we're NOT getting numeric codes (which would be wrong)
     numeric_codes = [code for code in country_codes if code.isdigit()]
-    assert len(numeric_codes) == 0, f"Found unexpected numeric codes: {numeric_codes[:10]}"
+    assert (
+        len(numeric_codes) == 0
+    ), f"Found unexpected numeric codes: {numeric_codes[:10]}"
 
     # Verify that most codes are 3-letter codes (ISO3 standard)
     # Note: IMF includes some non-standard codes (e.g., regional aggregates), so we use 70% threshold
-    three_letter_codes = [code for code in country_codes if len(code) == 3 and code.isalpha()]
-    assert len(three_letter_codes) > len(country_codes) * 0.7, \
-        f"Expected most codes to be 3-letter ISO codes, but only {len(three_letter_codes)}/{len(country_codes)} are"
+    three_letter_codes = [
+        code for code in country_codes if len(code) == 3 and code.isalpha()
+    ]
+    assert (
+        len(three_letter_codes) > len(country_codes) * 0.7
+    ), f"Expected most codes to be 3-letter ISO codes, but only {len(three_letter_codes)}/{len(country_codes)} are"

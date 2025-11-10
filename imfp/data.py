@@ -19,33 +19,33 @@ logger = logging.getLogger(__name__)
 def _parse_imf_sdmx_json(message: dict) -> DataFrame:
     """
     Parse SDMX JSON message from new API into a DataFrame.
-    
+
     Matches the R implementation's parse_imf_sdmx_json function.
-    
+
     Args:
         message: The JSON response from the API
-        
+
     Returns:
         DataFrame with one row per observation
     """
     # Defensive checks
     if not message or not message.get("data"):
         return DataFrame()
-    
+
     data_sets = message.get("data", {}).get("dataSets")
     structures = message.get("data", {}).get("structures")
-    
+
     if not data_sets or len(data_sets) < 1 or not structures or len(structures) < 1:
         return DataFrame()
-    
+
     ds = data_sets[0]
     st = structures[0]
-    
+
     # Dimensions metadata
     series_dims = st.get("dimensions", {}).get("series", [])
     obs_dims = st.get("dimensions", {}).get("observation", [])
     obs_dim = obs_dims[0] if obs_dims and len(obs_dims) >= 1 else None
-    
+
     # Helper to map index -> code/id
     def index_to_code(dim_def, idx):
         if not dim_def or not dim_def.get("values") or len(dim_def["values"]) < 1:
@@ -59,7 +59,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
             return v.get("id") or v.get("value")
         except (ValueError, IndexError, TypeError):
             return None
-    
+
     def obs_index_to_period(idx):
         if not obs_dim or not obs_dim.get("values") or len(obs_dim["values"]) < 1:
             return None
@@ -72,20 +72,20 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
             return v.get("value") or v.get("id")
         except (ValueError, IndexError, TypeError):
             return None
-    
+
     # No series present -> empty DataFrame
     if not ds.get("series") or len(ds["series"]) == 0:
         return DataFrame()
-    
+
     # Prepare column names for series dimensions
     series_dim_ids = []
     if series_dims and len(series_dims) > 0:
         series_dim_ids = [_extract_first(dim.get("id")) for dim in series_dims]
-    
+
     # Build rows
     rows = []
     series_keys = list(ds["series"].keys())
-    
+
     for sk in series_keys:
         s_entry = ds["series"][sk]
         # Decode series key indices to codes
@@ -93,24 +93,24 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
         # Ensure length matches; pad if necessary
         if len(sk_parts) < len(series_dim_ids):
             sk_parts.extend([None] * (len(series_dim_ids) - len(sk_parts)))
-        
+
         series_codes = []
         if len(series_dim_ids) > 0:
             for dim_def, idx in zip(series_dims, sk_parts):
                 code = index_to_code(dim_def, idx) if idx is not None else None
                 series_codes.append(code)
-        
+
         # Process observations
         obs_keys = list(s_entry.get("observations", {}).keys())
         if len(obs_keys) == 0:
             continue
-        
+
         for ok in obs_keys:
             obs = s_entry["observations"][ok]
             # Observation value is the first element; handle None gracefully
             obs_val_raw = obs[0] if len(obs) >= 1 else None
             obs_val_num = None
-            
+
             if obs_val_raw is not None:
                 try:
                     obs_val_num = float(obs_val_raw)
@@ -123,9 +123,9 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
                         "N/A",
                     ):
                         obs_val_num = None
-            
+
             time_period = obs_index_to_period(ok)
-            
+
             # Build row
             row = {}
             for dim_id, code in zip(series_dim_ids, series_codes):
@@ -133,10 +133,10 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
             row["TIME_PERIOD"] = time_period
             row["OBS_VALUE"] = obs_val_num
             rows.append(row)
-    
+
     if len(rows) == 0:
         return DataFrame()
-    
+
     # Convert to DataFrame
     df = DataFrame(rows)
     return df
@@ -268,33 +268,33 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
                 break
             except ValueError:
                 continue
-        
+
         if cl_body is None:
             raise ValueError(f"Codelist {codelist_id} not found.")
-        
+
         clists = cl_body.get("data", {}).get("codelists", [])
         if not clists or len(clists) < 1:
             raise ValueError(f"Empty codelists payload for {codelist_id}.")
-        
+
         codes_list = clists[0].get("codes", [])
         if not codes_list:
             raise ValueError(f"No codes found in codelist {codelist_id}.")
-        
+
         # Extract codes and descriptions
         input_codes = []
         code_descriptions = []
-        
+
         for code_obj in codes_list:
             code_id = _extract_first(code_obj.get("id"))
             code_name = _extract_first(code_obj.get("name"))
             code_desc = _extract_first(code_obj.get("description"))
-            
+
             if code_id:
                 input_codes.append(code_id)
                 # Use name if available, otherwise description, otherwise code_id
                 desc = code_name if code_name else (code_desc if code_desc else code_id)
                 code_descriptions.append(desc)
-        
+
         return DataFrame(
             {
                 "input_code": input_codes,
@@ -439,11 +439,11 @@ def imf_dataset(
         return_raw == True, returns the raw JSON fetched from the API endpoint.
     """
     import re
-    
+
     # Normalize start_year and end_year to strings
     start_period = None
     end_period = None
-    
+
     if start_year is not None:
         try:
             start_year = str(start_year)
@@ -458,7 +458,7 @@ def imf_dataset(
             raise ValueError(
                 "start_year must be a four-digit number, either integer or string."
             )
-    
+
     if end_year is not None:
         try:
             end_year = str(end_year)
@@ -475,9 +475,11 @@ def imf_dataset(
 
     # Get available parameters for validation
     data_dimensions = imf_parameters(database_id, times)
-    
+
     # Helper to coerce legacy input parameter names to dataset-specific keys
-    def _coerce_input_keys_for_dataset(input_dict: dict, available_keys: set[str]) -> dict:
+    def _coerce_input_keys_for_dataset(
+        input_dict: dict, available_keys: set[str]
+    ) -> dict:
         def map_key(k: str) -> str:
             kl = k.lower()
             if kl in available_keys:
@@ -487,29 +489,37 @@ def imf_dataset(
                 for cand in ("frequency", "freq"):
                     if cand in available_keys:
                         if cand != kl:
-                            warn(f"Coercing parameter '{k}' to '{cand}' for this dataset")
+                            warn(
+                                f"Coercing parameter '{k}' to '{cand}' for this dataset"
+                            )
                         return cand
             # ref_area aliases
             if kl in ("ref_area", "refarea", "ref-area", "country", "geo"):
                 for cand in ("ref_area", "refarea", "ref-area", "country", "geo"):
                     if cand in available_keys:
                         if cand != kl:
-                            warn(f"Coercing parameter '{k}' to '{cand}' for this dataset")
+                            warn(
+                                f"Coercing parameter '{k}' to '{cand}' for this dataset"
+                            )
                         return cand
             return kl
-        
+
         coerced: dict = {}
         for k, v in input_dict.items():
             new_k = map_key(k)
             if new_k in coerced and new_k != k:
-                warn(f"Duplicate values for '{new_k}' after coercion; keeping the first")
+                warn(
+                    f"Duplicate values for '{new_k}' after coercion; keeping the first"
+                )
                 continue
             coerced[new_k] = v
         return coerced
 
     if parameters is not None:
         # Coerce legacy keys in provided parameters dict
-        parameters = _coerce_input_keys_for_dataset(parameters, set(data_dimensions.keys()))
+        parameters = _coerce_input_keys_for_dataset(
+            parameters, set(data_dimensions.keys())
+        )
         if kwargs:
             warn(
                 "Parameters list argument cannot be combined with character "
@@ -604,12 +614,12 @@ def imf_dataset(
         codes = data_dimensions[key]["input_code"].tolist()
         if codes:
             norm_dims[key.upper()] = codes
-    
+
     # Fetch DSD components to get dimension order
     components = _get_datastructure_components(database_id, times)
     dims = components.get("dimensionList", {}).get("dimensions", [])
     time_dims = components.get("dimensionList", {}).get("timeDimensions", [])
-    
+
     # Build list of all dimensions with position
     all_dim_rows = []
     for dim in dims:
@@ -618,12 +628,14 @@ def imf_dataset(
             position = dim.get("position")
             dim_type = _extract_first(dim.get("type"))
             if dim_id and position is not None:
-                all_dim_rows.append({
-                    "id": dim_id.upper(),
-                    "position": int(position),
-                    "type": dim_type,
-                })
-    
+                all_dim_rows.append(
+                    {
+                        "id": dim_id.upper(),
+                        "position": int(position),
+                        "type": dim_type,
+                    }
+                )
+
     if time_dims:
         for dim in time_dims:
             if dim:
@@ -631,16 +643,18 @@ def imf_dataset(
                 position = dim.get("position")
                 dim_type = _extract_first(dim.get("type"))
                 if dim_id and position is not None:
-                    all_dim_rows.append({
-                        "id": dim_id.upper(),
-                        "position": int(position),
-                        "type": dim_type,
-                    })
-    
+                    all_dim_rows.append(
+                        {
+                            "id": dim_id.upper(),
+                            "position": int(position),
+                            "type": dim_type,
+                        }
+                    )
+
     # Series key uses non-time dimensions (TIME_PERIOD varies at observation)
     key_rows = [row for row in all_dim_rows if row["type"] != "TimeDimension"]
     key_rows.sort(key=lambda x: x["position"])
-    
+
     # Validate requested dimension names exist
     requested_dims = set(norm_dims.keys())
     available_dims = {row["id"] for row in key_rows}
@@ -650,7 +664,7 @@ def imf_dataset(
             f"Unknown dimension(s): {', '.join(sorted(unknown))}. "
             f"Available dimensions: {', '.join(sorted(available_dims))}"
         )
-    
+
     # Build dot-separated key with plus-separated codes per position
     segments = []
     for row in key_rows:
@@ -660,23 +674,23 @@ def imf_dataset(
             segments.append("*")
         else:
             segments.append("+".join(vals))
-    
+
     key = ".".join(segments)
-    
+
     # Helper to transform time periods for API compatibility
     def transform_period_for_frequency(period, frequency):
         if not period:
             return period
-        
+
         # Check if already in SDMX format with frequency suffix
         if re.match(r"^\d{4}-(M|Q|A|W)\d+$", period):
             return period
-        
+
         # User-friendly month format: "2019-01" to "2019-12"
         if re.match(r"^\d{4}-\d{2}$", period):
             parts = period.split("-")
             return f"{parts[0]}-M{parts[1]}"
-        
+
         # Plain year (e.g., "2015") needs frequency-specific suffix
         if re.match(r"^\d{4}$", period):
             if frequency and len(frequency) == 1:
@@ -685,21 +699,21 @@ def imf_dataset(
             else:
                 suffix = "-A1"  # default when frequency is wildcarded
             return f"{period}{suffix}"
-        
+
         return period
-    
+
     # Extract frequency from user's dimension filter (if provided), dynamically resolving the dimension id
     freq_dim_candidates = ["FREQUENCY", "FREQ"]
     freq_dim_id = next((d for d in freq_dim_candidates if d in available_dims), None)
     user_frequency = norm_dims.get(freq_dim_id) if freq_dim_id else None
-    
+
     # Build query params
     query_params = {
         "dimensionAtObservation": "TIME_PERIOD",
         "attributes": "dsd",
         "measures": "all",
     }
-    
+
     # Apply time filters
     time_filters = []
     if start_period:
@@ -708,7 +722,7 @@ def imf_dataset(
     if end_period:
         transformed_end = transform_period_for_frequency(end_period, user_frequency)
         time_filters.append(f"le:{transformed_end}")
-    
+
     # Determine dataflow agency (owner)
     raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
     raw_dataflows = raw_dl.get("data", {}).get("dataflows", [])
@@ -718,14 +732,14 @@ def imf_dataset(
         if flow_id == database_id:
             flow_row = flow
             break
-    
+
     if flow_row is None:
         raise ValueError(f"Dataflow not found or not unique: {database_id}.")
-    
+
     provider_agency = _extract_first(flow_row.get("agencyID"))
     if not provider_agency:
         provider_agency = "all"
-    
+
     # Apply time filter only for IMF.STA via c[TIME_PERIOD]
     if time_filters:
         if provider_agency == "IMF.STA":
@@ -735,18 +749,18 @@ def imf_dataset(
                 f"Agency {provider_agency} does not support time filters; "
                 "time window will be ignored."
             )
-    
+
     # Build path and perform request
     data_path = f"data/dataflow/{provider_agency}/{database_id}/+/{key}"
-    
+
     if print_url:
         full_url = f"{IMF_API_BASE_URL.rstrip('/')}/{data_path}"
         if query_params:
             full_url += "?" + urlencode(query_params)
         print(full_url)
-    
+
     message = _download_parse(data_path, times=times, query_params=query_params)
-    
+
     if return_raw:
         if include_metadata:
             # For now, return empty metadata dict (could be enhanced later)
@@ -754,19 +768,19 @@ def imf_dataset(
             return metadata, message
         else:
             return message
-    
+
     # Parse SDMX JSON message into DataFrame
     result = _parse_imf_sdmx_json(message)
-    
+
     if result.empty:
         raise ValueError(
             "No data found for that combination of parameters. "
             "Try making your request less restrictive."
         )
-    
+
     # Convert column names to lowercase for backward compatibility
     result.columns = result.columns.str.lower()
-    
+
     if not include_metadata:
         return result
     else:
