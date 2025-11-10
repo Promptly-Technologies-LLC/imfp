@@ -47,7 +47,7 @@ You can modify retry behavior:
 ``` {python}
 #| eval: false
 # Retry 4 times rather than the default 3
-df = imfp.imf_dataset("IFS", "NGDP_D_SA_IX", times=4)
+df = imfp.imf_dataset("PPI", "WPI", times=4)
 ```
 
 ### Caching Strategy

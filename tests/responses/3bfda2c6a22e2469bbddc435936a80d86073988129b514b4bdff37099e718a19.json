@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/conceptscheme/IMF.AFR/CS_AFRREO/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Mon, 10 Nov 2025 02:24:36 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "404720b3614a89dec863df75412624e2",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "23",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"data\":{\"conceptSchemes\":[{\"annotations\":[{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-03-27T22:42:42.524489Z\"}],\"id\":\"CS_AFRREO\",\"name\":\"Sub-Saharan Africa Regional Economic Outlook (AFRREO)\",\"names\":{\"en\":\"Sub-Saharan Africa Regional Economic Outlook (AFRREO)\"},\"descriptions\":{},\"version\":\"12.0.0\",\"agencyID\":\"IMF.AFR\",\"concepts\":[{\"annotations\":[],\"id\":\"COUNTRY\",\"name\":\"Country\",\"names\":{\"en\":\"Country\"},\"description\":\"This codelist identifies the geographical, economic, or aggregate entities for which statistical data is collected and shared. It includes countries, territories (not necessarily recognized as states under international law), economic entities, and UN and IMF country groups used for statistical calculations.\",\"descriptions\":{\"en\":\"This codelist identifies the geographical, economic, or aggregate entities for which statistical data is collected and shared. It includes countries, territories (not necessarily recognized as states under international law), economic entities, and UN and IMF country groups used for statistical calculations.\"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.AFR:CL_AFRREO_COUNTRY(8.0+.0)\"}},{\"annotations\":[],\"id\":\"INDICATOR\",\"name\":\"Indicator\",\"names\":{\"en\":\"Indicator\"},\"description\":\"A variable that sheds light on some phenomenon or situation.\",\"descriptions\":{\"en\":\"A variable that sheds light on some phenomenon or situation.\"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.AFR:CL_AFRREO_INDICATOR(6.0+.0)\"}}],\"isPartial\":false}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF6887\",\"test\":false,\"prepared\":\"2025-11-10T02:24:36.922244607Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"unknown\"}}}",
+  "encoding": null
+}

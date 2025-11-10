@@ -141,6 +141,8 @@ Here is a brief introduction about the packages used:
 
 `statsmodels.api`, `adfuller`, `ARIMA`,`VAR`,`plot_acf`,`plot_pacf`,`mean_absolute_error`,`mean_squared_error`, and`grangercausalitytests` are specifically used for time series analysis. 
 
+`pycountry`: convert between ISO2 and ISO3 country codes (install with `pip install pycountry`)
+
 ```{python}
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -156,10 +158,11 @@ from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import mean_squared_error
 from statsmodels.tsa.stattools import grangercausalitytests
+import pycountry
 ```
 
 ## Data Fetching
-In this section, we extracted four datasets through API calls: Gender Inequality Index(GII), GDP Deflator, Nominal GDP, and Population.  
+In this section, we load four datasets: Gender Inequality Index (GII) from a CSV file, and fetch GDP Deflator, Nominal GDP, and Population through API calls to the IMF.  
 
 ```{python}
 from pathlib import Path
@@ -178,58 +181,118 @@ databases[
 # view_dataframe_in_browser(databases)
 ```
 
-Two databases were used: Gender Equality and International Financial Statistics (IFS).
+Three IMF databases were used: World Economic Outlook (WEO), and National Economic Accounts (QNEA, ANEA).
+
+::: {.callout-note}
+## Database Changes
+
+The IMF has updated their API structure. The former IFS (International Financial Statistics) database has been discontinued and replaced with more specialized databases. This demo now uses:
+
+- **QNEA**: Quarterly National Economic Accounts for GDP deflator
+- **ANEA**: Annual National Economic Accounts for nominal GDP
+- **WEO**: World Economic Outlook for population data
+
+Note: The Gender Inequality Index (GII) is a UN dataset that is no longer available through the IMF API. We'll load it from a pre-downloaded CSV file instead.
+:::
 
 ```{python}
-databases[databases['database_id'].isin(['GENDER_EQUALITY','IFS'])]
+databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
 ```
 
-Parameters are dictionary key names to make requests from the databases. "freq" stands for Frequency, such as Annual, Monthly, or Quarterly. "ref_area" stands for Geogrpahical Area, such as US (United States), JP (Japan), and GB (United Kindom). "indicator" refers to the code representing a specific dataset in the database. For example, if we display all the indicators for IFS database, the GDP deflator dataset has an input code of "NGDP_D_SA_IX" with a full name description of Gross Domestic Product, Deflator, Seasonally Adjusted, Index. 
+Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
 
 ```{python}
-datasets = ["GENDER_EQUALITY", "IFS"]
+datasets_list = ["QNEA", "ANEA", "WEO"]
 params = {}
 
-# Fetch valid parameters for two datasets
-for dataset in datasets:
+# Fetch valid parameters for datasets
+for dataset in datasets_list:
     params[dataset] = load_or_fetch_parameters(dataset)
 
     valid_keys = list(params[dataset].keys())
     print(f"Parameters for {dataset}: ", valid_keys)
 ```
 
-We paired the database with the specific dataset indicator to read and store the csv file. 
+We'll need to update the `load_or_fetch_dataset` function to handle the new database parameters:
 
 ```{python}
-datasets = {}
-dsets = [("GENDER_EQUALITY", "GE_GII"), 
-("IFS", "NGDP_D_SA_IX"), 
-("IFS", "NGDP_XDC"), 
-("IFS", "LP_PE_NUM")]
+def load_or_fetch_dataset_with_params(database_id, filename_suffix, **kwargs):
+    """Fetch dataset with flexible parameters for new IMF databases"""
+    file_name = f"{database_id}.{filename_suffix}.csv"
+    csv_path = os.path.join("data", file_name)
 
-for dset in dsets:
-    datasets[dset[0] + "." + dset[1]] = load_or_fetch_dataset(dset[0], dset[1])
+    # Try to load from CSV file
+    if os.path.exists(csv_path):
+        try:
+            return pd.read_csv(csv_path)
+        except Exception as e:
+            print(f"Error loading CSV file: {e}")
+
+    # If CSV doesn't exist or couldn't be loaded, fetch from API
+    print(f"Fetching dataset for {database_id}.{filename_suffix} from IMF API...")
+    dataset = imfp.imf_dataset(database_id=database_id, **kwargs)
+
+    # Save to CSV file for future use
+    os.makedirs("data", exist_ok=True)
+    dataset.to_csv(csv_path, index=False)
+    print(f"Dataset saved to {csv_path}")
+
+    return dataset
+
+def convert_iso2_to_iso3(iso2_code):
+    """Convert ISO2 country code to ISO3"""
+    try:
+        # Handle NaN or non-string values
+        if pd.isna(iso2_code) or not isinstance(iso2_code, str):
+            return None
+        country = pycountry.countries.get(alpha_2=iso2_code.upper())
+        return country.alpha_3 if country else None
+    except (KeyError, AttributeError, LookupError):
+        return None
 ```
 
+Now fetch the datasets using the new databases:
 
 ```{python}
-# "Gender Inequality Index"
-GII = "GENDER_EQUALITY.GE_GII"
+# Gender Inequality Index - Load from CSV (UN dataset, not available via IMF API)
+GII_data = pd.read_csv("data/GENDER_EQUALITY.GE_GII.csv")
 
-# "Gross Domestic Product, Deflator, Seasonally Adjusted, Index"
-GDP_deflator = "IFS.NGDP_D_SA_IX"
+# Convert ISO2 country codes (ref_area) to ISO3 (country) to match IMF datasets
+GII_data['country'] = GII_data['ref_area'].apply(convert_iso2_to_iso3)
 
-# "Gross Domestic Product, Nominal, Domestic Currency"
-GDP_nominal = "IFS.NGDP_XDC"
+# Drop rows where country code conversion failed
+GII_data = GII_data.dropna(subset=['country'])
 
-# "Population, Persons, Number of"
-GDP_population = "IFS.LP_PE_NUM"
+print(f"Loaded {len(GII_data)} GII observations")
+print(f"Sample country codes: {GII_data['country'].unique()[:5]}")
 
-# Assign the datasets to new variables so we don't change the originals
-GII_data = datasets[GII]
-GDP_deflator_data = datasets[GDP_deflator]
-GDP_nominal_data = datasets[GDP_nominal]
-GDP_population_data = datasets[GDP_population]
+# GDP Deflator (Quarterly, Index)
+GDP_deflator_data = load_or_fetch_dataset_with_params(
+    "QNEA",
+    "B1GQ_PD_IX",
+    indicator="B1GQ",
+    price_type="PD",  # Price deflator
+    type_of_transformation="IX",  # Index
+    frequency="Q"
+)
+
+# Nominal GDP (Annual, Domestic Currency)
+GDP_nominal_data = load_or_fetch_dataset_with_params(
+    "ANEA",
+    "B1GQ_V_XDC",
+    indicator="B1GQ",
+    price_type="V",  # Current prices
+    type_of_transformation="XDC",  # Domestic currency
+    frequency="A"
+)
+
+# Population (Annual)
+GDP_population_data = load_or_fetch_dataset_with_params(
+    "WEO",
+    "LP",
+    indicator=["LP"],
+    frequency="A"
+)
 ```
 
 ## Feature Engineering
@@ -239,7 +302,6 @@ Since the GDP deflator was reported on a quarterly basis, we converted it to a y
 # Keep only rows with a partial string match for "Q4" in the time_period column
 GDP_deflator_data = GDP_deflator_data[GDP_deflator_data
 ['time_period'].str.contains("Q4")]
-
 ```
 
 ```{python}
@@ -247,7 +309,14 @@ GDP_deflator_data = GDP_deflator_data[GDP_deflator_data
 GDP_deflator_data.loc[:, 'time_period'] = GDP_deflator_data['time_period'].str[0:4]
 ```
 
-We made all the variables numeric.
+We make all the variables numeric.
+
+::: {.callout-note}
+## Unit Multiplier Changes
+
+The new IMF API returns values in the correct units, so we no longer need to apply unit multipliers. The `unit_mult` column has been removed from most datasets.
+:::
+
 ```{python}
 datasets = [GII_data, GDP_deflator_data, GDP_nominal_data, GDP_population_data]
 
@@ -257,21 +326,19 @@ for i, dataset in enumerate(datasets):
     errors='coerce')
     datasets[i].loc[:, 'time_period'] = pd.to_numeric(datasets[i]['time_period'], 
     errors='coerce')
-    datasets[i].loc[:, 'unit_mult'] = pd.to_numeric(datasets[i]['unit_mult'], 
-    errors='coerce')
 ```
 
 ### GII Percent Change: Dependent Variable
 We kept percents as decimals to make them easy to work with for calculation. Different countries have different baseline level of economic growth and gender equality. We calculated the percent change to make them comparable. 
 
-Gender Inequality Index (GII) is a composite measure of gender inequality using three dimensions: reproducitve health, empowerment, and labor market. GII ranges from 0 to 1. While 0 indicates gender equality, 1 indicates gender inequality, possibly the worst outcome for one gender in all three dimensions. 
+Gender Inequality Index (GII) is a composite measure of gender inequality using three dimensions: reproductive health, empowerment, and labor market. GII ranges from 0 to 1. While 0 indicates gender equality, 1 indicates gender inequality, possibly the worst outcome for one gender in all three dimensions. 
 
 ```{python}
-# Calculate percent change for each ref_area
+# Calculate percent change for each country
 # First, create a copy and reset the index to avoid duplicate index issues
 GII_data_sorted = GII_data.sort_values(
-    ['ref_area', 'time_period']).reset_index(drop=True)
-GII_data['pct_change'] = GII_data_sorted.groupby('ref_area')['obs_value'].pct_change()
+    ['country', 'time_period']).reset_index(drop=True)
+GII_data['pct_change'] = GII_data_sorted.groupby('country')['obs_value'].pct_change()
 
 # Display the first few rows of the updated dataset
 GII_data.head()
@@ -280,10 +347,10 @@ GII_data.head()
 We subset the data frame to keep only the columns we want:
 ```{python}
 # Create a new dataframe with only the required columns
-GII_data = GII_data[['ref_area', 'time_period', 'obs_value', 'pct_change']].copy()
+GII_data = GII_data[['country', 'time_period', 'obs_value', 'pct_change']].copy()
 
 GII_data = GII_data.rename(columns = {
-    'ref_area': 'Country',
+    'country': 'Country',
     'time_period': 'Time',
     'obs_value': 'GII',
     'pct_change': 'GII_change'
@@ -307,7 +374,7 @@ GDP Deflator is a measure of price inflation and deflation with respect to a spe
 # GDP Deflator Dataset
 # Create a new dataframe with only the required columns
 GDP_deflator_data = GDP_deflator_data[
-    ['ref_area', 'time_period', 'unit_mult', 'obs_value']].copy()
+    ['country', 'time_period', 'obs_value']].copy()
 
 # Display the first few rows of the new dataset
 GDP_deflator_data.head()
@@ -319,7 +386,7 @@ Nominal GDP is the total value of all goods and services produced in a given tim
 # GDP Nominal Data
 # Create a new dataframe with only the required columns
 GDP_nominal_data = GDP_nominal_data[
-    ['ref_area', 'time_period', 'unit_mult','obs_value']].copy()
+    ['country', 'time_period', 'obs_value']].copy()
 
 # Display the first few rows of the new dataset
 GDP_nominal_data.head()
@@ -331,7 +398,7 @@ Population is the total number of people living in a country at a given time. Th
 # GDP Population Data 
 # Create a new dataframe with only the required columns
 GDP_population_data = GDP_population_data[
-    ['ref_area', 'time_period', 'unit_mult','obs_value']].copy()
+    ['country', 'time_period', 'obs_value']].copy()
 
 # Display the first few rows of the new dataset
 GDP_population_data.head()
@@ -340,32 +407,20 @@ GDP_population_data.head()
 
 ```{python}
 # Combine all the datasets above for further calculation
-merged_df = pd.merge(pd.merge(GDP_deflator_data,GDP_nominal_data, 
-on=['time_period', 'ref_area'], 
+merged_df = pd.merge(pd.merge(GDP_deflator_data, GDP_nominal_data, 
+on=['time_period', 'country'], 
 suffixes=('_index', '_nominal'), 
 how='inner'), 
 GDP_population_data, 
-on=['time_period', 'ref_area'], 
+on=['time_period', 'country'], 
 how='inner')
-```
 
-We want to adjust GDP data based on unit multiplier. Unit multiplier stands for the number of zeroes we need to add to the value column. For example, in 1950, the observed population data for country GA (Georgia) was 473.296. With a unit muliplier of 3, the adjusted population would be 473296.
-
-```{python}
-merged_df['adjusted_index'] = merged_df['obs_value_index'] * (10 ** (merged_df
-['unit_mult_index']))
-merged_df['adjusted_nominal'] = merged_df['obs_value_nominal'] * (10 ** (merged_df
-['unit_mult_nominal']))
-merged_df['adjusted_population'] = merged_df['obs_value'] * (10 ** (merged_df
-['unit_mult']))
-```
-
-
-```{python}
-# Merged dataset
-# Create a new dataframe with only the required columns
-merged_df = merged_df[['ref_area', 'time_period',
-'adjusted_nominal', 'adjusted_index', 'adjusted_population']].copy()
+# Rename columns for clarity
+merged_df = merged_df.rename(columns={
+    'obs_value_index': 'deflator',
+    'obs_value_nominal': 'nominal',
+    'obs_value': 'population'
+})
 
 # Display the first few rows of the dataset
 merged_df.head()
@@ -374,20 +429,20 @@ merged_df.head()
 We wanted to compute the Real GDP per capita.
 ```{python}
 # Step 1: Real GDP = (Nominal GDP / GDP Deflator Index)*100
-merged_df['Real_GDP_domestic'] = (merged_df['adjusted_nominal'] / merged_df[
-    'adjusted_index'])*100
+merged_df['Real_GDP_domestic'] = (merged_df['nominal'] / merged_df[
+    'deflator'])*100
 
 # Step 2: Real GDP per Capita = Real GDP / Population
 merged_df['Real_GDP_per_capita'] = merged_df['Real_GDP_domestic'] / merged_df[
-    'adjusted_population']
+    'population']
 
 # Rename columns
 merged_df = merged_df.rename(columns= {
-    "ref_area": "Country",
+    "country": "Country",
     "time_period": "Time",
-    "adjusted_nominal": "Nominal",
-    "adjusted_index": "Deflator",
-    "adjusted_population": "Population",
+    "nominal": "Nominal",
+    "deflator": "Deflator",
+    "population": "Population",
     "Real_GDP_domestic": "Real GDP",
     "Real_GDP_per_capita": "Real GDP per Capita"
 }
@@ -399,7 +454,7 @@ merged_df.head()
 We calculated the percentage change in Real GDP per capita and put it in a new column.
 
 ```{python}
-# Calculate percent change for each ref_area
+# Calculate percent change for each country
 merged_df[f'GDP_change'] = merged_df.sort_values(['Country', 'Time']).groupby(
     'Country')['Real GDP per Capita'].pct_change()
 

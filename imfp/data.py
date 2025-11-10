@@ -250,7 +250,6 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
             raise ValueError(e)
 
     def fetch_parameter_data(k, times):
-        param_name = codelist.loc[k, "parameter"]
         codelist_id = codelist.loc[k, "code"]
         codelist_agency = codelist.loc[k, "agency"]
 
@@ -292,8 +291,8 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
             
             if code_id:
                 input_codes.append(code_id)
-                # Use description if available, otherwise name, otherwise code_id
-                desc = code_desc if code_desc else (code_name if code_name else code_id)
+                # Use name if available, otherwise description, otherwise code_id
+                desc = code_name if code_name else (code_desc if code_desc else code_id)
                 code_descriptions.append(desc)
         
         return DataFrame(

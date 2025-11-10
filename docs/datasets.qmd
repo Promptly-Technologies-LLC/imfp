@@ -4,20 +4,20 @@ title: "Requesting Datasets"
 
 ## Making a Request
 
-To retrieve data from an IMF database, you'll need the database ID and any relevant [filter parameters](parameters.qmd). Here's a basic example using the Primary Commodity Price System (PCPS) database:
+To retrieve data from an IMF database, you'll need the database ID and any relevant [filter parameters](parameters.qmd). Here's a basic example using the Producer Price Index (PPI) database from 2000 to 2015:
 
 ``` {python}
 import imfp
 
 # Get parameters and their valid codes
-params = imfp.imf_parameters("PCPS")
+params = imfp.imf_parameters("PPI")
 
 # Fetch annual coal price index data
 df = imfp.imf_dataset(
-    database_id="PCPS",
-    freq=["A"],  # Annual frequency
-    commodity=["PCOAL"],  # Coal prices
-    unit_measure=["IX"],  # Index
+    database_id="PPI",
+    frequency=["A"],  # Annual frequency
+    indicator=["WPI"],  # Wholesale Price Index
+    type_of_transformation=["IX"],
     start_year=2000,
     end_year=2015
 )
@@ -32,49 +32,41 @@ This example creates two objects we'll use in the following sections:
 
 When you retrieve data using `imf_dataset`, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from `imf_parameters`, so that codes like "A" (Annual) or "W00" (World) become self-explanatory labels.
 
-For example, suppose we want to decode the `freq` (frequency), `ref_area` (geographical area), and `unit_measure` (unit) columns in our dataset. We'll merge the parameter descriptions into our data frame:
+For example, suppose we want to decode the `frequency`, `country`, and `type_of_transformation` (unit) columns in our dataset. We'll merge the parameter descriptions into our data frame:
 
 ``` {python}
 # Decode frequency codes (e.g., "A" → "Annual")
-df = df.merge(
+decoded_df = df.merge(
     # Select code-description pairs
-    params['freq'][['input_code', 'description']],
+    params['frequency'][['input_code', 'description']],
     # Match codes in the data frame
-    left_on='freq',
+    left_on='frequency',
     # ...to codes in the parameter data
     right_on='input_code',
     # Keep all data rows
     how='left'
-).drop(columns=['freq', 'input_code']
-).rename(columns={"description": "freq"})
+).drop(columns=['frequency', 'input_code']
+).rename(columns={"description": "frequency"})
 
 # Decode geographic area codes (e.g., "W00" → "World")
-df = df.merge(
-    params['ref_area'][['input_code', 'description']],
-    left_on='ref_area',
+decoded_df = decoded_df.merge(
+    params['country'][['input_code', 'description']],
+    left_on='country',
     right_on='input_code',
     how='left'
-).drop(columns=['ref_area', 'input_code']
-).rename(columns={"description":"ref_area"})
+).drop(columns=['country', 'input_code']
+).rename(columns={"description":"country"})
 
 # Decode unit codes (e.g., "IX" → "Index")
-df = df.merge(
-    params['unit_measure'][['input_code', 'description']],
-    left_on='unit_measure',
+decoded_df = decoded_df.merge(
+    params['type_of_transformation'][['input_code', 'description']],
+    left_on='type_of_transformation',
     right_on='input_code',
     how='left'
-).drop(columns=['unit_measure', 'input_code']
-).rename(columns={"description":"unit_measure"})
+).drop(columns=['type_of_transformation', 'input_code']
+).rename(columns={"description":"type_of_transformation"})
 
-df.head()
+decoded_df.head()
 ```
 
 After decoding, the data frame is much more human-interpretable. This transformation makes the data more accessible for analysis and presentation, while maintaining all the original information.
-
-## Understanding the Data Frame
-
-Also note that the returned data frame has additional mysterious-looking codes as values in some columns.
-
-Codes in the `time_format` column are ISO 8601 duration codes. In this case, “P1Y” means “periods of 1 year.” See [Time Period Conversion](usage.qmd#time-period-conversion) for more information on reconciling time periods.
-
-The `unit_mult` column represents the number of zeroes you should add to the value column. For instance, if value is in millions, then the unit multiplier will be 6. If in billions, then the unit multiplier will be 9. See [Unit Multiplier Adjustment](usage.qmd#unit-multiplier-adjustment) for more information on reconciling units.

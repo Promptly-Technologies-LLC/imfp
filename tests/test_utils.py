@@ -157,7 +157,7 @@ def test_imf_dimensions_valid_database_id(set_options, use_saved_responses):
     dimensions = _imf_dimensions(database_id)
 
     assert isinstance(dimensions, pd.DataFrame)
-    assert dimensions.shape == (4, 3)
+    assert dimensions.shape == (4, 4)
     assert dimensions.isna().sum().sum() == 0
 
 
@@ -177,7 +177,7 @@ def test_imf_dimensions_times_param(set_options, use_saved_responses):
     dimensions = _imf_dimensions(database_id, times=2)
 
     assert isinstance(dimensions, pd.DataFrame)
-    assert dimensions.shape == (4, 3)
+    assert dimensions.shape == (4, 4)
     assert dimensions.isna().sum().sum() == 0
 
 
@@ -190,7 +190,7 @@ def test_imf_dimensions_inputs_only_param(set_options, use_saved_responses):
 
     assert isinstance(dimensions_1, pd.DataFrame)
     assert isinstance(dimensions_2, pd.DataFrame)
-    assert dimensions_1.shape == (4, 3)
-    assert dimensions_2.shape == (6, 3)
+    assert dimensions_1.shape == (4, 4)
+    assert dimensions_2.shape == (6, 4)
     assert dimensions_1.isna().sum().sum() == 0
-    assert dimensions_2.isna().sum().sum() == 2
+    assert dimensions_2.isna().sum().sum() == 4

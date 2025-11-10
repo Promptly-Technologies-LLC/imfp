@@ -4,11 +4,7 @@ title: "Suggestions for Usage"
 
 ## Determining Data Availability
 
-Unfortunately, **many** of the indicators listed as available in the lists of input codes returned by `imf_parameters()` are not actually available. This is a deficiency of the API rather than the library; someone at the IMF presumably intended to provide these indicators at some point, but never got around to it.
-
-The only way to be certain whether an indicator is available is to make a request to the API and see if it succeeds. If not, you will receive an error message indicating that no data was found for your parameters. In general, if you see this message, you should try making a less restrictive version of your request. For instance, if your request returns no data for an indicator for a given country and time period, you can omit the country or time period parameter and try again. If you still get no data, that indicator is not actually available through the API.
-
-While it is not fully predictable which indicators will be available, as a general rule you can expect to get unadjusted series but not adjusted ones. For instance, real and per capita GDP are not available (although they are listed) through the API, but nominal GDP is. The API does, however, make available all the adjustment variables you would need to adjust the data yourself. See the [Common Data Transformations](#common-data-transformations) section below for examples of how to make adjustments.
+The only way to be certain whether data is available for a given set of parameters is to make a request to the API and see if it succeeds. If you get an empty data frame, try a less restrictive version of your request.
 
 ## Working with Large Data Frames
 
@@ -27,9 +23,8 @@ pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 df: pd.DataFrame = imfp.imf_dataset(
     database_id="PCPS",
-    commodity=["PCOAL"],
-    unit_measure=["IX"],
-    start_year=2000, end_year=2001
+    indicator=["PCOAL"],
+    data_transformation=["IX"]
 )
 
 # Quick summary of DataFrame
@@ -51,7 +46,7 @@ All data is returned from the IMF API as a text (object) data type, so you will 
 
 ``` {python}
 # Numeric columns
-numeric_cols = ["unit_mult", "obs_value"]
+numeric_cols = ["obs_value"]
 
 # Cast numeric columns
 df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric)
@@ -64,11 +59,9 @@ You can also convert string columns to categorical types for better memory usage
 ``` {python}
 # Convert categorical columns like ref_area and indicator to category type
 categorical_cols = [
-  "freq",
-  "ref_area",
-  "commodity",
-  "unit_measure",
-  "time_format"
+  "frequency",
+  "country",
+  "indicator"
 ]
 
 df[categorical_cols] = df[categorical_cols].astype("category")
@@ -89,14 +82,14 @@ The `time_period` column can be more difficult to work with, because it may be d
 
 Annual data will be formatted as a four-digit year, such as "2000", which can be trivially converted to numeric.
 
-However, quarterly data will be formatted as "2000-Q1", and monthly data will be formatted like "2000-01".
+However, quarterly data will be formatted as "2000-Q1", monthly data will be formatted like "2000-M01", etc.
 
 You can use the `pandas` library's `to_datetime()` method with the `format="mixed"` argument to convert this column to a datetime object in a format-agnostic way:
 
 ``` {python}
 # Convert time_period to datetime
 df["datetime"] = pd.to_datetime(df["time_period"], format="mixed")
-df[["freq", "datetime"]].head()
+df[["frequency", "datetime"]].head()
 ```
 
 Alternatively, you can split the `time_period` column into separate columns for year, quarter, and month, and then convert each to a numeric value:
@@ -104,15 +97,16 @@ Alternatively, you can split the `time_period` column into separate columns for 
 ``` {python}
 # Split time_period into separate columns
 df["year"] = df["time_period"].str.extract(r"(\d{4})")[0]
-df["quarter"] = df["time_period"].str.extract(r"Q(\d{1})")[0]
-df["month"] = df["time_period"].str.extract(r"-(\d{2})")[0]
+df["quarter"] = df["time_period"].str.extract(r"[Q](\d{1})")[0]
+df["month"] = df["time_period"].str.extract(r"[M](\d{2})")[0]
 
 # Convert year, quarter, and month to numeric
 df["year"] = pd.to_numeric(df["year"])
 df["quarter"] = pd.to_numeric(df["quarter"])
 df["month"] = pd.to_numeric(df["month"])
 
-df[["time_period", "year", "quarter", "month"]].head()
+# Return head for non-na months
+df[["time_period", "year", "quarter", "month"]].dropna(subset=["month"]).head()
 ```
 
 ### Summarizing Data
@@ -148,7 +142,7 @@ View(df)
 
 ## Common Data Transformations
 
-The International Financial Statistics (IFS) database provides key macroeconomic aggregates that are frequently needed when working with other IMF datasets. Here, we'll demonstrate how to use three fundamental indicators—GDP, price deflators, and population statistics—to transform your data.
+The World Economic Outlook (WEO) and Consumer Price Index (CPI) databases provide key macroeconomic aggregates that are frequently needed when working with other IMF datasets. Here, we'll demonstrate how to use three fundamental indicators—GDP, price deflators, and population statistics—to transform your data.
 
 These transformations are essential for:
 
@@ -159,54 +153,88 @@ These transformations are essential for:
 
 For a complete, end-to-end example of these transformations in a real analysis workflow, see Jenny Xu's superb [demo notebook](https://github.com/jennyxu/imfp-demo).
 
-### Fetching IFS Adjusters
+### Fetching Adjusters
 
-First, let's retrieve the key adjustment variables from the IFS database:
+First, let's retrieve the key adjustment variables:
 
 ``` {python}
-# Fetch GDP Deflator (Index, Annual)
+# Fetch GDP Deflator (Index, Quarterly)
 deflator = imfp.imf_dataset(
-    database_id="IFS",
-    indicator="NGDP_D_SA_IX",
-    freq="Q",
+    database_id="QNEA",
+    indicator="B1GQ",
+    price_type="PD",  # Price deflator
+    type_of_transformation="IX",  # Index
+    frequency="Q",
     start_year=2010
 )
 
 # Fetch Population Estimates (Annual)
 population = imfp.imf_dataset(
-    database_id="IFS",
-    indicator="LP_PE_NUM",
-    freq="A",
+    database_id="WEO",
+    indicator="LP",
+    frequency="A",
     start_year=2010
 )
 
-# Fetch Exchange Rate (Annual)
+# Fetch Exchange Rate (Quarterly)
 exchange_rate = imfp.imf_dataset(
-    database_id="IFS", 
-    indicator="ENDE_XDC_USD_RATE",
-    freq="Q",
-    # start_year=2010 currently breaks this query for some reason
+    database_id="ER", 
+    indicator="XDC_USD",  # Domestic currency per USD
+    frequency="Q",
+    start_year=2010
 )
 ```
 
-We'll also retireve a nominal GDP series to be adjusted:
+We'll also retrieve a nominal GDP series to be adjusted:
 
 ``` {python}
 # Fetch Nominal GDP (Domestic currency, annual)
 nominal_gdp = imfp.imf_dataset(
-    database_id="IFS", 
-    indicator="NGDP_XDC",
-    freq="A",
+    database_id="ANEA",
+    indicator="B1GQ",
+    price_type="V",  # Current prices
+    type_of_transformation="XDC",  # Domestic currency
+    frequency="A",
     start_year=2010
 )
 ```
 
-**Key IFS Indicators**:
+**Key Indicators**:
 
-- `NGDP_D_SA_IX`: GDP deflator index (seasonally adjusted)
-- `LP_PE_NUM`: Population estimates
-- `ENDE_XDC_USD_RATE`: Exchange rate (domestic currency per USD)
-- `NGDP_XDC`: Nominal GDP in domestic currency
+- **QNEA** (Quarterly National Economic Accounts): `B1GQ` with `price_type="PD"` and `type_of_transformation="IX"` for GDP deflator index
+- **WEO** (World Economic Outlook): `LP` for population estimates
+- **ER** (Exchange Rates): `XDC_USD` for exchange rate (domestic currency per USD)
+- **ANEA** (Annual National Economic Accounts): `B1GQ` with `price_type="V"` and `type_of_transformation="XDC"` for nominal GDP in domestic currency
+
+::: {.callout-note}
+## Database Changes
+
+The IMF has updated their API structure. The former IFS (International Financial Statistics) database, which provided a central point of access to these adjusters, has been discontinued and replaced with more specialized databases:
+
+- **ANEA/QNEA**: National Economic Accounts data (annual and quarterly)
+- **WEO**: World Economic Outlook data including population
+- **ER**: Exchange rate data
+- **CPI**: Consumer Price Index data
+- **MFS_CBS**: Monetary and Financial Statistics, Central Bank data
+
+Use `imf_databases()` to see all available databases and `imf_parameters(database_id)` to explore their indicators.
+:::
+
+### Alternative: Using CPI for Price Adjustments
+
+If you prefer to use the Consumer Price Index instead of the GDP deflator:
+
+``` {python}
+# Fetch CPI (All Items, Index)
+cpi = imfp.imf_dataset(
+    database_id="CPI",
+    index_type="CPI",
+    coicop_1999="_T",  # All Items
+    type_of_transformation="IX",  # Index
+    frequency="Q",
+    start_year=2010
+)
+```
 
 ### Harmonizing Frequencies
 
@@ -238,7 +266,7 @@ exchange_rate = exchange_rate[exchange_rate['time_period'].astype(int) > 2010]
 #| eval: false
 # Alternative: Calculate annual averages
 deflator = deflator.groupby(
-    ['ref_area', deflator['time_period']], 
+    ['country', deflator['time_period']], 
     as_index=False
 ).agg({
     'obs_value': 'mean'
@@ -247,45 +275,24 @@ deflator = deflator.groupby(
 
 Choose the appropriate method based on your specific analysis needs and the economic meaning of your variables.
 
-### Unit Multiplier Adjustment
-
-IMF data often includes a `unit_mult` column that indicates the scale of the values (e.g., millions, billions). We can write a helper function to apply these scaling factors:
-
-``` {python}
-def apply_unit_multiplier(df):
-    """Convert to numeric, adjust values using IMF's scaling factors, and drop
-    missing values"""
-    df['obs_value'] = pd.to_numeric(df['obs_value'])
-    df['unit_mult'] = pd.to_numeric(df['unit_mult'])
-    df['adjusted_value'] = df['obs_value'] * 10 ** df['unit_mult']
-    df = df.dropna(subset=["obs_value"])
-    return df
-
-# Apply to each dataset
-deflator = apply_unit_multiplier(deflator)
-population = apply_unit_multiplier(population)
-exchange_rate = apply_unit_multiplier(exchange_rate)
-nominal_gdp = apply_unit_multiplier(nominal_gdp)
-```
-
 ### Merging Datasets
 
-After harmonizing unit scales, we can combine the datasets using `pd.DataFrame.merge()` with `ref_area` and `time_period` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `country` and `time_period` as keys:
 
 ``` {python}
 merged = (
     nominal_gdp.merge(
         deflator,
-        on=['ref_area', 'time_period'],
+        on=['country', 'time_period'],
         suffixes=('_gdp', '_deflator')
     )
     .merge(
         population,
-        on=['ref_area', 'time_period']
+        on=['country', 'time_period']
     )
     .merge(
         exchange_rate,
-        on=['ref_area', 'time_period'],
+        on=['country', 'time_period'],
         suffixes=('_population', '_exchange_rate')
     )
 )
@@ -298,32 +305,32 @@ With the merged dataset, we can now calculate real GDP and per capita values:
 ``` {python}
 # Convert nominal to real GDP
 merged['real_gdp'] = (
-    (merged['adjusted_value_gdp'] / merged['adjusted_value_deflator']) * 100
+    (merged['obs_value_gdp'] / merged['obs_value_deflator']) * 100
 )
 
 # Calculate per capita values (using population obs_value)
-merged['real_gdp_per_capita'] = merged['real_gdp'] / merged['adjusted_value_population']
+merged['real_gdp_per_capita'] = merged['real_gdp'] / merged['obs_value_population']
 
 # Display the first 5 rows of the transformed data
-merged[['time_period', 'real_gdp', 'real_gdp_per_capita']].head()
+merged[['country', 'time_period', 'real_gdp', 'real_gdp_per_capita']].head()
 ```
 
 ### Exchange Rate Adjustment
 
-Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the IFS database.
+Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the ER (Exchange Rates) database.
 
 ``` {python}
-# Because 'adjusted_value_exrate' is local-currency-per-USD,
+# Because 'obs_value_exchange_rate' is local-currency-per-USD,
 # dividing local-currency real GDP by it yields GDP in USD.
 merged["real_gdp_usd"] = (
-    merged["real_gdp"] / merged["adjusted_value_exchange_rate"]
+    merged["real_gdp"] / merged["obs_value_exchange_rate"]
 )
 
 # (Optional) real GDP per capita in USD
 merged["real_gdp_usd_per_capita"] = (
-    merged["real_gdp_usd"] / merged["adjusted_value_population"]
+    merged["real_gdp_usd"] / merged["obs_value_population"]
 )
 
 # Inspect results
-merged[["time_period","ref_area","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
+merged[["time_period","country","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
 ```

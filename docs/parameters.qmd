@@ -14,12 +14,14 @@ import pandas as pd
 # Set float format to 2 decimal places for pandas display output
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
+# Producer Price Index database
+database_id = "PPI"
 imfp.imf_dataset(database_id)
 ```
 
 However, while this will succeed for a few small databases, it will fail for all of the larger ones. And even in the rare case when it succeeds, fetching an entire database can take a long time. You’re much better off supplying additional filter parameters to reduce the size of your request.
 
-Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. The `imf_parameters` function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.
+Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. You also have to have the list of valid input codes for each parameter. The `imf_parameters` function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.
 
 ## Understanding Filter Parameters
 
@@ -41,8 +43,8 @@ To get started, you'll need to know what parameters are available for your chose
 ``` {python}
 import imfp
 
-# Fetch list of valid parameters for the Primary Commodity Price System database
-params = imfp.imf_parameters("PCPS")
+# Fetch list of valid parameters for the Producer Price Index database
+params = imfp.imf_parameters("PPI")
 
 # View the available parameter names
 params.keys()
@@ -55,11 +57,11 @@ Each key in the dictionary corresponds to a parameter used in making requests fr
 - `input_code`: The valid codes you can use for that parameter
 - `description`: A short text description of what each code represents
 
-For example, to see the valid codes for the `freq` (frequency) parameter:
+For example, to see the valid codes for the `frequency` parameter:
 
 ``` {python}
 # View the data frame of valid input codes for the frequency parameter
-params['freq']
+params['frequency']
 ```
 
 ## Parameter Definitions
@@ -68,7 +70,7 @@ If the parameter name is not self-explanatory, you can use the `imf_parameter_de
 
 ``` {python}
 # Get descriptions of what each parameter means
-params_defs = imfp.imf_parameter_defs("PCPS")
+params_defs = imfp.imf_parameter_defs("PPI")
 
 params_defs
 ```
@@ -79,17 +81,17 @@ params_defs
 
 To make a request to fetch data from the IMF API, just call `imf_dataset` with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.
 
-For instance, on exploring the `freq` parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imf_dataset` with `freq = ["A"]`.
+For instance, on exploring the `frequency` parameter of the Producer Price Index database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imf_dataset` with `frequency = ["A"]`.
 
-Here's a complete example that fetches annual coal prices for the years 2000 through 2015:
+Here's a complete example that fetches annual producer prices from 2000 to 2015:
 
 ``` {python}
 #| eval: false
-# Example: Get annual coal prices
+# Example: Get annual prices
 df = imfp.imf_dataset(
-    database_id="PCPS",
-    freq=["A"],  # Annual frequency
-    commodity=["PCOAL"],  # Coal prices
+    database_id="PPI",
+    frequency=["A"],  # Annual frequency
+    indicator=["PPI"],  # Producer Price Index
     start_year=2000,
     end_year=2015
 )
@@ -104,36 +106,27 @@ For more complex queries, there are two programmatic ways to supply parameters t
 This approach uses string matching to find the correct parameter codes before passing them to `imf_dataset`:
 
 ``` {python}
-# Fetch the input code column of the freq parameter...
-selected_freq = list(
-    params['freq']['input_code'][
+# Fetch the input code column of the frequency parameter...
+selected_frequency = list(
+    params['frequency']['input_code'][
         # ...where the description contains "Annual"
-        params['freq']['description'].str.contains("Annual")
-    ]
-)
-
-# Fetch the input code column of the commodity parameter...
-selected_commodity = list(
-    params['commodity']['input_code'][
-        # ...where the description contains "Coal"
-        params['commodity']['description'].str.contains("Coal")
+        params['frequency']['description'].str.contains("Annual")
     ]
 )
 
 # Fetch the input code column of the unit_measure parameter...
-selected_unit_measure = list(
-    params['unit_measure']['input_code'][
+selected_type_of_transformation = list(
+    params['type_of_transformation']['input_code'][
         # ...where the description contains "Index"
-        params['unit_measure']['description'].str.contains("Index")
+        params['type_of_transformation']['description'].str.contains("Index")
     ]
 )
 
 # Request data from the API using the filtered parameter code lists
 df = imfp.imf_dataset(
-    database_id="PCPS",
-    freq=selected_freq,
-    commodity=selected_commodity,
-    unit_measure=selected_unit_measure,
+    database_id="PPI",
+    frequency=selected_frequency,
+    type_of_transformation=selected_type_of_transformation,
     start_year=2000,
     end_year=2015
 )
@@ -150,22 +143,18 @@ This approach modifies the parameters dictionary directly and passes the entire 
 modified_params = params.copy()
 
 # Overwrite the data frame for each parameter in the dictionary with filtered rows
-modified_params['freq'] = params['freq'][
-    # ...where the input code description for freq contains "Annual"
-    params['freq']['description'].str.contains("Annual")
+modified_params['frequency'] = params['frequency'][
+    # ...where the input code description for frequency contains "Annual"
+    params['frequency']['description'].str.contains("Annual")
 ]
-modified_params['commodity'] = params['commodity'][
-    # ...where the input code description for commodity contains "Coal"
-    params['commodity']['description'].str.contains("Coal")
-]
-modified_params['unit_measure'] = params['unit_measure'][
-    # ...where the input code description for unit_measure contains "Index"
-    params['unit_measure']['description'].str.contains("Index")
+modified_params['type_of_transformation'] = params['type_of_transformation'][
+    # ...where the input code description for type_of_transformation contains "Index"
+    params['type_of_transformation']['description'].str.contains("Index")
 ]
 
 # Pass the modified dictionary to imf_dataset
 df = imfp.imf_dataset(
-    database_id="PCPS",
+    database_id="PPI",
     parameters=modified_params,
     start_year=2000,
     end_year=2015
@@ -175,4 +164,3 @@ df.head()
 ```
 
 Note that when using the parameters dictionary approach, you cannot combine it with individual parameter arguments. If you supply a `parameters` argument, any other keyword arguments for individual parameters will be ignored.
-
