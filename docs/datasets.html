@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a98ec624fb63d9b712fc3a6f62e2b305.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -116,6 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">imfp</span>
     </a>
@@ -183,7 +186,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#making-a-request" id="toc-making-a-request" class="nav-link active" data-scroll-target="#making-a-request">Making a Request</a></li>
   <li><a href="#decoding-returned-data" id="toc-decoding-returned-data" class="nav-link" data-scroll-target="#decoding-returned-data">Decoding Returned Data</a></li>
-  <li><a href="#understanding-the-data-frame" id="toc-understanding-the-data-frame" class="nav-link" data-scroll-target="#understanding-the-data-frame">Understanding the Data Frame</a></li>
   </ul>
 </nav>
     </div>
@@ -211,22 +213,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="making-a-request" class="level2">
 <h2 class="anchored" data-anchor-id="making-a-request">Making a Request</h2>
-<p>To retrieve data from an IMF database, you’ll need the database ID and any relevant <a href="../docs/parameters.html">filter parameters</a>. Here’s a basic example using the Primary Commodity Price System (PCPS) database:</p>
-<div id="3dfb0600" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
+<p>To retrieve data from an IMF database, you’ll need the database ID and any relevant <a href="../docs/parameters.html">filter parameters</a>. Here’s a basic example using the Producer Price Index (PPI) database from 2000 to 2015:</p>
+<div id="8c04af7d" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get parameters and their valid codes</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PPI"</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch annual coal price index data</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span>[<span class="st">"A"</span>],  <span class="co"># Annual frequency</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    commodity<span class="op">=</span>[<span class="st">"PCOAL"</span>],  <span class="co"># Coal prices</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    unit_measure<span class="op">=</span>[<span class="st">"IX"</span>],  <span class="co"># Index</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span>[<span class="st">"A"</span>],  <span class="co"># Annual frequency</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span>[<span class="st">"WPI"</span>],  <span class="co"># Wholesale Price Index</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span>[<span class="st">"IX"</span>],</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This example creates two objects we’ll use in the following sections:</p>
 <ul>
@@ -237,112 +239,100 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="decoding-returned-data" class="level2">
 <h2 class="anchored" data-anchor-id="decoding-returned-data">Decoding Returned Data</h2>
 <p>When you retrieve data using <code>imf_dataset</code>, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from <code>imf_parameters</code>, so that codes like “A” (Annual) or “W00” (World) become self-explanatory labels.</p>
-<p>For example, suppose we want to decode the <code>freq</code> (frequency), <code>ref_area</code> (geographical area), and <code>unit_measure</code> (unit) columns in our dataset. We’ll merge the parameter descriptions into our data frame:</p>
-<div id="047eca62" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode frequency codes (e.g., "A" → "Annual")</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.merge(</span>
+<p>For example, suppose we want to decode the <code>frequency</code>, <code>country</code>, and <code>type_of_transformation</code> (unit) columns in our dataset. We’ll merge the parameter descriptions into our data frame:</p>
+<div id="663918e3" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode frequency codes (e.g., "A" → "Annual")</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>decoded_df <span class="op">=</span> df.merge(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select code-description pairs</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'freq'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'frequency'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Match codes in the data frame</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'freq'</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'frequency'</span>,</span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...to codes in the parameter data</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">'input_code'</span>,</span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Keep all data rows</span></span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">'left'</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'freq'</span>, <span class="st">'input_code'</span>]</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>: <span class="st">"freq"</span>})</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'frequency'</span>, <span class="st">'input_code'</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>: <span class="st">"frequency"</span>})</span>
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode geographic area codes (e.g., "W00" → "World")</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.merge(</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'ref_area'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'ref_area'</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>decoded_df <span class="op">=</span> decoded_df.merge(</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'country'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'country'</span>,</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">'input_code'</span>,</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">'left'</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'ref_area'</span>, <span class="st">'input_code'</span>]</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>:<span class="st">"ref_area"</span>})</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'country'</span>, <span class="st">'input_code'</span>]</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>:<span class="st">"country"</span>})</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode unit codes (e.g., "IX" → "Index")</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.merge(</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'unit_measure'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'unit_measure'</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>decoded_df <span class="op">=</span> decoded_df.merge(</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'type_of_transformation'</span>][[<span class="st">'input_code'</span>, <span class="st">'description'</span>]],</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">'type_of_transformation'</span>,</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">'input_code'</span>,</span>
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">'left'</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'unit_measure'</span>, <span class="st">'input_code'</span>]</span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>:<span class="st">"unit_measure"</span>})</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">'type_of_transformation'</span>, <span class="st">'input_code'</span>]</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>).rename(columns<span class="op">=</span>{<span class="st">"description"</span>:<span class="st">"type_of_transformation"</span>})</span>
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>decoded_df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">commodity</th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
-<th data-quarto-table-cell-role="th">time_format</th>
+<th data-quarto-table-cell-role="th">indicator</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
-<th data-quarto-table-cell-role="th">freq</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
-<th data-quarto-table-cell-role="th">unit_measure</th>
+<th data-quarto-table-cell-role="th">frequency</th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">type_of_transformation</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>PCOAL</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2000</td>
-<td>39.3510230293202</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>WPI</td>
+<td>2008</td>
+<td>80.099924</td>
 <td>Annual</td>
-<td>All Countries, excluding the IO</td>
+<td>Angola</td>
 <td>Index</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>PCOAL</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2001</td>
-<td>49.3378587284039</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>WPI</td>
+<td>2009</td>
+<td>88.676029</td>
 <td>Annual</td>
-<td>All Countries, excluding the IO</td>
+<td>Angola</td>
 <td>Index</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>PCOAL</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2002</td>
-<td>39.4949091648006</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>WPI</td>
+<td>2010</td>
+<td>100.000000</td>
 <td>Annual</td>
-<td>All Countries, excluding the IO</td>
+<td>Angola</td>
 <td>Index</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>PCOAL</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2003</td>
-<td>43.2878876950788</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>WPI</td>
+<td>2011</td>
+<td>111.889914</td>
 <td>Annual</td>
-<td>All Countries, excluding the IO</td>
+<td>Angola</td>
 <td>Index</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>PCOAL</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2004</td>
-<td>82.9185858052862</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>WPI</td>
+<td>2012</td>
+<td>117.840781</td>
 <td>Annual</td>
-<td>All Countries, excluding the IO</td>
+<td>Angola</td>
 <td>Index</td>
 </tr>
 </tbody>
@@ -352,12 +342,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>After decoding, the data frame is much more human-interpretable. This transformation makes the data more accessible for analysis and presentation, while maintaining all the original information.</p>
-</section>
-<section id="understanding-the-data-frame" class="level2">
-<h2 class="anchored" data-anchor-id="understanding-the-data-frame">Understanding the Data Frame</h2>
-<p>Also note that the returned data frame has additional mysterious-looking codes as values in some columns.</p>
-<p>Codes in the <code>time_format</code> column are ISO 8601 duration codes. In this case, “P1Y” means “periods of 1 year.” See <a href="../docs/usage.html#time-period-conversion">Time Period Conversion</a> for more information on reconciling time periods.</p>
-<p>The <code>unit_mult</code> column represents the number of zeroes you should add to the value column. For instance, if value is in millions, then the unit multiplier will be 6. If in billions, then the unit multiplier will be 9. See <a href="../docs/usage.html#unit-multiplier-adjustment">Unit Multiplier Adjustment</a> for more information on reconciling units.</p>
 
 
 </section>
@@ -414,13 +398,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

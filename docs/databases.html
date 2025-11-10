@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a98ec624fb63d9b712fc3a6f62e2b305.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -116,6 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">imfp</span>
     </a>
@@ -228,17 +231,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fetching-an-index-of-databases-with-the-imf_databases-function" class="level3">
 <h3 class="anchored" data-anchor-id="fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <code>imf_databases</code> Function</h3>
 <p>To obtain the list of available databases and their corresponding IDs, use <code>imf_databases</code>:</p>
-<div id="753c0944" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
+<div id="389fa93f" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Fetch the list of databases available through the IMF API</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>databases.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>databases.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -248,29 +251,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>BOP_2017M06</td>
-<td>Balance of Payments (BOP), 2017 M06</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>GDD</td>
+<td>Global Debt Database (GDD)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>BOP_2020M3</td>
-<td>Balance of Payments (BOP), 2020 M03</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>ITG_WCA</td>
+<td>International Trade in Goods, World and Countr...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>BOP_2017M11</td>
-<td>Balance of Payments (BOP), 2017 M11</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>SRD</td>
+<td>Structural Reform Database (SRD)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>DOT_2020Q1</td>
-<td>Direction of Trade Statistics (DOTS), 2020 Q1</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>PPI</td>
+<td>Producer Price Index (PPI)</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>GFSMAB2016</td>
-<td>Government Finance Statistics Yearbook (GFSY 2...</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>EER</td>
+<td>Effective Exchange Rate (EER)</td>
 </tr>
 </tbody>
 </table>
@@ -278,20 +281,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This function returns the IMF’s listing of 259 databases available through the API. (In reality, a few of the listed databases are defunct and not actually available. The databases FAS_2015, GFS01, FM202010, APDREO202010, AFRREO202010, WHDREO202010, BOPAGG_2020, and DOT_2020Q1 were unavailable as of last check.)</p>
+<p>This function returns the IMF’s listing of 71 databases available through the API.</p>
 </section>
 </section>
 <section id="exploring-the-database-list" class="level2">
 <h2 class="anchored" data-anchor-id="exploring-the-database-list">Exploring the Database List</h2>
 <p>To view and explore the database list, it’s possible to explore subsets of the data frame by row number with <code>databases.loc</code>:</p>
-<div id="81c7945b" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5d6ee9b2" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -301,29 +304,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">5</td>
-<td>BOP_2019M12</td>
-<td>Balance of Payments (BOP), 2019 M12</td>
+<th data-quarto-table-cell-role="th">5</th>
+<td>PSBS</td>
+<td>Public Sector Balance Sheet (PSBS)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">6</td>
-<td>GFSYFALCS2014</td>
-<td>Government Finance Statistics Yearbook (GFSY 2...</td>
+<th data-quarto-table-cell-role="th">6</th>
+<td>MFS_OFC</td>
+<td>Monetary and Financial Statistics (MFS), Other...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">7</td>
-<td>GFSE2016</td>
-<td>Government Finance Statistics Yearbook (GFSY 2...</td>
+<th data-quarto-table-cell-role="th">7</th>
+<td>EQ</td>
+<td>Export Quality (EQ)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">8</td>
-<td>FM201510</td>
-<td>Fiscal Monitor (FM) October 2015</td>
+<th data-quarto-table-cell-role="th">8</th>
+<td>ISORA_2016_DATA_PUB</td>
+<td>ISORA 2016 Data</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">9</td>
-<td>GFSIBS2016</td>
-<td>Government Finance Statistics Yearbook (GFSY 2...</td>
+<th data-quarto-table-cell-role="th">9</th>
+<td>FA</td>
+<td>Fund Accounts (FA)</td>
 </tr>
 </tbody>
 </table>
@@ -332,13 +335,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using <code>str.contains</code> and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:</p>
-<div id="82fe59c0" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="eb83e631" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -348,14 +351,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">304</td>
+<th data-quarto-table-cell-role="th">43</th>
 <td>PCPS</td>
-<td>Primary Commodity Price System (PCPS)</td>
+<td>Primary Commodity Price System&nbsp;(PCPS)</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">320</td>
-<td>PCTOT</td>
-<td>Commodity Terms of Trade</td>
+<th data-quarto-table-cell-role="th">58</th>
+<td>CTOT</td>
+<td>Commodity Terms of Trade (CTOT)</td>
 </tr>
 </tbody>
 </table>
@@ -442,13 +445,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

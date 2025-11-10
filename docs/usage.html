@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a98ec624fb63d9b712fc3a6f62e2b305.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -116,6 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">imfp</span>
     </a>
@@ -191,9 +194,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#common-data-transformations" id="toc-common-data-transformations" class="nav-link" data-scroll-target="#common-data-transformations">Common Data Transformations</a>
   <ul class="collapse">
-  <li><a href="#fetching-ifs-adjusters" id="toc-fetching-ifs-adjusters" class="nav-link" data-scroll-target="#fetching-ifs-adjusters">Fetching IFS Adjusters</a></li>
+  <li><a href="#fetching-adjusters" id="toc-fetching-adjusters" class="nav-link" data-scroll-target="#fetching-adjusters">Fetching Adjusters</a></li>
+  <li><a href="#alternative-using-cpi-for-price-adjustments" id="toc-alternative-using-cpi-for-price-adjustments" class="nav-link" data-scroll-target="#alternative-using-cpi-for-price-adjustments">Alternative: Using CPI for Price Adjustments</a></li>
   <li><a href="#harmonizing-frequencies" id="toc-harmonizing-frequencies" class="nav-link" data-scroll-target="#harmonizing-frequencies">Harmonizing Frequencies</a></li>
-  <li><a href="#unit-multiplier-adjustment" id="toc-unit-multiplier-adjustment" class="nav-link" data-scroll-target="#unit-multiplier-adjustment">Unit Multiplier Adjustment</a></li>
   <li><a href="#merging-datasets" id="toc-merging-datasets" class="nav-link" data-scroll-target="#merging-datasets">Merging Datasets</a></li>
   <li><a href="#calculating-real-values" id="toc-calculating-real-values" class="nav-link" data-scroll-target="#calculating-real-values">Calculating Real Values</a></li>
   <li><a href="#exchange-rate-adjustment" id="toc-exchange-rate-adjustment" class="nav-link" data-scroll-target="#exchange-rate-adjustment">Exchange Rate Adjustment</a></li>
@@ -225,9 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="determining-data-availability" class="level2">
 <h2 class="anchored" data-anchor-id="determining-data-availability">Determining Data Availability</h2>
-<p>Unfortunately, <strong>many</strong> of the indicators listed as available in the lists of input codes returned by <code>imf_parameters()</code> are not actually available. This is a deficiency of the API rather than the library; someone at the IMF presumably intended to provide these indicators at some point, but never got around to it.</p>
-<p>The only way to be certain whether an indicator is available is to make a request to the API and see if it succeeds. If not, you will receive an error message indicating that no data was found for your parameters. In general, if you see this message, you should try making a less restrictive version of your request. For instance, if your request returns no data for an indicator for a given country and time period, you can omit the country or time period parameter and try again. If you still get no data, that indicator is not actually available through the API.</p>
-<p>While it is not fully predictable which indicators will be available, as a general rule you can expect to get unadjusted series but not adjusted ones. For instance, real and per capita GDP are not available (although they are listed) through the API, but nominal GDP is. The API does, however, make available all the adjustment variables you would need to adjust the data yourself. See the <a href="#common-data-transformations">Common Data Transformations</a> section below for examples of how to make adjustments.</p>
+<p>The only way to be certain whether data is available for a given set of parameters is to make a request to the API and see if it succeeds. If you get an empty data frame, try a less restrictive version of your request.</p>
 </section>
 <section id="working-with-large-data-frames" class="level2">
 <h2 class="anchored" data-anchor-id="working-with-large-data-frames">Working with Large Data Frames</h2>
@@ -235,8 +236,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="inspecting-data">Inspecting Data</h3>
 <p><code>imfp</code> outputs data in <code>pandas</code> DataFrames, so you will want to use the <code>pandas</code> package for its functions for viewing and manipulating this object type.</p>
 <p>For large datasets, you can use the <code>pandas</code> library’s <code>info()</code> method to get a quick summary of the data frame, including the number of rows and columns, the count of non-missing values, the column names, and the data types.</p>
-<div id="b123011e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
+<div id="9bd81681" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set float format to 2 decimal places for pandas display output</span></span>
@@ -244,108 +245,97 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df: pd.DataFrame <span class="op">=</span> imfp.imf_dataset(</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    commodity<span class="op">=</span>[<span class="st">"PCOAL"</span>],</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    unit_measure<span class="op">=</span>[<span class="st">"IX"</span>],</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>, end_year<span class="op">=</span><span class="dv">2001</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick summary of DataFrame</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>df.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span>[<span class="st">"PCOAL"</span>],</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    data_transformation<span class="op">=</span>[<span class="st">"IX"</span>]</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick summary of DataFrame</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>df.info()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/runner/work/imfp/imfp/imfp/data.py:582: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
+  warn(</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
 <pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
-Index: 34 entries, 0 to 23
-Data columns (total 8 columns):
- #   Column        Non-Null Count  Dtype 
----  ------        --------------  ----- 
- 0   freq          34 non-null     object
- 1   ref_area      34 non-null     object
- 2   commodity     34 non-null     object
- 3   unit_measure  34 non-null     object
- 4   unit_mult     34 non-null     object
- 5   time_format   34 non-null     object
- 6   time_period   34 non-null     object
- 7   obs_value     34 non-null     object
-dtypes: object(8)
-memory usage: 2.4+ KB</code></pre>
+RangeIndex: 1722 entries, 0 to 1721
+Data columns (total 6 columns):
+ #   Column               Non-Null Count  Dtype  
+---  ------               --------------  -----  
+ 0   country              1722 non-null   object 
+ 1   indicator            1722 non-null   object 
+ 2   data_transformation  1722 non-null   object 
+ 3   frequency            1722 non-null   object 
+ 4   time_period          1722 non-null   object 
+ 5   obs_value            1722 non-null   float64
+dtypes: float64(1), object(5)
+memory usage: 80.8+ KB</code></pre>
 </div>
 </div>
 <p>Alternatively, you can use the <code>head()</code> method to view the first 5 rows of the data frame.</p>
-<div id="9ac4b6fd" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows of DataFrame</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="dc930df0" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View first 5 rows of DataFrame</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">freq</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
-<th data-quarto-table-cell-role="th">commodity</th>
-<th data-quarto-table-cell-role="th">unit_measure</th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
-<th data-quarto-table-cell-role="th">time_format</th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">indicator</th>
+<th data-quarto-table-cell-role="th">data_transformation</th>
+<th data-quarto-table-cell-role="th">frequency</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2000</td>
-<td>39.3510230293202</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1992</td>
+<td>49.89</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2001</td>
-<td>49.3378587284039</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1993</td>
+<td>43.28</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Q</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P3M</td>
-<td>2000-Q1</td>
-<td>36.2253202528364</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1994</td>
+<td>45.21</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Q</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P3M</td>
-<td>2000-Q2</td>
-<td>38.3233649120962</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1995</td>
+<td>55.43</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Q</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P3M</td>
-<td>2000-Q3</td>
-<td>39.5896503864216</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1996</td>
+<td>53.18</td>
 </tr>
 </tbody>
 </table>
@@ -359,85 +349,122 @@ memory usage: 2.4+ KB</code></pre>
 <section id="numeric-conversion" class="level4">
 <h4 class="anchored" data-anchor-id="numeric-conversion">Numeric Conversion</h4>
 <p>All data is returned from the IMF API as a text (object) data type, so you will want to cast numeric columns to numeric.</p>
-<div id="1cc350a5" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric columns</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>numeric_cols <span class="op">=</span> [<span class="st">"unit_mult"</span>, <span class="st">"obs_value"</span>]</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast numeric columns</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df[numeric_cols] <span class="op">=</span> df[numeric_cols].<span class="bu">apply</span>(pd.to_numeric)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="69007576" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Numeric columns</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>numeric_cols <span class="op">=</span> [<span class="st">"obs_value"</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Cast numeric columns</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df[numeric_cols] <span class="op">=</span> df[numeric_cols].<span class="bu">apply</span>(pd.to_numeric)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/2877006961.py:5: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric)</code></pre>
+</div>
 </div>
 </section>
 <section id="categorical-conversion" class="level4">
 <h4 class="anchored" data-anchor-id="categorical-conversion">Categorical Conversion</h4>
 <p>You can also convert string columns to categorical types for better memory usage.</p>
-<div id="fd8ee109" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert categorical columns like ref_area and indicator to category type</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"freq"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ref_area"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"commodity"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"unit_measure"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"time_format"</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>df[categorical_cols] <span class="op">=</span> df[categorical_cols].astype(<span class="st">"category"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="edaf27d9" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert categorical columns like ref_area and indicator to category type</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> [</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"frequency"</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"country"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"indicator"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>df[categorical_cols] <span class="op">=</span> df[categorical_cols].astype(<span class="st">"category"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/1114720700.py:8: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df[categorical_cols] = df[categorical_cols].astype("category")</code></pre>
+</div>
 </div>
 </section>
 <section id="na-removal" class="level4">
 <h4 class="anchored" data-anchor-id="na-removal">NA Removal</h4>
 <p>After conversion, you may want to drop any rows with missing values.</p>
-<div id="0f74fae0" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing values</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="072b8780" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing values</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.dropna()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="time-period-conversion" class="level4">
 <h4 class="anchored" data-anchor-id="time-period-conversion">Time Period Conversion</h4>
 <p>The <code>time_period</code> column can be more difficult to work with, because it may be differently formatted depending on the frequency of the data.</p>
 <p>Annual data will be formatted as a four-digit year, such as “2000”, which can be trivially converted to numeric.</p>
-<p>However, quarterly data will be formatted as “2000-Q1”, and monthly data will be formatted like “2000-01”.</p>
+<p>However, quarterly data will be formatted as “2000-Q1”, monthly data will be formatted like “2000-M01”, etc.</p>
 <p>You can use the <code>pandas</code> library’s <code>to_datetime()</code> method with the <code>format="mixed"</code> argument to convert this column to a datetime object in a format-agnostic way:</p>
-<div id="ec727bde" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time_period to datetime</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"datetime"</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">"time_period"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"mixed"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"freq"</span>, <span class="st">"datetime"</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="5163401b" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert time_period to datetime</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"datetime"</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">"time_period"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"mixed"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"frequency"</span>, <span class="st">"datetime"</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/3082768046.py:2: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["datetime"] = pd.to_datetime(df["time_period"], format="mixed")</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">freq</th>
+<th data-quarto-table-cell-role="th">frequency</th>
 <th data-quarto-table-cell-role="th">datetime</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>A</td>
-<td>2000-01-01</td>
+<td>1992-01-01</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
 <td>A</td>
-<td>2001-01-01</td>
+<td>1993-01-01</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>Q</td>
-<td>2000-01-01</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>A</td>
+<td>1994-01-01</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>Q</td>
-<td>2000-04-01</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>A</td>
+<td>1995-01-01</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>Q</td>
-<td>2000-07-01</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>A</td>
+<td>1996-01-01</td>
 </tr>
 </tbody>
 </table>
@@ -446,23 +473,92 @@ memory usage: 2.4+ KB</code></pre>
 </div>
 </div>
 <p>Alternatively, you can split the <code>time_period</code> column into separate columns for year, quarter, and month, and then convert each to a numeric value:</p>
-<div id="eb7a361e" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split time_period into separate columns</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"year"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{4}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"quarter"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"Q</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{1}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"month"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"-</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{2}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert year, quarter, and month to numeric</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"year"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"year"</span>])</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"quarter"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"quarter"</span>])</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"month"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"month"</span>])</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"time_period"</span>, <span class="st">"year"</span>, <span class="st">"quarter"</span>, <span class="st">"month"</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b0b7fded" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split time_period into separate columns</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"year"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{4}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"quarter"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"</span><span class="pp">[Q]</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{1}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"month"</span>] <span class="op">=</span> df[<span class="st">"time_period"</span>].<span class="bu">str</span>.extract(<span class="vs">r"</span><span class="pp">[M]</span><span class="kw">(</span><span class="dv">\d</span><span class="op">{2}</span><span class="kw">)</span><span class="vs">"</span>)[<span class="dv">0</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert year, quarter, and month to numeric</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"year"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"year"</span>])</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"quarter"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"quarter"</span>])</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>df[<span class="st">"month"</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">"month"</span>])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Return head for non-na months</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">"time_period"</span>, <span class="st">"year"</span>, <span class="st">"quarter"</span>, <span class="st">"month"</span>]].dropna(subset<span class="op">=</span>[<span class="st">"month"</span>]).head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/39852174.py:2: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["year"] = df["time_period"].str.extract(r"(\d{4})")[0]
+/tmp/ipykernel_7570/39852174.py:3: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["quarter"] = df["time_period"].str.extract(r"[Q](\d{1})")[0]
+/tmp/ipykernel_7570/39852174.py:4: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["month"] = df["time_period"].str.extract(r"[M](\d{2})")[0]
+/tmp/ipykernel_7570/39852174.py:7: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["year"] = pd.to_numeric(df["year"])
+/tmp/ipykernel_7570/39852174.py:8: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["quarter"] = pd.to_numeric(df["quarter"])
+/tmp/ipykernel_7570/39852174.py:9: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  df["month"] = pd.to_numeric(df["month"])</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -474,39 +570,39 @@ memory usage: 2.4+ KB</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>2000</td>
-<td>2000</td>
+<th data-quarto-table-cell-role="th">33</th>
+<td>1992-M01</td>
+<td>1992</td>
 <td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2001</td>
-<td>2001</td>
-<td>NaN</td>
-<td>NaN</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>2000-Q1</td>
-<td>2000</td>
 <td>1.00</td>
-<td>NaN</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>2000-Q2</td>
-<td>2000</td>
-<td>2.00</td>
+<th data-quarto-table-cell-role="th">34</th>
+<td>1992-M02</td>
+<td>1992</td>
 <td>NaN</td>
+<td>2.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2000-Q3</td>
-<td>2000</td>
-<td>3.00</td>
+<th data-quarto-table-cell-role="th">35</th>
+<td>1992-M03</td>
+<td>1992</td>
 <td>NaN</td>
+<td>3.00</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">36</th>
+<td>1992-M04</td>
+<td>1992</td>
+<td>NaN</td>
+<td>4.00</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">37</th>
+<td>1992-M05</td>
+<td>1992</td>
+<td>NaN</td>
+<td>5.00</td>
 </tr>
 </tbody>
 </table>
@@ -519,18 +615,17 @@ memory usage: 2.4+ KB</code></pre>
 <section id="summarizing-data" class="level3">
 <h3 class="anchored" data-anchor-id="summarizing-data">Summarizing Data</h3>
 <p>After converting columns to numeric, you can use the <code>describe()</code> function to get a quick summary of the statistical properties of these, including the count of rows, the mean, the standard deviation, the minimum and maximum values, and the quartiles.</p>
-<div id="cf64d501" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistical summary</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="83cca526" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Statistical summary</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
 <th data-quarto-table-cell-role="th">datetime</th>
 <th data-quarto-table-cell-role="th">year</th>
@@ -540,76 +635,68 @@ memory usage: 2.4+ KB</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">count</td>
-<td>34.00</td>
-<td>34.00</td>
-<td>34</td>
-<td>34.00</td>
-<td>8.00</td>
-<td>24.00</td>
+<th data-quarto-table-cell-role="th">count</th>
+<td>1722.00</td>
+<td>1722</td>
+<td>1722.00</td>
+<td>405.00</td>
+<td>1218.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">mean</td>
-<td>0.00</td>
-<td>44.34</td>
-<td>2000-11-28 21:52:56.470588288</td>
-<td>2000.50</td>
-<td>2.50</td>
-<td>6.50</td>
+<th data-quarto-table-cell-role="th">mean</th>
+<td>41.76</td>
+<td>2008-06-21 19:04:02.907665408</td>
+<td>2008.39</td>
+<td>2.49</td>
+<td>6.48</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">min</td>
-<td>0.00</td>
-<td>35.59</td>
-<td>2000-01-01 00:00:00</td>
-<td>2000.00</td>
+<th data-quarto-table-cell-role="th">min</th>
+<td>-69.21</td>
+<td>1992-01-01 00:00:00</td>
+<td>1992.00</td>
 <td>1.00</td>
 <td>1.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">25%</td>
-<td>0.00</td>
-<td>39.22</td>
-<td>2000-06-08 12:00:00</td>
+<th data-quarto-table-cell-role="th">25%</th>
+<td>-3.97</td>
+<td>2000-01-01 00:00:06</td>
 <td>2000.00</td>
-<td>1.75</td>
-<td>3.75</td>
+<td>1.00</td>
+<td>3.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">50%</td>
-<td>0.00</td>
-<td>44.35</td>
-<td>2000-12-16 12:00:00</td>
-<td>2000.50</td>
-<td>2.50</td>
-<td>6.50</td>
+<th data-quarto-table-cell-role="th">50%</th>
+<td>9.01</td>
+<td>2008-05-16 12:00:00</td>
+<td>2008.00</td>
+<td>2.00</td>
+<td>6.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">75%</td>
-<td>0.00</td>
-<td>50.11</td>
-<td>2001-05-24 06:00:00</td>
-<td>2001.00</td>
-<td>3.25</td>
-<td>9.25</td>
+<th data-quarto-table-cell-role="th">75%</th>
+<td>64.32</td>
+<td>2017-01-01 00:00:04</td>
+<td>2017.00</td>
+<td>3.00</td>
+<td>9.00</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">max</td>
-<td>0.00</td>
-<td>51.48</td>
-<td>2001-12-01 00:00:00</td>
-<td>2001.00</td>
+<th data-quarto-table-cell-role="th">max</th>
+<td>577.58</td>
+<td>2025-07-01 00:00:00</td>
+<td>2025.00</td>
 <td>4.00</td>
 <td>12.00</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">std</td>
-<td>0.00</td>
-<td>5.76</td>
+<th data-quarto-table-cell-role="th">std</th>
+<td>77.21</td>
 <td>NaN</td>
-<td>0.51</td>
-<td>1.20</td>
-<td>3.53</td>
+<td>9.75</td>
+<td>1.12</td>
+<td>3.44</td>
 </tr>
 </tbody>
 </table>
@@ -621,27 +708,27 @@ memory usage: 2.4+ KB</code></pre>
 <section id="viewing-data" class="level3">
 <h3 class="anchored" data-anchor-id="viewing-data">Viewing Data</h3>
 <p>For large data frames, it can be useful to view the data in a browser window. To facilitate this, you can define a <code>View()</code> function as follows. This function will save the data frame to a temporary HTML file and open it in your default web browser.</p>
-<div id="0447bbea" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> webbrowser</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a simple function to view data frame in a browser window</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> View(df: pd.DataFrame):</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    html <span class="op">=</span> df.to_html()</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> tempfile.NamedTemporaryFile(<span class="st">'w'</span>, </span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    delete<span class="op">=</span><span class="va">False</span>, suffix<span class="op">=</span><span class="st">'.html'</span>) <span class="im">as</span> f:</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        url <span class="op">=</span> <span class="st">'file://'</span> <span class="op">+</span> f.name</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        f.write(html)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    webbrowser.<span class="bu">open</span>(url)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the function</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>View(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="37cf0cd7" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> webbrowser</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a simple function to view data frame in a browser window</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> View(df: pd.DataFrame):</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    html <span class="op">=</span> df.to_html()</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> tempfile.NamedTemporaryFile(<span class="st">'w'</span>, </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    delete<span class="op">=</span><span class="va">False</span>, suffix<span class="op">=</span><span class="st">'.html'</span>) <span class="im">as</span> f:</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>        url <span class="op">=</span> <span class="st">'file://'</span> <span class="op">+</span> f.name</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        f.write(html)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    webbrowser.<span class="bu">open</span>(url)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Call the function</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>View(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 </section>
 <section id="common-data-transformations" class="level2">
 <h2 class="anchored" data-anchor-id="common-data-transformations">Common Data Transformations</h2>
-<p>The International Financial Statistics (IFS) database provides key macroeconomic aggregates that are frequently needed when working with other IMF datasets. Here, we’ll demonstrate how to use three fundamental indicators—GDP, price deflators, and population statistics—to transform your data.</p>
+<p>The World Economic Outlook (WEO) and Consumer Price Index (CPI) databases provide key macroeconomic aggregates that are frequently needed when working with other IMF datasets. Here, we’ll demonstrate how to use three fundamental indicators—GDP, price deflators, and population statistics—to transform your data.</p>
 <p>These transformations are essential for:</p>
 <ul>
 <li>Converting nominal to real dollar values</li>
@@ -650,51 +737,95 @@ memory usage: 2.4+ KB</code></pre>
 <li>Adjusting for different unit scales</li>
 </ul>
 <p>For a complete, end-to-end example of these transformations in a real analysis workflow, see Jenny Xu’s superb <a href="https://github.com/jennyxu/imfp-demo">demo notebook</a>.</p>
-<section id="fetching-ifs-adjusters" class="level3">
-<h3 class="anchored" data-anchor-id="fetching-ifs-adjusters">Fetching IFS Adjusters</h3>
-<p>First, let’s retrieve the key adjustment variables from the IFS database:</p>
-<div id="f22b57cb" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch GDP Deflator (Index, Annual)</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"NGDP_D_SA_IX"</span>,</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span>,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Population Estimates (Annual)</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>,</span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"LP_PE_NUM"</span>,</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"A"</span>,</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Exchange Rate (Annual)</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>, </span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"ENDE_XDC_USD_RATE"</span>,</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"Q"</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># start_year=2010 currently breaks this query for some reason</span></span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="fetching-adjusters" class="level3">
+<h3 class="anchored" data-anchor-id="fetching-adjusters">Fetching Adjusters</h3>
+<p>First, let’s retrieve the key adjustment variables:</p>
+<div id="46c78f90" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch GDP Deflator (Index, Quarterly)</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"QNEA"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"B1GQ"</span>,</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    price_type<span class="op">=</span><span class="st">"PD"</span>,  <span class="co"># Price deflator</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span><span class="st">"IX"</span>,  <span class="co"># Index</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span><span class="st">"Q"</span>,</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Population Estimates (Annual)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"WEO"</span>,</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"LP"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span><span class="st">"A"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Exchange Rate (Quarterly)</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"ER"</span>, </span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"XDC_USD"</span>,  <span class="co"># Domestic currency per USD</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span><span class="st">"Q"</span>,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/runner/work/imfp/imfp/imfp/data.py:748: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
+  warn(</code></pre>
 </div>
-<p>We’ll also retireve a nominal GDP series to be adjusted:</p>
-<div id="80826bd4" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Nominal GDP (Domestic currency, annual)</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>nominal_gdp <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"IFS"</span>, </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"NGDP_XDC"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span><span class="st">"A"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Key IFS Indicators</strong>:</p>
+<p>We’ll also retrieve a nominal GDP series to be adjusted:</p>
+<div id="8d865233" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch Nominal GDP (Domestic currency, annual)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>nominal_gdp <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"ANEA"</span>,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span><span class="st">"B1GQ"</span>,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    price_type<span class="op">=</span><span class="st">"V"</span>,  <span class="co"># Current prices</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span><span class="st">"XDC"</span>,  <span class="co"># Domestic currency</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span><span class="st">"A"</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Key Indicators</strong>:</p>
 <ul>
-<li><code>NGDP_D_SA_IX</code>: GDP deflator index (seasonally adjusted)</li>
-<li><code>LP_PE_NUM</code>: Population estimates</li>
-<li><code>ENDE_XDC_USD_RATE</code>: Exchange rate (domestic currency per USD)</li>
-<li><code>NGDP_XDC</code>: Nominal GDP in domestic currency</li>
+<li><strong>QNEA</strong> (Quarterly National Economic Accounts): <code>B1GQ</code> with <code>price_type="PD"</code> and <code>type_of_transformation="IX"</code> for GDP deflator index</li>
+<li><strong>WEO</strong> (World Economic Outlook): <code>LP</code> for population estimates</li>
+<li><strong>ER</strong> (Exchange Rates): <code>XDC_USD</code> for exchange rate (domestic currency per USD)</li>
+<li><strong>ANEA</strong> (Annual National Economic Accounts): <code>B1GQ</code> with <code>price_type="V"</code> and <code>type_of_transformation="XDC"</code> for nominal GDP in domestic currency</li>
 </ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Database Changes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The IMF has updated their API structure. The former IFS (International Financial Statistics) database, which provided a central point of access to these adjusters, has been discontinued and replaced with more specialized databases:</p>
+<ul>
+<li><strong>ANEA/QNEA</strong>: National Economic Accounts data (annual and quarterly)</li>
+<li><strong>WEO</strong>: World Economic Outlook data including population</li>
+<li><strong>ER</strong>: Exchange rate data</li>
+<li><strong>CPI</strong>: Consumer Price Index data</li>
+<li><strong>MFS_CBS</strong>: Monetary and Financial Statistics, Central Bank data</li>
+</ul>
+<p>Use <code>imf_databases()</code> to see all available databases and <code>imf_parameters(database_id)</code> to explore their indicators.</p>
+</div>
+</div>
+</section>
+<section id="alternative-using-cpi-for-price-adjustments" class="level3">
+<h3 class="anchored" data-anchor-id="alternative-using-cpi-for-price-adjustments">Alternative: Using CPI for Price Adjustments</h3>
+<p>If you prefer to use the Consumer Price Index instead of the GDP deflator:</p>
+<div id="e5528fc4" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch CPI (All Items, Index)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>cpi <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"CPI"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    index_type<span class="op">=</span><span class="st">"CPI"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    coicop_1999<span class="op">=</span><span class="st">"_T"</span>,  <span class="co"># All Items</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span><span class="st">"IX"</span>,  <span class="co"># Index</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span><span class="st">"Q"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2010</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 <section id="harmonizing-frequencies" class="level3">
 <h3 class="anchored" data-anchor-id="harmonizing-frequencies">Harmonizing Frequencies</h3>
@@ -702,93 +833,122 @@ memory usage: 2.4+ KB</code></pre>
 <ol type="1">
 <li>Using Q4 values: This approach is often used for stock variables (measurements taken at a point in time) and when you want to align with end-of-year values:</li>
 </ol>
-<div id="d8150bd4" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only Q4 observations for annual comparisons</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator[deflator[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> exchange_rate[exchange_rate[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract just the year from the time period for Q4 data</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>deflator[<span class="st">'time_period'</span>] <span class="op">=</span> deflator[<span class="st">'time_period'</span>].<span class="bu">str</span>[:<span class="dv">4</span>]</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>exchange_rate[<span class="st">'time_period'</span>] <span class="op">=</span> exchange_rate[<span class="st">'time_period'</span>].<span class="bu">str</span>[:<span class="dv">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c268fa9a" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only Q4 observations for annual comparisons</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator[deflator[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> exchange_rate[exchange_rate[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract just the year from the time period for Q4 data</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>deflator[<span class="st">'time_period'</span>] <span class="op">=</span> deflator[<span class="st">'time_period'</span>].<span class="bu">str</span>[:<span class="dv">4</span>]</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>exchange_rate[<span class="st">'time_period'</span>] <span class="op">=</span> exchange_rate[<span class="st">'time_period'</span>].<span class="bu">str</span>[:<span class="dv">4</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/2718242792.py:6: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  deflator['time_period'] = deflator['time_period'].str[:4]
+/tmp/ipykernel_7570/2718242792.py:7: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  exchange_rate['time_period'] = exchange_rate['time_period'].str[:4]</code></pre>
+</div>
 </div>
 <ol start="2" type="1">
 <li>Calculating annual averages: This approach is more appropriate for flow variables (measurements over a period) and when you want to smooth out seasonal variations:</li>
 </ol>
-<div id="487ee348" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative: Calculate annual averages</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator.groupby(</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'ref_area'</span>, deflator[<span class="st">'time_period'</span>]], </span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    as_index<span class="op">=</span><span class="va">False</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>).agg({</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'obs_value'</span>: <span class="st">'mean'</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8a6b65e0" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative: Calculate annual averages</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> deflator.groupby(</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'country'</span>, deflator[<span class="st">'time_period'</span>]], </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    as_index<span class="op">=</span><span class="va">False</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>).agg({</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'obs_value'</span>: <span class="st">'mean'</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Choose the appropriate method based on your specific analysis needs and the economic meaning of your variables.</p>
 </section>
-<section id="unit-multiplier-adjustment" class="level3">
-<h3 class="anchored" data-anchor-id="unit-multiplier-adjustment">Unit Multiplier Adjustment</h3>
-<p>IMF data often includes a <code>unit_mult</code> column that indicates the scale of the values (e.g., millions, billions). We can write a helper function to apply these scaling factors:</p>
-<div id="f479aef8" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> apply_unit_multiplier(df):</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Convert to numeric, adjust values using IMF's scaling factors, and drop</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">    missing values"""</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'obs_value'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'obs_value'</span>])</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'unit_mult'</span>] <span class="op">=</span> pd.to_numeric(df[<span class="st">'unit_mult'</span>])</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">'adjusted_value'</span>] <span class="op">=</span> df[<span class="st">'obs_value'</span>] <span class="op">*</span> <span class="dv">10</span> <span class="op">**</span> df[<span class="st">'unit_mult'</span>]</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> df.dropna(subset<span class="op">=</span>[<span class="st">"obs_value"</span>])</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply to each dataset</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>deflator <span class="op">=</span> apply_unit_multiplier(deflator)</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>population <span class="op">=</span> apply_unit_multiplier(population)</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>exchange_rate <span class="op">=</span> apply_unit_multiplier(exchange_rate)</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>nominal_gdp <span class="op">=</span> apply_unit_multiplier(nominal_gdp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
 <section id="merging-datasets" class="level3">
 <h3 class="anchored" data-anchor-id="merging-datasets">Merging Datasets</h3>
-<p>After harmonizing unit scales, we can combine the datasets using <code>pd.DataFrame.merge()</code> with <code>ref_area</code> and <code>time_period</code> as keys:</p>
-<div id="c1c4209e" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> (</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    nominal_gdp.merge(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        deflator,</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'ref_area'</span>, <span class="st">'time_period'</span>],</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        suffixes<span class="op">=</span>(<span class="st">'_gdp'</span>, <span class="st">'_deflator'</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        population,</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'ref_area'</span>, <span class="st">'time_period'</span>]</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        exchange_rate,</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'ref_area'</span>, <span class="st">'time_period'</span>],</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        suffixes<span class="op">=</span>(<span class="st">'_population'</span>, <span class="st">'_exchange_rate'</span>)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We can combine the datasets using <code>pd.DataFrame.merge()</code> with <code>country</code> and <code>time_period</code> as keys:</p>
+<div id="d832b5a1" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>merged <span class="op">=</span> (</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    nominal_gdp.merge(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        deflator,</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'country'</span>, <span class="st">'time_period'</span>],</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        suffixes<span class="op">=</span>(<span class="st">'_gdp'</span>, <span class="st">'_deflator'</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        population,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'country'</span>, <span class="st">'time_period'</span>]</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>    .merge(</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        exchange_rate,</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>        on<span class="op">=</span>[<span class="st">'country'</span>, <span class="st">'time_period'</span>],</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        suffixes<span class="op">=</span>(<span class="st">'_population'</span>, <span class="st">'_exchange_rate'</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="calculating-real-values" class="level3">
 <h3 class="anchored" data-anchor-id="calculating-real-values">Calculating Real Values</h3>
 <p>With the merged dataset, we can now calculate real GDP and per capita values:</p>
-<div id="e36d3165" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert nominal to real GDP</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">'real_gdp'</span>] <span class="op">=</span> (</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    (merged[<span class="st">'adjusted_value_gdp'</span>] <span class="op">/</span> merged[<span class="st">'adjusted_value_deflator'</span>]) <span class="op">*</span> <span class="dv">100</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate per capita values (using population obs_value)</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">'real_gdp_per_capita'</span>] <span class="op">=</span> merged[<span class="st">'real_gdp'</span>] <span class="op">/</span> merged[<span class="st">'adjusted_value_population'</span>]</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first 5 rows of the transformed data</span></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>merged[[<span class="st">'time_period'</span>, <span class="st">'real_gdp'</span>, <span class="st">'real_gdp_per_capita'</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9f495045" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert nominal to real GDP</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">'real_gdp'</span>] <span class="op">=</span> (</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    (merged[<span class="st">'obs_value_gdp'</span>] <span class="op">/</span> merged[<span class="st">'obs_value_deflator'</span>]) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate per capita values (using population obs_value)</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">'real_gdp_per_capita'</span>] <span class="op">=</span> merged[<span class="st">'real_gdp'</span>] <span class="op">/</span> merged[<span class="st">'obs_value_population'</span>]</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first 5 rows of the transformed data</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>merged[[<span class="st">'country'</span>, <span class="st">'time_period'</span>, <span class="st">'real_gdp'</span>, <span class="st">'real_gdp_per_capita'</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/35632758.py:2: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  merged['real_gdp'] = (
+/tmp/ipykernel_7570/35632758.py:7: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  merged['real_gdp_per_capita'] = merged['real_gdp'] / merged['obs_value_population']</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="15">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">country</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">real_gdp</th>
 <th data-quarto-table-cell-role="th">real_gdp_per_capita</th>
@@ -796,34 +956,39 @@ memory usage: 2.4+ KB</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>ALB</td>
 <td>2011</td>
-<td>3551364668794.20</td>
-<td>82248.89</td>
+<td>1266392354394.81</td>
+<td>435935.41</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>ALB</td>
+<td>2011</td>
+<td>1266392354394.81</td>
+<td>435935.41</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>ALB</td>
 <td>2012</td>
-<td>3792317490278.53</td>
-<td>85521.44</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2013</td>
-<td>3967309320845.69</td>
-<td>87155.33</td>
+<td>1302994927918.21</td>
+<td>449308.60</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2014</td>
-<td>4144699824894.22</td>
-<td>88751.48</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>ALB</td>
+<td>2012</td>
+<td>1302994927918.21</td>
+<td>449308.60</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>2015</td>
-<td>4417512779956.08</td>
-<td>92265.37</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>ALB</td>
+<td>2013</td>
+<td>1327471211207.70</td>
+<td>458539.28</td>
 </tr>
 </tbody>
 </table>
@@ -834,31 +999,55 @@ memory usage: 2.4+ KB</code></pre>
 </section>
 <section id="exchange-rate-adjustment" class="level3">
 <h3 class="anchored" data-anchor-id="exchange-rate-adjustment">Exchange Rate Adjustment</h3>
-<p>Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the IFS database.</p>
-<div id="22f8c16a" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Because 'adjusted_value_exrate' is local-currency-per-USD,</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing local-currency real GDP by it yields GDP in USD.</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">"real_gdp_usd"</span>] <span class="op">=</span> (</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    merged[<span class="st">"real_gdp"</span>] <span class="op">/</span> merged[<span class="st">"adjusted_value_exchange_rate"</span>]</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (Optional) real GDP per capita in USD</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">"real_gdp_usd_per_capita"</span>] <span class="op">=</span> (</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    merged[<span class="st">"real_gdp_usd"</span>] <span class="op">/</span> merged[<span class="st">"adjusted_value_population"</span>]</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect results</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>merged[[<span class="st">"time_period"</span>,<span class="st">"ref_area"</span>,<span class="st">"real_gdp"</span>,<span class="st">"real_gdp_usd"</span>,<span class="st">"real_gdp_usd_per_capita"</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the ER (Exchange Rates) database.</p>
+<div id="ad6f2bea" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Because 'obs_value_exchange_rate' is local-currency-per-USD,</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing local-currency real GDP by it yields GDP in USD.</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">"real_gdp_usd"</span>] <span class="op">=</span> (</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    merged[<span class="st">"real_gdp"</span>] <span class="op">/</span> merged[<span class="st">"obs_value_exchange_rate"</span>]</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (Optional) real GDP per capita in USD</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>merged[<span class="st">"real_gdp_usd_per_capita"</span>] <span class="op">=</span> (</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    merged[<span class="st">"real_gdp_usd"</span>] <span class="op">/</span> merged[<span class="st">"obs_value_population"</span>]</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Inspect results</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>merged[[<span class="st">"time_period"</span>,<span class="st">"country"</span>,<span class="st">"real_gdp"</span>,<span class="st">"real_gdp_usd"</span>,<span class="st">"real_gdp_usd_per_capita"</span>]].head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/tmp/ipykernel_7570/400048459.py:3: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  merged["real_gdp_usd"] = (
+/tmp/ipykernel_7570/400048459.py:8: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  merged["real_gdp_usd_per_capita"] = (</code></pre>
+</div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
 <th data-quarto-table-cell-role="th">time_period</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
+<th data-quarto-table-cell-role="th">country</th>
 <th data-quarto-table-cell-role="th">real_gdp</th>
 <th data-quarto-table-cell-role="th">real_gdp_usd</th>
 <th data-quarto-table-cell-role="th">real_gdp_usd_per_capita</th>
@@ -866,44 +1055,44 @@ memory usage: 2.4+ KB</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>2011</td>
-<td>KE</td>
-<td>3551364668794.20</td>
-<td>41747313843.78</td>
-<td>966.86</td>
+<td>ALB</td>
+<td>1266392354394.81</td>
+<td>11776012222.38</td>
+<td>4053.70</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>2011</td>
+<td>ALB</td>
+<td>1266392354394.81</td>
+<td>12190133681.53</td>
+<td>4196.26</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>2012</td>
-<td>KE</td>
-<td>3792317490278.53</td>
-<td>44096304805.05</td>
-<td>994.43</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>2013</td>
-<td>KE</td>
-<td>3967309320845.69</td>
-<td>45965960945.06</td>
-<td>1009.80</td>
+<td>ALB</td>
+<td>1302994927918.21</td>
+<td>12309824543.39</td>
+<td>4244.77</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>2014</td>
-<td>KE</td>
-<td>4144699824894.22</td>
-<td>45796944714.40</td>
-<td>980.66</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>2012</td>
+<td>ALB</td>
+<td>1302994927918.21</td>
+<td>12088272826.03</td>
+<td>4168.37</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>2015</td>
-<td>KE</td>
-<td>4417512779956.08</td>
-<td>43177131580.22</td>
-<td>901.81</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>2013</td>
+<td>ALB</td>
+<td>1327471211207.70</td>
+<td>13032311125.15</td>
+<td>4501.66</td>
 </tr>
 </tbody>
 </table>
@@ -968,13 +1157,14 @@ memory usage: 2.4+ KB</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

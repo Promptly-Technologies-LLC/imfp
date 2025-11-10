@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-a98ec624fb63d9b712fc3a6f62e2b305.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -116,6 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">imfp</span>
     </a>
@@ -218,17 +221,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="filtering-imf-dataset-requests-with-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="filtering-imf-dataset-requests-with-parameters">Filtering IMF Dataset Requests with Parameters</h2>
 <p>Once you have a <code>database_id</code>, it’s possible to make a call to <code>imf_dataset</code> to fetch the entire database:</p>
-<div id="f272499e" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
+<div id="dd8794a5" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set float format to 2 decimal places for pandas display output</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">%.2f</span><span class="st">'</span> <span class="op">%</span> x)</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>imfp.imf_dataset(database_id)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Producer Price Index database</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>database_id <span class="op">=</span> <span class="st">"PPI"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>imfp.imf_dataset(database_id)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>However, while this will succeed for a few small databases, it will fail for all of the larger ones. And even in the rare case when it succeeds, fetching an entire database can take a long time. You’re much better off supplying additional filter parameters to reduce the size of your request.</p>
-<p>Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. The <code>imf_parameters</code> function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.</p>
+<p>Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. You also have to have the list of valid input codes for each parameter. The <code>imf_parameters</code> function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.</p>
 </section>
 <section id="understanding-filter-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="understanding-filter-parameters">Understanding Filter Parameters</h2>
@@ -244,16 +249,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="discovering-available-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="discovering-available-parameters">Discovering Available Parameters</h2>
 <p>To get started, you’ll need to know what parameters are available for your chosen database. Use <code>imf_parameters()</code> to get this information:</p>
-<div id="b8da3e03" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
+<div id="baa77609" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters for the Primary Commodity Price System database</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters for the Producer Price Index database</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PPI"</span>)</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View the available parameter names</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>dict_keys(['freq', 'ref_area', 'commodity', 'unit_measure'])</code></pre>
+<pre><code>dict_keys(['country', 'indicator', 'type_of_transformation', 'frequency'])</code></pre>
 </div>
 </div>
 <p>The function returns a dictionary of data frames.</p>
@@ -262,15 +267,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>input_code</code>: The valid codes you can use for that parameter</li>
 <li><code>description</code>: A short text description of what each code represents</li>
 </ul>
-<p>For example, to see the valid codes for the <code>freq</code> (frequency) parameter:</p>
-<div id="05d38d77" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'freq'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For example, to see the valid codes for the <code>frequency</code> parameter:</p>
+<div id="96c6f0bc" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'frequency'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -280,19 +285,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>A</td>
 <td>Annual</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>D</td>
+<td>Daily</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>M</td>
 <td>Monthly</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>Q</td>
 <td>Quarterly</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>S</td>
+<td>Half-yearly, semester</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>W</td>
+<td>Weekly</td>
 </tr>
 </tbody>
 </table>
@@ -304,16 +324,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="parameter-definitions" class="level2">
 <h2 class="anchored" data-anchor-id="parameter-definitions">Parameter Definitions</h2>
 <p>If the parameter name is not self-explanatory, you can use the <code>imf_parameter_defs()</code> function to get a text description of what each parameter represents.</p>
-<div id="09c0e6f1" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get descriptions of what each parameter means</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params_defs <span class="op">=</span> imfp.imf_parameter_defs(<span class="st">"PCPS"</span>)</span>
+<div id="e5d78083" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get descriptions of what each parameter means</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params_defs <span class="op">=</span> imfp.imf_parameter_defs(<span class="st">"PPI"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>params_defs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>params_defs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -323,24 +343,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>freq</td>
-<td>Frequency</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>country</td>
+<td>Country</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>ref_area</td>
-<td>Geographical Areas</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>indicator</td>
+<td>Producer Price Index (PPI) Indicator codelist</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>commodity</td>
-<td>Indicator</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>type_of_transformation</td>
+<td>Producer Price Indexes (PPI) Type of Transform...</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>unit_measure</td>
-<td>Unit</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>frequency</td>
+<td>Frequency</td>
 </tr>
 </tbody>
 </table>
@@ -354,17 +374,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="basic-approach-recommended-for-most-users" class="level3">
 <h3 class="anchored" data-anchor-id="basic-approach-recommended-for-most-users">Basic Approach (Recommended for Most Users)</h3>
 <p>To make a request to fetch data from the IMF API, just call <code>imf_dataset</code> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
-<p>For instance, on exploring the <code>freq</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imf_dataset</code> with <code>freq = ["A"]</code>.</p>
-<p>Here’s a complete example that fetches annual coal prices for the years 2000 through 2015:</p>
-<div id="44363bd7" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Get annual coal prices</span></span>
+<p>For instance, on exploring the <code>frequency</code> parameter of the Producer Price Index database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imf_dataset</code> with <code>frequency = ["A"]</code>.</p>
+<p>Here’s a complete example that fetches annual producer prices from 2000 to 2015:</p>
+<div id="fc214b8f" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Get annual prices</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span>[<span class="st">"A"</span>],  <span class="co"># Annual frequency</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    commodity<span class="op">=</span>[<span class="st">"PCOAL"</span>],  <span class="co"># Coal prices</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span>[<span class="st">"A"</span>],  <span class="co"># Annual frequency</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span>[<span class="st">"PPI"</span>],  <span class="co"># Producer Price Index</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="advanced-approaches" class="level3">
@@ -373,115 +393,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="list-arguments-with-parameter-filtering" class="level4">
 <h4 class="anchored" data-anchor-id="list-arguments-with-parameter-filtering">1. List Arguments with Parameter Filtering</h4>
 <p>This approach uses string matching to find the correct parameter codes before passing them to <code>imf_dataset</code>:</p>
-<div id="7d1d00fe" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the freq parameter...</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>selected_freq <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'freq'</span>][<span class="st">'input_code'</span>][</span>
+<div id="7c44abf5" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the frequency parameter...</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>selected_frequency <span class="op">=</span> <span class="bu">list</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'frequency'</span>][<span class="st">'input_code'</span>][</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Annual"</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'freq'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'frequency'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the commodity parameter...</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>selected_commodity <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'commodity'</span>][<span class="st">'input_code'</span>][</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Coal"</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'commodity'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the unit_measure parameter...</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>selected_type_of_transformation <span class="op">=</span> <span class="bu">list</span>(</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'type_of_transformation'</span>][<span class="st">'input_code'</span>][</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Index"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'type_of_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the unit_measure parameter...</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>selected_unit_measure <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'unit_measure'</span>][<span class="st">'input_code'</span>][</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Index"</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'unit_measure'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API using the filtered parameter code lists</span></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    freq<span class="op">=</span>selected_freq,</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    commodity<span class="op">=</span>selected_commodity,</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    unit_measure<span class="op">=</span>selected_unit_measure,</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API using the filtered parameter code lists</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span>selected_frequency,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span>selected_type_of_transformation,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">freq</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
-<th data-quarto-table-cell-role="th">commodity</th>
-<th data-quarto-table-cell-role="th">unit_measure</th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
-<th data-quarto-table-cell-role="th">time_format</th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">indicator</th>
+<th data-quarto-table-cell-role="th">type_of_transformation</th>
+<th data-quarto-table-cell-role="th">frequency</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2000</td>
-<td>39.3510230293202</td>
+<td>A</td>
+<td>2008</td>
+<td>80.099924</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2001</td>
-<td>49.3378587284039</td>
+<td>A</td>
+<td>2009</td>
+<td>88.676029</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2002</td>
-<td>39.4949091648006</td>
+<td>A</td>
+<td>2010</td>
+<td>100.000000</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2003</td>
-<td>43.2878876950788</td>
+<td>A</td>
+<td>2011</td>
+<td>111.889914</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2004</td>
-<td>82.9185858052862</td>
+<td>A</td>
+<td>2012</td>
+<td>117.840781</td>
 </tr>
 </tbody>
 </table>
@@ -493,106 +492,90 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="parameters-dictionary-approach" class="level4">
 <h4 class="anchored" data-anchor-id="parameters-dictionary-approach">2. Parameters Dictionary Approach</h4>
 <p>This approach modifies the parameters dictionary directly and passes the entire filtered dictionary to <code>imf_dataset</code> as a single <code>parameters</code> keyword argument. This is more concise but requires understanding how the parameters dictionary works:</p>
-<div id="7c24735e" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the params dictionary</span></span>
+<div id="24127a5a" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the params dictionary</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>modified_params <span class="op">=</span> params.copy()</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overwrite the data frame for each parameter in the dictionary with filtered rows</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'freq'</span>] <span class="op">=</span> params[<span class="st">'freq'</span>][</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for freq contains "Annual"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'freq'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'frequency'</span>] <span class="op">=</span> params[<span class="st">'frequency'</span>][</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for frequency contains "Annual"</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'frequency'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'commodity'</span>] <span class="op">=</span> params[<span class="st">'commodity'</span>][</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for commodity contains "Coal"</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'commodity'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'type_of_transformation'</span>] <span class="op">=</span> params[<span class="st">'type_of_transformation'</span>][</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for type_of_transformation contains "Index"</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'type_of_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
 <span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'unit_measure'</span>] <span class="op">=</span> params[<span class="st">'unit_measure'</span>][</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for unit_measure contains "Index"</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'unit_measure'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass the modified dictionary to imf_dataset</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>modified_params,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass the modified dictionary to imf_dataset</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>modified_params,</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">freq</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
-<th data-quarto-table-cell-role="th">commodity</th>
-<th data-quarto-table-cell-role="th">unit_measure</th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
-<th data-quarto-table-cell-role="th">time_format</th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">indicator</th>
+<th data-quarto-table-cell-role="th">type_of_transformation</th>
+<th data-quarto-table-cell-role="th">frequency</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2000</td>
-<td>39.3510230293202</td>
+<td>A</td>
+<td>2008</td>
+<td>80.099924</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2001</td>
-<td>49.3378587284039</td>
+<td>A</td>
+<td>2009</td>
+<td>88.676029</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2002</td>
-<td>39.4949091648006</td>
+<td>A</td>
+<td>2010</td>
+<td>100.000000</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2003</td>
-<td>43.2878876950788</td>
+<td>A</td>
+<td>2011</td>
+<td>111.889914</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>A</td>
-<td>W00</td>
-<td>PCOAL</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>AGO</td>
+<td>WPI</td>
 <td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2004</td>
-<td>82.9185858052862</td>
+<td>A</td>
+<td>2012</td>
+<td>117.840781</td>
 </tr>
 </tbody>
 </table>
@@ -659,13 +642,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

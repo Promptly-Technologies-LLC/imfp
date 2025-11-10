@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.25">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/quarto-nav/headroom.min.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-a98ec624fb63d9b712fc3a6f62e2b305.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -102,7 +103,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
@@ -116,6 +117,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    </a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">imfp</span>
     </a>
@@ -192,7 +195,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#working-with-the-returned-data-frame" id="toc-working-with-the-returned-data-frame" class="nav-link" data-scroll-target="#working-with-the-returned-data-frame">Working with the Returned Data Frame</a></li>
   <li><a href="#contributing" id="toc-contributing" class="nav-link" data-scroll-target="#contributing">Contributing</a></li>
-  <li><a href="#working-with-llms" id="toc-working-with-llms" class="nav-link" data-scroll-target="#working-with-llms">Working with LLMs</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -223,13 +225,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>imfp</h1>
 <p><a href="https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml"><img src="https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml/badge.svg" class="img-fluid" alt="Tests"></a> <a href="https://pypi.python.org/pypi/imfp"><img src="https://img.shields.io/pypi/v/imfp.svg" class="img-fluid" alt="PyPI Version"></a> <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" class="img-fluid" alt="Code style: black"></a></p>
 <p><code>imfp</code>, created and maintained by <a href="https://promptlytechnologies.com">Promptly Technologies</a>, is a Python package for downloading data from the <a href="http://data.imf.org/">International Monetary Fund’s</a> <a href="http://datahelp.imf.org/knowledgebase/articles/667681-using-json-restful-web-service">RESTful JSON API</a>.</p>
+<p><strong>NOTE: The IMF recently discontinued their SDMX 2.0 API, which <code>imfp</code> used, and migrated to 3.0. Version 1.3.0 of <code>imfp</code> represents my best effort to make a semi-backward compatible version of the library. Function names remain the same, and I have added a few helpers to map old parameters to the new ones. But the honest truth is that the structure of the API and the data returned by it has changed very significantly, and your old code is very unlikely to work without some modifications. I apologize for the inconvenience. <code>imfp</code> version 2.0.0 will be released soon, and will rewrite the library more comprehensively to follow the patterns of the new API.</strong></p>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>To install the stable version of imfp from PyPi, use pip.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> imfp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> imfp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>To load the library, use <code>import</code>:</p>
-<div id="111811d2" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="41fb499d" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="workflow" class="level2">
@@ -239,9 +242,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="fetching-a-list-of-databases-with-imf_databases">Fetching a List of Databases with <code>imf_databases</code></h3>
 <p>For instance, all calls to <code>imf_dataset</code> require a <code>database_id</code>. This is because the IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from.</p>
 <p>To fetch a list of available databases, use:</p>
-<div id="7661b962" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of available databases</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="350dba0a" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of available databases</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>See <a href="./docs/databases.html">Working with Databases</a> for more information.</p>
 </section>
@@ -249,28 +252,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="fetching-a-list-of-parameters-and-input-codes-with-imf_parameters">Fetching a List of Parameters and Input Codes with <code>imf_parameters</code></h3>
 <p>Requests to fetch data from IMF databases are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. See <a href="./docs/parameters.html">Working with Parameters</a> for a more detailed explanation of parameters and input codes and how they work.</p>
 <p>To obtain the full list of parameters and valid input codes for a given database, use:</p>
-<div id="056b765e" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters and input codes for commodity price database</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="11af549d" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters and input codes for commodity price database</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The <code>imf_parameters</code> function returns a dictionary of data frames. Each dictionary key name corresponds to a parameter used in making requests from the database:</p>
-<div id="75d4f981" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get key names from the params object</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="df5e0809" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get key names from the params object</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>dict_keys(['freq', 'ref_area', 'commodity', 'unit_measure'])</code></pre>
+<pre><code>dict_keys(['country', 'indicator', 'data_transformation', 'frequency'])</code></pre>
 </div>
 </div>
 <p>Each named list item is a data frame containing the valid input codes (and their descriptions) that can be used with the named parameter.</p>
 <p>To access the data frame containing valid values for each parameter, subset the <code>params</code> dict by the parameter name:</p>
-<div id="7e9ef743" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'freq'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="2adb9b53" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'frequency'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -280,19 +283,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
+<th data-quarto-table-cell-role="th">0</th>
 <td>A</td>
 <td>Annual</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>D</td>
+<td>Daily</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
 <td>M</td>
 <td>Monthly</td>
 </tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
 <td>Q</td>
 <td>Quarterly</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>S</td>
+<td>Half-yearly, semester</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">5</th>
+<td>W</td>
+<td>Weekly</td>
 </tr>
 </tbody>
 </table>
@@ -304,18 +322,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="supplying-parameter-arguments-to-imf_dataset" class="level3">
 <h3 class="anchored" data-anchor-id="supplying-parameter-arguments-to-imf_dataset">Supplying Parameter Arguments to <code>imf_dataset</code></h3>
 <p>To make a request to fetch data from the IMF API, just call <code>imfp.imf_dataset</code> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
-<p>For instance, on exploring the <code>freq</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imfp.imf_dataset</code> with <code>freq = ["A"]</code>.</p>
-<p>Similarly, we might search the dataframes of valid input codes for the <code>commodity</code> and <code>unit_measure</code> parameters to find the input codes for coal and index:</p>
-<div id="bc829c92" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'commodity' input code for coal</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'commodity'</span>].loc[</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'commodity'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>For instance, on exploring the <code>frequency</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imfp.imf_dataset</code> with <code>frequency = ["A"]</code>.</p>
+<p>Similarly, we might search the dataframes of valid input codes for the <code>indicator</code> and <code>data_transformation</code> parameters to find the input codes for coal and index:</p>
+<div id="581cb20b" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'indicator' input code for coal</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'indicator'</span>].loc[</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'indicator'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -325,19 +343,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">14</td>
+<th data-quarto-table-cell-role="th">14</th>
 <td>PCOAL</td>
-<td>Primary Commodity Prices, Coal index</td>
+<td>Coal index, Commodity price index, Index, 2016...</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">15</td>
+<th data-quarto-table-cell-role="th">15</th>
 <td>PCOALAU</td>
-<td>Primary Commodity Prices, Coal, Australia</td>
+<td>Coal, Australia, US dollars per metric tonne, ...</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">16</td>
+<th data-quarto-table-cell-role="th">16</th>
 <td>PCOALSA</td>
-<td>Primary Commodity Prices, Coal, South Africa</td>
+<td>Coal, South Africa, US dollars per metric tonn...</td>
 </tr>
 </tbody>
 </table>
@@ -345,16 +363,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="3b064b58" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'unit_measure' input code for index</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'unit_measure'</span>].loc[</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'unit_measure'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="81a71e60" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'data_transformation' input code for index</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'data_transformation'</span>].loc[</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'data_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
@@ -364,9 +382,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>IX</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>INDEX</td>
 <td>Index</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>INDEX_PCH</td>
+<td>Index, percent change</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>INDEX_PCHY</td>
+<td>Index, percent change from a year ago</td>
 </tr>
 </tbody>
 </table>
@@ -375,88 +403,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Finally, we can use the information we’ve gathered to make the request to fetch the data:</p>
-<div id="21dd06af" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API</span></span>
+<div id="df230075" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(database_id <span class="op">=</span> <span class="st">"PCPS"</span>,</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         freq <span class="op">=</span> [<span class="st">"A"</span>], commodity <span class="op">=</span> [<span class="st">"PCOAL"</span>, <span class="st">"PCOALAU"</span>, <span class="st">"PCOALSA"</span>],</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         unit_measure <span class="op">=</span> [<span class="st">"IX"</span>],</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>         start_year <span class="op">=</span> <span class="dv">2000</span>, end_year <span class="op">=</span> <span class="dv">2015</span>)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few entries in the retrieved data frame</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         frequency <span class="op">=</span> [<span class="st">"A"</span>], indicator <span class="op">=</span> [<span class="st">"PCOAL"</span>],</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         data_transformation <span class="op">=</span> [<span class="st">"INDEX"</span>])</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few entries in the retrieved data frame</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
 
-<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">freq</th>
-<th data-quarto-table-cell-role="th">ref_area</th>
-<th data-quarto-table-cell-role="th">commodity</th>
-<th data-quarto-table-cell-role="th">unit_measure</th>
-<th data-quarto-table-cell-role="th">unit_mult</th>
-<th data-quarto-table-cell-role="th">time_format</th>
+<th data-quarto-table-cell-role="th">country</th>
+<th data-quarto-table-cell-role="th">indicator</th>
+<th data-quarto-table-cell-role="th">data_transformation</th>
+<th data-quarto-table-cell-role="th">frequency</th>
 <th data-quarto-table-cell-role="th">time_period</th>
 <th data-quarto-table-cell-role="th">obs_value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">0</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">0</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2000</td>
-<td>39.3510230293202</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1992</td>
+<td>49.892138</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">1</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">1</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2001</td>
-<td>49.3378587284039</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1993</td>
+<td>43.279151</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">2</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">2</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2002</td>
-<td>39.4949091648006</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1994</td>
+<td>45.213931</td>
 </tr>
 <tr class="even">
-<td data-quarto-table-cell-role="th">3</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">3</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2003</td>
-<td>43.2878876950788</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1995</td>
+<td>55.433711</td>
 </tr>
 <tr class="odd">
-<td data-quarto-table-cell-role="th">4</td>
-<td>A</td>
-<td>W00</td>
+<th data-quarto-table-cell-role="th">4</th>
+<td>G001</td>
 <td>PCOAL</td>
-<td>IX</td>
-<td>0</td>
-<td>P1Y</td>
-<td>2004</td>
-<td>82.9185858052862</td>
+<td>INDEX</td>
+<td>A</td>
+<td>1996</td>
+<td>53.179458</td>
 </tr>
 </tbody>
 </table>
@@ -464,26 +479,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The returned data frame has a <code>time_format</code> column that contains ISO 8601 duration codes. In this case, “P1Y” means “periods of 1 year.” The <code>unit_mult</code> column represents the power of 10 to which the value column should be raised. For instance, if value is in millions, then the unit multiplier will be 6 (meaning 10^6). If in billions, then the unit multiplier will be 9 (meaning 10^9). For more information on interpreting the returned data frame, see <a href="./docs/usage.html#understanding-the-data-frame">Understanding the Data Frame</a>.</p>
 </section>
 </section>
 <section id="working-with-the-returned-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="working-with-the-returned-data-frame">Working with the Returned Data Frame</h2>
 <p>Note that all columns in the returned data frame are string objects, and to plot the series we will need to convert to valid numeric or date formats:</p>
-<div id="aed62612" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert obs_value to numeric and time_period to integer year</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.astype({<span class="st">"time_period"</span> : <span class="bu">int</span>, <span class="st">"obs_value"</span> : <span class="bu">float</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="89636034" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert obs_value to numeric and time_period to integer year</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.astype({<span class="st">"time_period"</span> : <span class="bu">int</span>, <span class="st">"obs_value"</span> : <span class="bu">float</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then, using <code>seaborn</code> with <code>hue</code>, we can plot different indicators in different colors:</p>
-<div id="3295d443" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<div id="38923304" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot prices of different commodities in different colors with seaborn</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">'time_period'</span>, y<span class="op">=</span><span class="st">'obs_value'</span>, hue<span class="op">=</span><span class="st">'commodity'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">'time_period'</span>, y<span class="op">=</span><span class="st">'obs_value'</span>, hue<span class="op">=</span><span class="st">'indicator'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:300: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  sub_data[f"{other}min"] = np.nan
+/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:301: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  sub_data[f"{other}max"] = np.nan
+/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:307: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
+You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
+A typical example is when you are setting values in a column of a DataFrame, like:
+
+df["col"][row_indexer] = value
+
+Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+
+  sub_data[col] = inv(sub_data[col])</code></pre>
+</div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-11-output-1.png" width="593" height="429" class="figure-img"></p>
+<p><img src="index_files/figure-html/cell-11-output-2.png" width="601" height="429" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -506,10 +555,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>Note that if you want to change and preview the documentation, you will need to install the <a href="https://quarto.org/docs/download/">Quarto CLI tool</a>.</p>
 <p>Version incrementing, package building, testing, changelog generation, documentation rendering, publishing to PyPI, and Github release creation is handled automatically by the GitHub Actions workflow based on the commit messages.</p>
-</section>
-<section id="working-with-llms" class="level2">
-<h2 class="anchored" data-anchor-id="working-with-llms">Working with LLMs</h2>
-<p>In line with the <a href="https://llmstxt.org/">llms.txt standard</a>, we have exposed the full Markdown-formatted project documentation as a <a href="docs/static/llms.txt">single text file</a> to make it more usable by LLM agents.</p>
 
 
 </section>
@@ -567,13 +612,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
