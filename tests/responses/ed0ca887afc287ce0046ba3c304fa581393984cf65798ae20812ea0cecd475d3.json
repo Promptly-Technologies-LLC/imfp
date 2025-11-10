@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/conceptscheme/IMF.RES/CS_PCPS/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 15:34:08 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "f82d2b67a59b1ddd4360a7407210fb1e",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "22",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"data\":{\"conceptSchemes\":[{\"annotations\":[{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-06-16T17:59:44.587191Z\"}],\"id\":\"CS_PCPS\",\"name\":\"Primary Commodity Price System (PCPS)\",\"names\":{\"en\":\"Primary Commodity Price System (PCPS)\"},\"descriptions\":{},\"version\":\"7.0.0\",\"agencyID\":\"IMF.RES\",\"concepts\":[{\"annotations\":[],\"id\":\"INDICATOR\",\"name\":\"Indicator\",\"names\":{\"en\":\"Indicator\"},\"description\":\"A variable that sheds light on some phenomenon or situation.\",\"descriptions\":{\"en\":\"A variable that sheds light on some phenomenon or situation.\"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.RES:CL_PCPS_INDICATOR(3.0+.0)\"}},{\"annotations\":[],\"id\":\"DATA_TRANSFORMATION\",\"name\":\"Data Transformation\",\"names\":{\"en\":\"Data Transformation\"},\"description\":\"Represents the specific calculations or computations applied to source data, along with the standard unit used to express the resulting new data elements or indicators. \",\"descriptions\":{\"en\":\"Represents the specific calculations or computations applied to source data, along with the standard unit used to express the resulting new data elements or indicators. \"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.RES:CL_PCPS_DATA_TRANSFORMATION(4.0+.0)\"}},{\"annotations\":[],\"id\":\"PCPS_RY\",\"name\":\"PCPS Reference Year\",\"names\":{\"en\":\"PCPS Reference Year\"},\"description\":\"A variable that sheds light on some phenomenon or situation.\",\"descriptions\":{\"en\":\"A variable that sheds light on some phenomenon or situation.\"},\"coreRepresentation\":{\"enumeration\":\"urn:sdmx:org.sdmx.infomodel.codelist.Codelist=IMF.RES:CL_PCPS_REFERENCE_YEAR(1.0+.0)\"}}],\"isPartial\":false}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF9402\",\"test\":false,\"prepared\":\"2025-11-09T15:34:08.506454681Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"unknown\"}}}",
+  "encoding": null
+}

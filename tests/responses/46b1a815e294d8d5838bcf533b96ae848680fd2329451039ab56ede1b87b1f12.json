@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/codelist/IMF.STA/CL_GFS_TYPE_OF_TRANSFORMATION/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Sun, 09 Nov 2025 20:52:38 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "d6be6c1e7340217a48d8abcf9c1db728",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "19",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:349969e1-7e6f-4e0e-bb7b-54d9077e7f0f"
+  },
+  "text": "{\"data\":{\"codelists\":[{\"annotations\":[{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-05-29T15:13:02.674567Z\"}],\"id\":\"CL_GFS_TYPE_OF_TRANSFORMATION\",\"name\":\"Government Finance Statistics (GFS) Type of Transformation\",\"names\":{\"en\":\"Government Finance Statistics (GFS) Type of Transformation\"},\"descriptions\":{},\"version\":\"1.0.0\",\"agencyID\":\"IMF.STA\",\"isPartial\":false,\"codes\":[{\"annotations\":[],\"id\":\"POGDP_PT\",\"name\":\"Percent of GDP\",\"names\":{\"en\":\"Percent of GDP\"},\"description\":\"Value expressed as a percent of the Gross Domestic Product (GDP) of a country. A ratio expressed as a fraction of 100.\",\"descriptions\":{\"en\":\"Value expressed as a percent of the Gross Domestic Product (GDP) of a country. A ratio expressed as a fraction of 100.\"}},{\"annotations\":[],\"id\":\"XDC\",\"name\":\"Domestic currency\",\"names\":{\"en\":\"Domestic currency\"},\"description\":\"Currency issued by the country of origin, used internally. Used to specify what Unit of Measure the country used to provide data to the IMF.�\",\"descriptions\":{\"en\":\"Currency issued by the country of origin, used internally. Used to specify what Unit of Measure the country used to provide data to the IMF.�\"}},{\"annotations\":[],\"id\":\"POTO_PT\",\"name\":\"Percent of total outlays\",\"names\":{\"en\":\"Percent of total outlays\"},\"description\":\"The share of a specific expenditure item or category within the total amount of all outlays or expenditures. A ratio expressed as a fraction of 100.\",\"descriptions\":{\"en\":\"The share of a specific expenditure item or category within the total amount of all outlays or expenditures. A ratio expressed as a fraction of 100.\"}}],\"codelistExtensions\":[]}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF5992\",\"test\":false,\"prepared\":\"2025-11-09T20:52:38.178671934Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"unknown\"}}}",
+  "encoding": null
+}

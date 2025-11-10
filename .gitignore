@@ -136,3 +136,9 @@ cython_debug/
 
 # Mac
 .DS_Store
+
+# AI nonsense
+CLAUDE.md
+AGENTS.md
+.cursor/
+.claude/

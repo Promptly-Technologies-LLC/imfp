@@ -1,0 +1,19 @@
+{
+  "url": "https://example.com/",
+  "status_code": 200,
+  "headers": {
+    "Accept-Ranges": "bytes",
+    "Content-Type": "text/html",
+    "ETag": "\"bc2473a18e003bdb249eba5ce893033f:1760028122.592274\"",
+    "Last-Modified": "Thu, 09 Oct 2025 16:42:02 GMT",
+    "Vary": "Accept-Encoding",
+    "Content-Encoding": "gzip",
+    "Content-Length": "363",
+    "Cache-Control": "max-age=86000",
+    "Date": "Sun, 09 Nov 2025 15:33:12 GMT",
+    "Connection": "keep-alive",
+    "Alt-Svc": "h3=\":443\"; ma=93600"
+  },
+  "text": "<!doctype html><html lang=\"en\"><head><title>Example Domain</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><style>body{background:#eee;width:60vw;margin:15vh auto;font-family:system-ui,sans-serif}h1{font-size:1.5em}div{opacity:0.8}a:link,a:visited{color:#348}</style><body><div><h1>Example Domain</h1><p>This domain is for use in documentation examples without needing permission. Avoid use in operations.<p><a href=\"https://iana.org/domains/example\">Learn more</a></div></body></html>\n",
+  "encoding": "ISO-8859-1"
+}
