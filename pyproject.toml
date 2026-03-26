@@ -17,7 +17,7 @@ classifiers = [
 requires-python = ">=3.10"
 dependencies = [
     "pandas == 2.2.3",
-    "requests == 2.32.4",
+    "requests==2.33.0",
     "type-enforced>=1.10.1",
 ]
 
