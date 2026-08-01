@@ -56,4 +56,4 @@ To get started with development of `imfp`,
    curl -o- https://raw.githubusercontent.com/tapsellorg/conventional-commits-git-hook/master/scripts/install.sh | sh
    ```
 
-To edit and preview the documentation, you'll also want to install the [Quarto CLI tool](https://quarto.org/docs/download/).
+To edit and preview the documentation, install the [Quarto CLI tool](https://quarto.org/docs/download/) and run `uv run great-docs build` (or `uv run great-docs preview`).
