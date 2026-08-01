@@ -370,8 +370,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -385,8 +384,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs,
-) -> tuple[dict, DataFrame]:
-    ...
+) -> tuple[dict, DataFrame]: ...
 
 
 @type_enforced.Enforcer
