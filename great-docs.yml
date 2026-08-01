@@ -96,6 +96,15 @@ reference:
 # Canonical address of the deployed documentation site.
 site_url: "https://promptlytechnologies.com/imfp/"
 
+# Changelog
+# ---------
+# Disable auto-generation from GitHub Releases. Dependabot release bodies
+# embed YAML that breaks Quarto parsing, and this project already maintains
+# changelog.md via python-semantic-release (the previous Quarto site also
+# excluded the changelog from rendering).
+changelog:
+  enabled: false
+
 # Jupyter Kernel
 # --------------
 # Jupyter kernel to use for executing code cells in .qmd files.
