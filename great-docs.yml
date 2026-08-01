@@ -1,0 +1,111 @@
+# Great Docs Configuration
+# See https://posit-dev.github.io/great-docs/user-guide/configuration.html
+
+# Display Name
+# ------------
+# Title shown in the navbar and browser tab.
+display_name: imfp
+
+# GitHub Repository
+# -----------------
+# Canonical repository URL (used for source links and the GitHub widget).
+repo: https://github.com/Promptly-Technologies-LLC/imfp
+
+# Docstring Parser
+# ----------------
+# The docstring format used in your package (numpy, google, or sphinx)
+parser: google
+
+# Dynamic Introspection
+# ---------------------
+# Use runtime introspection for more accurate documentation (default: true)
+# Set to false if your package has cyclic alias issues (e.g., PyO3/Rust bindings)
+dynamic: true
+
+# API Discovery Settings
+# ----------------------
+# Exclude private helpers that are re-exported via __all__ for internal use.
+exclude:
+  - _download_parse
+  - _imf_dimensions
+  - _imf_get
+  - _imf_metadata
+  - _imf_wait_time
+  - _min_wait_time_limited
+
+# Author Information
+# ------------------
+authors:
+  - name: Christopher C. Smith
+    role: Author
+    email: christopher.smith@promptlytechnologies.com
+
+# Funding / Copyright Holder
+# --------------------------
+funding:
+  name: Promptly Technologies, LLC
+  roles:
+    - Copyright holder
+  homepage: https://promptlytechnologies.com
+
+# User Guide Structure
+# --------------------
+# Explicit ordering and section grouping for the narrative user guide.
+# Files are referenced by name relative to the user-guide/ directory.
+# Using explicit ordering (instead of numeric filename prefixes) keeps the
+# source filenames identical to their published URLs, so links resolve both
+# on the rendered site and when browsing the repository on GitHub.
+user_guide:
+  - section: "Getting Started"
+    contents:
+      - installation.qmd
+  - section: "Core Concepts"
+    contents:
+      - databases.qmd
+      - parameters.qmd
+      - datasets.qmd
+  - section: "Usage"
+    contents:
+      - usage.qmd
+      - rate_limits.qmd
+  - section: "Examples"
+    contents:
+      - demo.qmd
+
+# API Reference Structure
+# -----------------------
+# Customize the sections below to organize your API documentation.
+# - Reorder items within a section to change their display order
+# - Move items between sections or create new sections
+# - Use 'members: false' to exclude methods from documentation
+# - Add 'desc:' to sections for descriptions
+
+reference:
+  - title: Functions
+    desc: Public functions for discovering IMF databases and downloading data
+    contents:
+      - imf_databases
+      - imf_parameters
+      - imf_parameter_defs
+      - imf_dataset
+      - set_imf_app_name
+      - set_imf_wait_time
+
+# Site URL
+# --------
+# Canonical address of the deployed documentation site.
+site_url: "https://promptlytechnologies.com/imfp/"
+
+# Changelog
+# ---------
+# Disable auto-generation from GitHub Releases. Dependabot release bodies
+# embed YAML that breaks Quarto parsing, and this project already maintains
+# changelog.md via python-semantic-release (the previous Quarto site also
+# excluded the changelog from rendering).
+changelog:
+  enabled: false
+
+# Jupyter Kernel
+# --------------
+# Jupyter kernel to use for executing code cells in .qmd files.
+jupyter: python3

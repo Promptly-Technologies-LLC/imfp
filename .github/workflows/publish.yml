@@ -19,7 +19,9 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
-          python-version-file: "pyproject.toml"
+          # great-docs requires Python >= 3.11; the package itself still
+          # supports 3.10 (see the python_full_version marker in pyproject.toml).
+          python-version: "3.12"
 
       - name: Install dependencies
         run: uv sync
@@ -27,10 +29,11 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Configure Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Build documentation site
+        run: uv run great-docs build
 
-      - name: Render and Publish
-        run: uv run quarto publish gh-pages --no-prompt --no-browser
+      - name: Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./great-docs/_site

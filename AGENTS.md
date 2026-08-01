@@ -16,6 +16,8 @@ Run everything through `uv run` (do not activate the venv manually). Key command
   action-black, so a local reformat finding is expected, not a setup failure).
 - Type check: `uv run mypy imfp` (config in `mypy.ini`).
 - Build: `uv build` (wheel + sdist into `dist/`).
+- Docs: `uv run great-docs build` (output in `great-docs/_site/`; requires Quarto CLI and
+  Python >= 3.11 for the `great-docs` dependency).
 - Live smoke test / real usage: `uv run python -c "import imfp; print(len(imfp.imf_databases()))"`.
 
 Notes:
@@ -25,5 +27,5 @@ Notes:
   of built-in rate limiting (default 1.5s between requests, tunable via `IMF_WAIT_TIME`).
 - Optional env vars (see `imfp/admin.py`): `IMF_APP_NAME` (custom request header to reduce
   rate-limiting) and `IMF_WAIT_TIME`. Neither is required for tests.
-- Documentation is built with the external Quarto CLI (`uv run quarto render`, per CI
-  `test.yml`). Quarto is not installed by the update script; install it only if editing docs.
+- Narrative docs live in `user-guide/`; site config is `great-docs.yml`. Quarto is not
+  installed by the update script; install it only if building docs.

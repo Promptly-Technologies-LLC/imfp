@@ -54,6 +54,6 @@ We welcome contributions to improve `imfp`! Here's how you can help:
    - Create a fix, commit it with an ["Angular-style Conventional Commit"](https://www.conventionalcommits.org/en/v1.0.0-beta.4/) message, and push it to your fork
    - Open a pull request to our `main` branch
 
-Note that if you want to change and preview the documentation, you will need to install the [Quarto CLI tool](https://quarto.org/docs/download/).
+Note that if you want to change and preview the documentation, you will need to install the [Quarto CLI tool](https://quarto.org/docs/download/) and run `uv run great-docs build` (or `uv run great-docs preview`).
 
 Version incrementing, package building, testing, changelog generation, documentation rendering, publishing to PyPI, and Github release creation is handled automatically by the GitHub Actions workflow based on the commit messages.
