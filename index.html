@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>imfp</title>
+<title>imfp | imfp</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -67,15 +73,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-0b37c64f34216b628666a8dac638b53b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -106,67 +111,75 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
 
 <script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'termshow.css'}));</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-compare.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-compare.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script>document.head.appendChild(Object.assign(document.createElement('link'),{rel:'stylesheet',href:(document.querySelector('meta[name="quarto:offset"]')||{content:''}).content+'gd-lightbox-annotate.css'}));</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'gd-lightbox-annotate.js';s.defer=true;document.head.appendChild(s);})();</script>
+<script src="theme-init.js"></script>
 
 
+  <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/">
+  <meta name="description" content="Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "imfp",
+  "description": "Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.",
+  "license": "https://opensource.org/licenses/MIT",
+  "url": "https://Promptly-Technologies-LLC.github.io/imfp",
+  "documentation": "https://Promptly-Technologies-LLC.github.io/imfp",
+  "programmingLanguage": {
+    "@type": "ComputerLanguage",
+    "name": "Python"
+  }
+}
+</script>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="imfp | imfp">
+  <meta property="og:description" content="Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.">
+  <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp">
+  <meta property="og:site_name" content="imfp">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="imfp | imfp">
+  <meta name="twitter:description" content="Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed gd-homepage quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a href="./index.html" class="navbar-brand navbar-brand-logo">
-    </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">imfp</span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2025-11-10">v1.3.0</span></span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
+            <div id="quarto-search" class=""></div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
-<span class="menu-text">Quickstart</span></a>
+    <a class="nav-link" href="./user-guide/installation.html"> 
+<span class="menu-text">User Guide</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./docs/installation.html"> 
-<span class="menu-text">Installation</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/databases.html"> 
-<span class="menu-text">Databases</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/parameters.html"> 
-<span class="menu-text">Parameters</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/datasets.html"> 
-<span class="menu-text">Datasets</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/usage.html"> 
-<span class="menu-text">Usage</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/rate_limits.html"> 
-<span class="menu-text">Rate Limits</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./docs/demo.html"> 
-<span class="menu-text">Demo</span></a>
+    <a class="nav-link" href="./reference/index.html"> 
+<span class="menu-text">Reference</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/Promptly-Technologies-LLC/imfp"> <i class="bi bi-github" role="img">
-</i> 
-<span class="menu-text"></span></a>
+  <li class="nav-item">
+    <span class="nav-link">
+<div id="github-widget" data-owner="Promptly-Technologies-LLC" data-repo="imfp" data-stars="16" data-forks="7"></div>
+    </span>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -179,32 +192,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#imfp" id="toc-imfp" class="nav-link active" data-scroll-target="#imfp">imfp</a>
-  <ul class="collapse">
-  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow">Workflow</a>
-  <ul class="collapse">
-  <li><a href="#fetching-a-list-of-databases-with-imf_databases" id="toc-fetching-a-list-of-databases-with-imf_databases" class="nav-link" data-scroll-target="#fetching-a-list-of-databases-with-imf_databases">Fetching a List of Databases with <code>imf_databases</code></a></li>
-  <li><a href="#fetching-a-list-of-parameters-and-input-codes-with-imf_parameters" id="toc-fetching-a-list-of-parameters-and-input-codes-with-imf_parameters" class="nav-link" data-scroll-target="#fetching-a-list-of-parameters-and-input-codes-with-imf_parameters">Fetching a List of Parameters and Input Codes with <code>imf_parameters</code></a></li>
-  <li><a href="#supplying-parameter-arguments-to-imf_dataset" id="toc-supplying-parameter-arguments-to-imf_dataset" class="nav-link" data-scroll-target="#supplying-parameter-arguments-to-imf_dataset">Supplying Parameter Arguments to <code>imf_dataset</code></a></li>
-  </ul></li>
-  <li><a href="#working-with-the-returned-data-frame" id="toc-working-with-the-returned-data-frame" class="nav-link" data-scroll-target="#working-with-the-returned-data-frame">Working with the Returned Data Frame</a></li>
-  <li><a href="#contributing" id="toc-contributing" class="nav-link" data-scroll-target="#contributing">Contributing</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">imfp</h1>
+<h1 class="title">Workflow</h1>
 </div>
 
 
@@ -221,7 +216,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="imfp" class="level1">
+<style>
+section.level1:first-of-type > h1:first-child,
+section.level2:first-of-type > h2:first-child,
+.column-body-outset-right > section.level1:first-of-type > h1,
+#quarto-document-content > section:first-of-type > h1 {
+  margin-top: 4px !important;
+}
+</style>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<section id="links" class="level3">
+<h3 class="anchored" data-anchor-id="links">Links</h3>
+<p><a href="https://pypi.org/project/imfp/">View on PyPI<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.05em; margin-left: 0em; margin-top: 0.1em;" viewbox="0 0 24 24"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a><br> <a href="https://github.com/Promptly-Technologies-LLC/imfp">Browse source code<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.05em; margin-left: 0em; margin-top: 0.1em;" viewbox="0 0 24 24"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg></a><br></p>
+</section>
+<section id="ai-agents" class="level3">
+<h3 class="anchored" data-anchor-id="ai-agents">AI / Agents</h3>
+<p><a href="skills.html">Skills<svg class="gd-sparkle" xmlns="http://www.w3.org/2000/svg" width="0.85em" height="0.85em" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -0.1em; margin-left: 0.25em;"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path></svg></a><br> <a href="llms.txt">llms.txt</a><br> <a href="llms-full.txt">llms-full.txt</a><br></p>
+</section>
+<section id="developers" class="level3">
+<h3 class="anchored" data-anchor-id="developers">Developers</h3>
+<div>
+<span>
+<p>
+<strong style="padding-bottom: 4px;">Christopher C. Smith</strong>
+</p>
+</span><span style="margin-top: -0.15em; display: block;">
+<p>
+<small>Author</small>
+</p>
+</span><span style="margin-top: -0.15em; display: block;"><a href="mailto:christopher.smith@promptlytechnologies.com" title="Email"><i class="bi bi-envelope-fill"></i></a> <a href="https://github.com/Promptly-Technologies-LLC" title="GitHub"><i class="bi bi-github"></i></a></span>
+</div>
+<div style="padding-top: 10px;">
+<span>
+<p>
+<strong style="padding-bottom: 4px;">Promptly Technologies, LLC</strong>
+</p>
+</span><span style="margin-top: -0.15em; display: block;">
+<p>
+<small>Copyright holder</small>
+</p>
+</span><span style="margin-top: -0.15em; display: block;"><a href="https://promptlytechnologies.com" title="Website"><i class="bi bi-globe"></i></a></span>
+</div>
+</section>
+<section id="community" class="level3">
+<h3 class="anchored" data-anchor-id="community">Community</h3>
+<p><a href="./license.html">Full license</a> <span class="gd-spdx-badge" title="MIT License">MIT</span><br></p>
+</section>
+<section id="meta" class="level3">
+<h3 class="anchored" data-anchor-id="meta">Meta</h3>
+<p><strong>Requires:</strong> Python <code>&gt;=3.10</code><br> <a href="package-info.html">Package Info</a></p>
+</section>
+</div></div><section id="imfp" class="level1">
 <h1>imfp</h1>
 <p><a href="https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml"><img src="https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml/badge.svg" class="img-fluid" alt="Tests"></a> <a href="https://pypi.python.org/pypi/imfp"><img src="https://img.shields.io/pypi/v/imfp.svg" class="img-fluid" alt="PyPI Version"></a> <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" class="img-fluid" alt="Code style: black"></a></p>
 <p><code>imfp</code>, created and maintained by <a href="https://promptlytechnologies.com">Promptly Technologies</a>, is a Python package for downloading data from the <a href="http://data.imf.org/">International Monetary Fund’s</a> <a href="http://datahelp.imf.org/knowledgebase/articles/667681-using-json-restful-web-service">RESTful JSON API</a>.</p>
@@ -229,253 +275,382 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <p>To install the stable version of imfp from PyPi, use pip.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> imfp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> imfp</span></code></pre></div>
 <p>To load the library, use <code>import</code>:</p>
-<div id="41fb499d" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="b5ba5b71" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span></code></pre></div>
 </div>
-</section>
-<section id="workflow" class="level2">
-<h2 class="anchored" data-anchor-id="workflow">Workflow</h2>
-<p>The <code>imfp</code> package introduces four core functions: <code>imf_databases</code>, <code>imf_parameters</code>, <code>imf_parameter_defs</code>, and <code>imf_dataset</code>. The function for downloading datasets is <code>imf_dataset</code>, but you will need the other functions to determine what arguments to supply to your <code>imf_dataset</code> function call.</p>
+<p>The <code>imfp</code> package introduces four core functions: <a href="reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a>, <a href="reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a>, <a href="reference/imf_parameter_defs.html#imfp.imf_parameter_defs" class="gdls-link gdls-code">imf_parameter_defs</a>, and <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a>. The function for downloading datasets is <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a>, but you will need the other functions to determine what arguments to supply to your <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> function call.</p>
 <section id="fetching-a-list-of-databases-with-imf_databases" class="level3">
-<h3 class="anchored" data-anchor-id="fetching-a-list-of-databases-with-imf_databases">Fetching a List of Databases with <code>imf_databases</code></h3>
-<p>For instance, all calls to <code>imf_dataset</code> require a <code>database_id</code>. This is because the IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from.</p>
+<h3 class="anchored" data-anchor-id="fetching-a-list-of-databases-with-imf_databases">Fetching a List of Databases with <a href="reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a></h3>
+<p>For instance, all calls to <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> require a <code>database_id</code>. This is because the IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from.</p>
 <p>To fetch a list of available databases, use:</p>
-<div id="350dba0a" class="cell" data-execution_count="2">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of available databases</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="6327d096" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of available databases</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span></code></pre></div>
 </div>
-<p>See <a href="./docs/databases.html">Working with Databases</a> for more information.</p>
+<p>See <a href="./user-guide/databases.html">Working with Databases</a> for more information.</p>
 </section>
 <section id="fetching-a-list-of-parameters-and-input-codes-with-imf_parameters" class="level3">
-<h3 class="anchored" data-anchor-id="fetching-a-list-of-parameters-and-input-codes-with-imf_parameters">Fetching a List of Parameters and Input Codes with <code>imf_parameters</code></h3>
-<p>Requests to fetch data from IMF databases are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. See <a href="./docs/parameters.html">Working with Parameters</a> for a more detailed explanation of parameters and input codes and how they work.</p>
+<h3 class="anchored" data-anchor-id="fetching-a-list-of-parameters-and-input-codes-with-imf_parameters">Fetching a List of Parameters and Input Codes with <a href="reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a></h3>
+<p>Requests to fetch data from IMF databases are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. See <a href="./user-guide/parameters.html">Working with Parameters</a> for a more detailed explanation of parameters and input codes and how they work.</p>
 <p>To obtain the full list of parameters and valid input codes for a given database, use:</p>
-<div id="11af549d" class="cell" data-execution_count="3">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters and input codes for commodity price database</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="23075db4" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters and input codes for commodity price database</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span></code></pre></div>
 </div>
-<p>The <code>imf_parameters</code> function returns a dictionary of data frames. Each dictionary key name corresponds to a parameter used in making requests from the database:</p>
-<div id="df5e0809" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get key names from the params object</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <a href="reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a> function returns a dictionary of data frames. Each dictionary key name corresponds to a parameter used in making requests from the database:</p>
+<div id="c58cd71d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get key names from the params object</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
 <pre><code>dict_keys(['country', 'indicator', 'data_transformation', 'frequency'])</code></pre>
 </div>
 </div>
 <p>Each named list item is a data frame containing the valid input codes (and their descriptions) that can be used with the named parameter.</p>
 <p>To access the data frame containing valid values for each parameter, subset the <code>params</code> dict by the parameter name:</p>
-<div id="2adb9b53" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'frequency'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="5626ce29" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'frequency'</span>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">input_code</th>
-<th data-quarto-table-cell-role="th">description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>A</td>
-<td>Annual</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>D</td>
-<td>Daily</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>M</td>
-<td>Monthly</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>Q</td>
-<td>Quarterly</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>S</td>
-<td>Half-yearly, semester</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">5</th>
-<td>W</td>
-<td>Weekly</td>
-</tr>
-</tbody>
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>input_code</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>A</td>
+      <td>Annual</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>D</td>
+      <td>Daily</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>M</td>
+      <td>Monthly</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Q</td>
+      <td>Quarterly</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>S</td>
+      <td>Half-yearly, semester</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>W</td>
+      <td>Weekly</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>A2</td>
+      <td>Biennial</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>A3</td>
+      <td>Triennial</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>A4</td>
+      <td>Quadrennial</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>A5</td>
+      <td>Quinquennial</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>A10</td>
+      <td>Decennial</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>A20</td>
+      <td>Bidecennial</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>A30</td>
+      <td>Tridecennial</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>A_3</td>
+      <td>Three times a year</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>M2</td>
+      <td>Bimonthly</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>M_2</td>
+      <td>Semimonthly</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>M_3</td>
+      <td>Three times a month</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>W2</td>
+      <td>Biweekly</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>W3</td>
+      <td>Triweekly</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>W4</td>
+      <td>Four-weekly</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>W_2</td>
+      <td>Semiweekly</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>W_3</td>
+      <td>Three times a week</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>D_2</td>
+      <td>Twice a day</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>H</td>
+      <td>Hourly</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>H2</td>
+      <td>Bihourly</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>H3</td>
+      <td>Trihourly</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>B</td>
+      <td>Daily – business week</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>N</td>
+      <td>Minutely</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>I</td>
+      <td>Irregular</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>OA</td>
+      <td>Occasional annual</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>OM</td>
+      <td>Occasional monthly</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>_O</td>
+      <td>Other</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>_U</td>
+      <td>Unspecified</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>_Z</td>
+      <td>Not applicable</td>
+    </tr>
+  </tbody>
 </table>
-
 </div>
 </div>
 </div>
 </section>
 <section id="supplying-parameter-arguments-to-imf_dataset" class="level3">
-<h3 class="anchored" data-anchor-id="supplying-parameter-arguments-to-imf_dataset">Supplying Parameter Arguments to <code>imf_dataset</code></h3>
-<p>To make a request to fetch data from the IMF API, just call <code>imfp.imf_dataset</code> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
-<p>For instance, on exploring the <code>frequency</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <code>imfp.imf_dataset</code> with <code>frequency = ["A"]</code>.</p>
+<h3 class="anchored" data-anchor-id="supplying-parameter-arguments-to-imf_dataset">Supplying Parameter Arguments to <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a></h3>
+<p>To make a request to fetch data from the IMF API, just call <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imfp.imf_dataset</a> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
+<p>For instance, on exploring the <code>frequency</code> parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <a href="reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imfp.imf_dataset</a> with <code>frequency = ["A"]</code>.</p>
 <p>Similarly, we might search the dataframes of valid input codes for the <code>indicator</code> and <code>data_transformation</code> parameters to find the input codes for coal and index:</p>
-<div id="581cb20b" class="cell" data-execution_count="6">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'indicator' input code for coal</span></span>
+<div id="e9a34809" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'indicator' input code for coal</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'indicator'</span>].loc[</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'indicator'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">input_code</th>
-<th data-quarto-table-cell-role="th">description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">14</th>
-<td>PCOAL</td>
-<td>Coal index, Commodity price index, Index, 2016...</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">15</th>
-<td>PCOALAU</td>
-<td>Coal, Australia, US dollars per metric tonne, ...</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">16</th>
-<td>PCOALSA</td>
-<td>Coal, South Africa, US dollars per metric tonn...</td>
-</tr>
-</tbody>
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>input_code</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>14</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>PCOALAU</td>
+      <td>Coal, Australia, US dollars per metric tonne, ...</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>PCOALSA</td>
+      <td>Coal, South Africa, US dollars per metric tonn...</td>
+    </tr>
+  </tbody>
 </table>
-
 </div>
 </div>
 </div>
-<div id="81a71e60" class="cell" data-execution_count="7">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'data_transformation' input code for index</span></span>
+<div id="01e8fe65" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the 'data_transformation' input code for index</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'data_transformation'</span>].loc[</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'data_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <div>
 
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">input_code</th>
-<th data-quarto-table-cell-role="th">description</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>INDEX</td>
-<td>Index</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>INDEX_PCH</td>
-<td>Index, percent change</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>INDEX_PCHY</td>
-<td>Index, percent change from a year ago</td>
-</tr>
-</tbody>
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>input_code</th>
+      <th>description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>INDEX</td>
+      <td>Index</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>INDEX_PCH</td>
+      <td>Index, percent change</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>INDEX_PCHY</td>
+      <td>Index, percent change from a year ago</td>
+    </tr>
+  </tbody>
 </table>
-
 </div>
 </div>
 </div>
 <p>Finally, we can use the information we’ve gathered to make the request to fetch the data:</p>
-<div id="df230075" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API</span></span>
+<div id="2382d83f" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(database_id <span class="op">=</span> <span class="st">"PCPS"</span>,</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>         frequency <span class="op">=</span> [<span class="st">"A"</span>], indicator <span class="op">=</span> [<span class="st">"PCOAL"</span>],</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         data_transformation <span class="op">=</span> [<span class="st">"INDEX"</span>])</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Display the first few entries in the retrieved data frame</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
 
-
-<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th"></th>
-<th data-quarto-table-cell-role="th">country</th>
-<th data-quarto-table-cell-role="th">indicator</th>
-<th data-quarto-table-cell-role="th">data_transformation</th>
-<th data-quarto-table-cell-role="th">frequency</th>
-<th data-quarto-table-cell-role="th">time_period</th>
-<th data-quarto-table-cell-role="th">obs_value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">0</th>
-<td>G001</td>
-<td>PCOAL</td>
-<td>INDEX</td>
-<td>A</td>
-<td>1992</td>
-<td>49.892138</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">1</th>
-<td>G001</td>
-<td>PCOAL</td>
-<td>INDEX</td>
-<td>A</td>
-<td>1993</td>
-<td>43.279151</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">2</th>
-<td>G001</td>
-<td>PCOAL</td>
-<td>INDEX</td>
-<td>A</td>
-<td>1994</td>
-<td>45.213931</td>
-</tr>
-<tr class="even">
-<th data-quarto-table-cell-role="th">3</th>
-<td>G001</td>
-<td>PCOAL</td>
-<td>INDEX</td>
-<td>A</td>
-<td>1995</td>
-<td>55.433711</td>
-</tr>
-<tr class="odd">
-<th data-quarto-table-cell-role="th">4</th>
-<td>G001</td>
-<td>PCOAL</td>
-<td>INDEX</td>
-<td>A</td>
-<td>1996</td>
-<td>53.179458</td>
-</tr>
-</tbody>
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>country</th>
+      <th>indicator</th>
+      <th>data_transformation</th>
+      <th>frequency</th>
+      <th>time_period</th>
+      <th>obs_value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1992</td>
+      <td>49.892138</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1993</td>
+      <td>43.279151</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1994</td>
+      <td>45.213931</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1995</td>
+      <td>55.433711</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1996</td>
+      <td>53.179458</td>
+    </tr>
+  </tbody>
 </table>
-
 </div>
 </div>
 </div>
@@ -484,55 +659,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="working-with-the-returned-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="working-with-the-returned-data-frame">Working with the Returned Data Frame</h2>
 <p>Note that all columns in the returned data frame are string objects, and to plot the series we will need to convert to valid numeric or date formats:</p>
-<div id="89636034" class="cell" data-execution_count="9">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert obs_value to numeric and time_period to integer year</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.astype({<span class="st">"time_period"</span> : <span class="bu">int</span>, <span class="st">"obs_value"</span> : <span class="bu">float</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="81a8d3a5" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert obs_value to numeric and time_period to integer year</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.astype({<span class="st">"time_period"</span> : <span class="bu">int</span>, <span class="st">"obs_value"</span> : <span class="bu">float</span>})</span></code></pre></div>
 </div>
 <p>Then, using <code>seaborn</code> with <code>hue</code>, we can plot different indicators in different colors:</p>
-<div id="38923304" class="cell" data-execution_count="10">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<div id="8aa78f82" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot prices of different commodities in different colors with seaborn</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">'time_period'</span>, y<span class="op">=</span><span class="st">'obs_value'</span>, hue<span class="op">=</span><span class="st">'indicator'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:300: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df["col"][row_indexer] = value
-
-Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  sub_data[f"{other}min"] = np.nan
-/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:301: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df["col"][row_indexer] = value
-
-Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  sub_data[f"{other}max"] = np.nan
-/home/runner/work/imfp/imfp/.venv/lib/python3.14/site-packages/seaborn/relational.py:307: FutureWarning: ChainedAssignmentError: behaviour will change in pandas 3.0!
-You are setting values through chained assignment. Currently this works in certain cases, but when using Copy-on-Write (which will become the default behaviour in pandas 3.0) this will never work to update the original DataFrame or Series, because the intermediate object on which we are setting values will behave as a copy.
-A typical example is when you are setting values in a column of a DataFrame, like:
-
-df["col"][row_indexer] = value
-
-Use `df.loc[row_indexer, "col"] = values` instead, to perform the assignment in a single step and ensure this keeps updating the original `df`.
-
-See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-
-  sub_data[col] = inv(sub_data[col])</code></pre>
-</div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span><span class="st">'time_period'</span>, y<span class="op">=</span><span class="st">'obs_value'</span>, hue<span class="op">=</span><span class="st">'indicator'</span>)<span class="op">;</span></span></code></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/cell-11-output-2.png" width="601" height="429" class="figure-img"></p>
+<p><img src="index_files/figure-html/cell-11-output-1.png" width="593" height="429" class="figure-img"></p>
 </figure>
 </div>
 </div>
@@ -553,7 +693,7 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <li>Open a pull request to our <code>main</code> branch</li>
 </ul></li>
 </ol>
-<p>Note that if you want to change and preview the documentation, you will need to install the <a href="https://quarto.org/docs/download/">Quarto CLI tool</a>.</p>
+<p>Note that if you want to change and preview the documentation, you will need to install the <a href="https://quarto.org/docs/download/">Quarto CLI tool</a> and run <code>uv run great-docs build</code> (or <code>uv run great-docs preview</code>).</p>
 <p>Version incrementing, package building, testing, changelog generation, documentation rendering, publishing to PyPI, and Github release creation is handled automatically by the GitHub Actions workflow based on the commit messages.</p>
 
 
@@ -570,71 +710,9 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
       icon: icon
     };
     anchorJS.add('.anchored');
-    const isCodeAnnotation = (el) => {
-      for (const clz of el.classList) {
-        if (clz.startsWith('code-annotation-')) {                     
-          return true;
-        }
-      }
-      return false;
-    }
-    const onCopySuccess = function(e) {
-      // button target
-      const button = e.trigger;
-      // don't keep focus
-      button.blur();
-      // flash "checked"
-      button.classList.add('code-copy-button-checked');
-      var currentTitle = button.getAttribute("title");
-      button.setAttribute("title", "Copied!");
-      let tooltip;
-      if (window.bootstrap) {
-        button.setAttribute("data-bs-toggle", "tooltip");
-        button.setAttribute("data-bs-placement", "left");
-        button.setAttribute("data-bs-title", "Copied!");
-        tooltip = new bootstrap.Tooltip(button, 
-          { trigger: "manual", 
-            customClass: "code-copy-button-tooltip",
-            offset: [0, -8]});
-        tooltip.show();    
-      }
-      setTimeout(function() {
-        if (tooltip) {
-          tooltip.hide();
-          button.removeAttribute("data-bs-title");
-          button.removeAttribute("data-bs-toggle");
-          button.removeAttribute("data-bs-placement");
-        }
-        button.setAttribute("title", currentTitle);
-        button.classList.remove('code-copy-button-checked');
-      }, 1000);
-      // clear code selection
-      e.clearSelection();
-    }
-    const getTextToCopy = function(trigger) {
-      const outerScaffold = trigger.parentElement.cloneNode(true);
-      const codeEl = outerScaffold.querySelector('code');
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-      text: getTextToCopy
-    });
-    clipboard.on('success', onCopySuccess);
-    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-        text: getTextToCopy,
-        container: window.document.getElementById('quarto-embedded-source-code-modal')
-      });
-      clipboardModal.on('success', onCopySuccess);
-    }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
-        var filterRegex = new RegExp("https:\/\/Promptly-Technologies-LLC\.github\.io\/imfp\/");
+        var filterRegex = new RegExp("https:\/\/promptlytechnologies\.com\/imfp\/");
       var isInternal = (href) => {
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
@@ -964,24 +1042,28 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
-    <div class="nav-footer-left">
-<p>Copyright 2024, Promptly Technologies, LLC. MIT License.</p>
-</div>   
-    <div class="nav-footer-center">
-      &nbsp;
-    </div>
-    <div class="nav-footer-right">
-      <ul class="footer-items list-unstyled">
-    <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/Promptly-Technologies-LLC/imfp">
-      <i class="bi bi-github" role="img">
-</i> 
-    </a>
-  </li>  
-</ul>
-    </div>
-  </div>
+<div class="nav-footer-center">
+<p>Developed by <strong>Christopher&nbsp;C.&nbsp;Smith</strong>. Supported by <a href="https://promptlytechnologies.com"><strong>Promptly&nbsp;Technologies,&nbsp;LLC</strong></a>.<br>Site created with <strong>Great&nbsp;Docs</strong>.</p>
+</div>
+</div>
 </footer>
+<script src="github-widget.js"></script>
+<script src="sidebar-wrap.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'sidebar-float.js';document.body.appendChild(s);})();</script>
+<script src="sidebar-filter.js"></script>
+<script src="dark-mode-toggle.js"></script>
+<script src="back-to-top.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'on-this-page.js';document.body.appendChild(s);})();</script>
+<script src="keyboard-nav.js"></script>
+<script src="copy-code.js"></script>
+<script src="details.js"></script>
+<script src="mermaid-renderer.js"></script>
+<script src="tooltips.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'color-swatch.js';document.body.appendChild(s);})();</script>
+<script src="responsive-tables.js"></script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'video-embed.js';document.body.appendChild(s);})();</script>
+<script>(function(){var s=document.createElement('script');var m=document.querySelector('meta[name="quarto:offset"]');s.src=(m?m.content:'')+'termshow.js';document.body.appendChild(s);})();</script>
+<script src="navbar-widgets.js"></script>
 
 
 

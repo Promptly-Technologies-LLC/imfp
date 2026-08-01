@@ -1,0 +1,88 @@
+# Rate Limits
+
+
+# API Rate Management
+
+The IMF API imposes very restrictive (and incompletely documented) rate limits, not only for individual users and applications, but also globally for all users of the API. Thus, at high-traffic times, you may find that your requests fail. It's highly recommended that you set up proactive error handling, wait times, retries, and request caching to avoid hitting the API's rate limits. The `imfp` library provides some tools to help you do this (with more planned for future releases).
+
+
+## Setting Application Name
+
+The IMF API has an application-based rate limit of 50 requests per second. Each application is identified by the "user_agent" variable in the request header. By default, all `imfp` users share the same application name, which could lead to rate limit issues if many users are making requests simultaneously.
+
+This could prove problematic if the `imfp` library became too popular and too many users tried to make simultaneous API requests using the default app name. By setting a custom application name, users can avoid hitting this rate limit and being blocked by the API. To solve this problem, `imfp` supplies the [set_imf_app_name()](../reference/set_imf_app_name.md#imfp.set_imf_app_name) function to set a custom application name.
+
+[set_imf_app_name()](../reference/set_imf_app_name.md#imfp.set_imf_app_name) sets the application name by changing the `IMF_APP_NAME` variable in the environment. If this variable doesn't exist, [set_imf_app_name()](../reference/set_imf_app_name.md#imfp.set_imf_app_name) will create it. To set a custom application name, simply call the [set_imf_app_name()](../reference/set_imf_app_name.md#imfp.set_imf_app_name) function with your desired application name as an argument:
+
+
+``` python
+import imfp
+
+# Set custom app name as an environment variable
+imfp.set_imf_app_name("my_custom_app_name")
+```
+
+
+The function will throw an error if the provided name is missing, NULL, NA, not a string, or longer than 255 characters. If the provided name is "imfp" (the default) or an empty string, the function will issue a warning recommending the use of a unique app name to avoid hitting rate limits.
+
+
+## Managing Request Timing
+
+If making multiple requests in a short period of time, you may want to increase the wait time between requests to avoid hitting the API's rate limits. This is done with the [set_imf_wait_time()](../reference/set_imf_wait_time.md#imfp.set_imf_wait_time) function:
+
+
+``` python
+# Increase wait time to 5 seconds
+imfp.set_imf_wait_time(5)
+```
+
+
+## Retries
+
+`imfp` automatically handles rate limits with exponential backoff:
+
+1.  Waits for specified time
+2.  Retries the request
+3.  Increases wait time exponentially on subsequent failures
+4.  Stops after 3 attempts (default)
+
+You can modify retry behavior:
+
+
+``` python
+# Retry 4 times rather than the default 3
+df = imfp.imf_dataset("PPI", "WPI", times=4)
+```
+
+
+## Caching Strategy
+
+To reduce API calls, you can cache frequently accessed data. For instance, in a Jupyter or Quarto notebook that you run multiple times, you can wrap each `imfp` function call in an `if` statement that checks if the returned data has already been saved to a file. If it has, it loads the data from the file. If it hasn't, it fetches the data from the API and saves it to a file.
+
+Note that to run this code, you will need to install the `pyarrow` library, which `pandas` uses as its engine for reading and writing parquet files (but which is not installed with `pandas` or `imfp` by default). Use `pip install pyarrow` to install it.
+
+
+``` python
+import os
+import pandas as pd
+
+# Fetch imf databases from file if available, else from API
+cache_path = f"data/imf_databases.parquet"
+if os.path.exists(cache_path):
+    databases = pd.read_parquet(cache_path)
+else:
+    databases = imfp.imf_databases()
+    os.makedirs("data", exist_ok=True)
+    databases.to_parquet(cache_path)
+```
+
+
+You can also functionalize this logic to permit reuse several times in the same script or notebook. See Jenny Xu's excellent [demo notebook](demo.md#utility-functions) for example caching functions.
+
+
+# Performance Tips
+
+1.  **Filter Early**: Use parameters to limit data at the API level
+2.  **Parallelize Carefully**: Avoid running parallel API requests, even from multiple clients
+3.  **Use Efficient Formats**: Store cached data in parquet or feather files
+4.  **Validate Data**: Check for errors and empty responses

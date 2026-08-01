@@ -1,0 +1,14 @@
+# imfp
+
+> Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.
+
+## Docs
+
+### API Reference
+
+- [imf_databases](https://promptlytechnologies.com/imfp/reference/imf_databases.html): List IMF database IDs and descriptions
+- [imf_parameters](https://promptlytechnologies.com/imfp/reference/imf_parameters.html): List input parameters and available parameter values for use in
+- [imf_parameter_defs](https://promptlytechnologies.com/imfp/reference/imf_parameter_defs.html): Get text descriptions of input parameters used in making API
+- [imf_dataset](https://promptlytechnologies.com/imfp/reference/imf_dataset.html): Download a data series from the IMF
+- [set_imf_app_name](https://promptlytechnologies.com/imfp/reference/set_imf_app_name.html): Set the IMF Application Name
+- [set_imf_wait_time](https://promptlytechnologies.com/imfp/reference/set_imf_wait_time.html): Set the IMF wait time as an environment variable

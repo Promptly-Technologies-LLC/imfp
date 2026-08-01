@@ -1,0 +1,65 @@
+# Installation
+
+
+# Prerequisites
+
+To install the latest version of `imfp`, you will need to have [Python 3.10 or later](https://www.python.org/downloads/) installed on your system.
+
+If you don't already have Python, we recommend installing [the `uv` package manager](https://astral.sh/setup-uv/) and installing Python with `uv python install`.
+
+
+# Installation
+
+To install the latest stable `imfp` wheel from PyPi using pip:
+
+``` bash
+pip install --upgrade imfp
+```
+
+Alternatively, to install from the source code on Github, you can use the following command:
+
+``` bash
+pip install --upgrade git+https://github.com/Promptly-Technologies-LLC/imfp.git
+```
+
+You can then import the package in your Python script:
+
+``` python
+import imfp
+```
+
+
+# Suggested Dependencies for Data Analysis
+
+`imfp` outputs data in a `pandas` data frame, so you will want to use the `pandas` package (which is installed with `imfp`) for its functions for viewing and manipulating this object type. For data visualization, we recommend installing these additional packages:
+
+``` bash
+pip install -q matplotlib seaborn
+```
+
+You can then import these packages in your Python script:
+
+``` python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+
+
+# Development Installation
+
+To get started with development of `imfp`,
+
+1.  Fork and clone the repository
+
+2.  Install [uv](https://astral.sh/setup-uv/) with `curl -LsSf https://astral.sh/uv/install.sh | sh`
+
+3.  Install the dependencies with `uv sync`
+
+4.  Install a git pre-commit hook to enforce conventional commits:
+
+    ``` bash
+    curl -o- https://raw.githubusercontent.com/tapsellorg/conventional-commits-git-hook/master/scripts/install.sh | sh
+    ```
+
+To edit and preview the documentation, install the [Quarto CLI tool](https://quarto.org/docs/download/) and run `uv run great-docs build` (or `uv run great-docs preview`).
