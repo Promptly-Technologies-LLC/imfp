@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import overload, Literal
 from warnings import warn
 from urllib.parse import urlencode
@@ -140,6 +141,59 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
     # Convert to DataFrame
     df = DataFrame(rows)
     return df
+
+
+def _codes_in_parameter_order(
+    selected: list[str] | set[str], codebook: DataFrame
+) -> list[str]:
+    """Return selected input codes in ``imf_parameters`` / codelist order.
+
+    The IMF series key joins multiple codes for a dimension with '+'. The API
+    expects those codes in the same order they appear in the parameter
+    codebook (for frequency, that matches alphabetized-by-description order
+    for A/M/Q), not the caller's list order.
+    """
+    if codebook.empty or not selected:
+        return []
+    selected_set = set(selected)
+    return [code for code in codebook["input_code"].tolist() if code in selected_set]
+
+
+def _transform_period_for_frequency(
+    period: str | None,
+    frequency: list[str] | None,
+    bound: Literal["start", "end"] = "start",
+) -> str | None:
+    """Transform a user time period into the SDMX filter form for a frequency.
+
+    When ``frequency`` is a single code, year bounds use that frequency's first
+    (start) or last (end) period of the year. When frequency is omitted or
+    multi-valued, start uses the earliest cross-frequency suffix (``-A1``) and
+    end uses a high sentinel (``-W99``) so quarterly/monthly periods in the
+    requested year are not excluded by lexicographic comparison.
+    """
+    if not period:
+        return period
+
+    if re.match(r"^\d{4}-(M|Q|A|W)\d+$", period):
+        return period
+
+    if re.match(r"^\d{4}-\d{2}$", period):
+        year, month = period.split("-")
+        return f"{year}-M{month}"
+
+    if re.match(r"^\d{4}$", period):
+        start_suffixes = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
+        end_suffixes = {"A": "-A1", "Q": "-Q4", "M": "-M12", "W": "-W53"}
+        if frequency and len(frequency) == 1:
+            freq = frequency[0].upper()
+            suffix_map = end_suffixes if bound == "end" else start_suffixes
+            suffix = suffix_map.get(freq, "-A1" if bound == "start" else "-W99")
+        else:
+            suffix = "-A1" if bound == "start" else "-W99"
+        return f"{period}{suffix}"
+
+    return period
 
 
 @type_enforced.Enforcer
@@ -370,8 +424,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -385,8 +438,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs,
-) -> tuple[dict, DataFrame]:
-    ...
+) -> tuple[dict, DataFrame]: ...
 
 
 @type_enforced.Enforcer
@@ -438,8 +490,6 @@ def imf_dataset(
         database header, and whose second item is the pandas DataFrame. If
         return_raw == True, returns the raw JSON fetched from the API endpoint.
     """
-    import re
-
     # Normalize start_year and end_year to strings
     start_period = None
     end_period = None
@@ -473,8 +523,11 @@ def imf_dataset(
                 "end_year must be a four-digit number, either integer or string"
             )
 
-    # Get available parameters for validation
+    # Get available parameters for validation. Keep an unfiltered copy so
+    # multi-value key segments can be ordered by codebook position even if
+    # filtered frames are later rearranged.
     data_dimensions = imf_parameters(database_id, times)
+    parameter_codebooks = {key: frame.copy() for key, frame in data_dimensions.items()}
 
     # Helper to coerce legacy input parameter names to dataset-specific keys
     def _coerce_input_keys_for_dataset(
@@ -608,10 +661,13 @@ def imf_dataset(
         for key in data_dimensions:
             data_dimensions[key] = data_dimensions[key].iloc[0:0]
 
-    # Normalize dimension filters (build dict mapping dimension names to code lists)
+    # Normalize dimension filters (build dict mapping dimension names to code lists).
+    # Codes are ordered by the parameter codebook so multi-value key segments
+    # (e.g. A+M+Q) ignore caller list order such as ["A", "Q", "M"].
     norm_dims = {}
     for key in data_dimensions:
-        codes = data_dimensions[key]["input_code"].tolist()
+        selected = data_dimensions[key]["input_code"].tolist()
+        codes = _codes_in_parameter_order(selected, parameter_codebooks[key])
         if codes:
             norm_dims[key.upper()] = codes
 
@@ -665,7 +721,8 @@ def imf_dataset(
             f"Available dimensions: {', '.join(sorted(available_dims))}"
         )
 
-    # Build dot-separated key with plus-separated codes per position
+    # Build dot-separated key with plus-separated codes per position.
+    # Omitted dimensions (including omitted frequency) become '*' wildcards.
     segments = []
     for row in key_rows:
         dim_id = row["id"]
@@ -676,31 +733,6 @@ def imf_dataset(
             segments.append("+".join(vals))
 
     key = ".".join(segments)
-
-    # Helper to transform time periods for API compatibility
-    def transform_period_for_frequency(period, frequency):
-        if not period:
-            return period
-
-        # Check if already in SDMX format with frequency suffix
-        if re.match(r"^\d{4}-(M|Q|A|W)\d+$", period):
-            return period
-
-        # User-friendly month format: "2019-01" to "2019-12"
-        if re.match(r"^\d{4}-\d{2}$", period):
-            parts = period.split("-")
-            return f"{parts[0]}-M{parts[1]}"
-
-        # Plain year (e.g., "2015") needs frequency-specific suffix
-        if re.match(r"^\d{4}$", period):
-            if frequency and len(frequency) == 1:
-                freq_map = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
-                suffix = freq_map.get(frequency[0].upper(), "-A1")
-            else:
-                suffix = "-A1"  # default when frequency is wildcarded
-            return f"{period}{suffix}"
-
-        return period
 
     # Extract frequency from user's dimension filter (if provided), dynamically resolving the dimension id
     freq_dim_candidates = ["FREQUENCY", "FREQ"]
@@ -717,10 +749,14 @@ def imf_dataset(
     # Apply time filters
     time_filters = []
     if start_period:
-        transformed_start = transform_period_for_frequency(start_period, user_frequency)
+        transformed_start = _transform_period_for_frequency(
+            start_period, user_frequency, bound="start"
+        )
         time_filters.append(f"ge:{transformed_start}")
     if end_period:
-        transformed_end = transform_period_for_frequency(end_period, user_frequency)
+        transformed_end = _transform_period_for_frequency(
+            end_period, user_frequency, bound="end"
+        )
         time_filters.append(f"le:{transformed_end}")
 
     # Determine dataflow agency (owner)
