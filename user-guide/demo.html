@@ -420,7 +420,7 @@ window.Quarto = {
 <h1>Utility Functions</h1>
 <p>The integration of other Python tools not only streamlined our computational processes but also ensured consistency across the project.</p>
 <p>A custom module is written to simplify the process of making API calls and fetching information with imfp library. <code>load_or_fetch_databases</code>, <code>load_or_fetch_parameters</code> <code>load_or_fetch_dataset</code> load and retreive database, parameters, and dataset from a local or remote source. <code>view_dataframe_in_browser</code> displays dataframe in a web browser.</p>
-<div id="39314019" class="cell" data-execution_count="1">
+<div id="4172f1f1" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pickle</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tempfile <span class="im">import</span> NamedTemporaryFile</span>
@@ -518,7 +518,7 @@ window.Quarto = {
 <p><code>tabulate</code>: format data into tables</p>
 <p><code>statsmodels.api</code>, <code>adfuller</code>, <code>ARIMA</code>,<code>VAR</code>,<code>plot_acf</code>,<code>plot_pacf</code>,<code>mean_absolute_error</code>,<code>mean_squared_error</code>, and<code>grangercausalitytests</code> are specifically used for time series analysis.</p>
 <p><code>pycountry</code>: convert between ISO2 and ISO3 country codes (install with <code>pip install pycountry</code>)</p>
-<div id="aef9fc38" class="cell" data-execution_count="2">
+<div id="b60cf9e2" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -539,11 +539,11 @@ window.Quarto = {
 <section id="data-fetching" class="level1">
 <h1>Data Fetching</h1>
 <p>In this section, we load four datasets: Gender Inequality Index (GII) from a CSV file, and fetch GDP Deflator, Nominal GDP, and Population through API calls to the IMF.</p>
-<div id="6ac09ae4" class="cell" data-execution_count="3">
+<div id="3c5722ed" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Path(<span class="st">"data"</span>).mkdir(exist_ok<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
 </div>
-<div id="a55ae2a3" class="cell" data-execution_count="4">
+<div id="fa89ccaa" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load or fetch databases</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> load_or_fetch_databases()</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -570,29 +570,29 @@ Databases saved to data/databases.csv</code></pre>
   </thead>
   <tbody>
     <tr>
-      <th>1</th>
-      <td>MCDREO</td>
-      <td>Middle East and Central Asia Regional Economic...</td>
+      <th>0</th>
+      <td>ITS</td>
+      <td>International Trade in Services (ITS)</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>PCPS</td>
-      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+      <th>1</th>
+      <td>PI_WCA</td>
+      <td>Production Indexes, World and Country Group Ag...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>MFS_DC</td>
-      <td>Monetary and Financial Statistics (MFS), Depos...</td>
+      <td>UNFCCC</td>
+      <td>Greenhouse Gas Emissions (UNFCCC)</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>LS</td>
-      <td>Labor Statistics (LS)</td>
+      <td>GS_ED</td>
+      <td>Gender Statistics (GS) Education</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>PIP</td>
-      <td>Portfolio Investment Positions by Counterpart ...</td>
+      <th>7</th>
+      <td>SDG</td>
+      <td>IMF Reported SDG Data</td>
     </tr>
     <tr>
       <th>...</th>
@@ -600,29 +600,29 @@ Databases saved to data/databases.csv</code></pre>
       <td>...</td>
     </tr>
     <tr>
-      <th>210</th>
-      <td>BOP_AGG</td>
-      <td>Balance of Payments and International Investme...</td>
+      <th>207</th>
+      <td>FSICDM</td>
+      <td>Financial Soundness Indicators (FSI), Concentr...</td>
     </tr>
     <tr>
       <th>212</th>
-      <td>MFS_FC</td>
-      <td>Monetary and Financial Statistics (MFS), Finan...</td>
+      <td>GFS_SSUC</td>
+      <td>GFS Statement of Sources and Uses of Cash</td>
+    </tr>
+    <tr>
+      <th>214</th>
+      <td>ANEA</td>
+      <td>National Economic Accounts (NEA), Annual Data</td>
     </tr>
     <tr>
       <th>216</th>
-      <td>AEA</td>
-      <td>Air Emissions Accounts (AEA)</td>
+      <td>FSIC</td>
+      <td>Financial Soundness Indicators (FSI), Core and...</td>
     </tr>
     <tr>
       <th>220</th>
-      <td>FM</td>
-      <td>Fiscal Monitor (FM)</td>
-    </tr>
-    <tr>
-      <th>221</th>
-      <td>ANEA</td>
-      <td>National Economic Accounts (NEA), Annual Data</td>
+      <td>GFS_COFOG</td>
+      <td>GFS Government Expenditures by Function</td>
     </tr>
   </tbody>
 </table>
@@ -650,7 +650,7 @@ Databases saved to data/databases.csv</code></pre>
 <p>Note: The Gender Inequality Index (GII) is a UN dataset that is no longer available through the IMF API. We’ll load it from a pre-downloaded CSV file instead.</p>
 </div>
 </div>
-<div id="6f6fbb4d" class="cell" data-execution_count="5">
+<div id="69d50897" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'database_id'</span>].isin([<span class="st">'QNEA'</span>,<span class="st">'ANEA'</span>,<span class="st">'WEO'</span>])]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
@@ -665,17 +665,17 @@ Databases saved to data/databases.csv</code></pre>
   </thead>
   <tbody>
     <tr>
-      <th>74</th>
+      <th>16</th>
       <td>QNEA</td>
       <td>National Economic Accounts (NEA), Quarterly Data</td>
     </tr>
     <tr>
-      <th>166</th>
+      <th>161</th>
       <td>WEO</td>
       <td>World Economic Outlook (WEO)</td>
     </tr>
     <tr>
-      <th>221</th>
+      <th>214</th>
       <td>ANEA</td>
       <td>National Economic Accounts (NEA), Annual Data</td>
     </tr>
@@ -685,7 +685,7 @@ Databases saved to data/databases.csv</code></pre>
 </div>
 </div>
 <p>Parameters are dictionary key names to make requests from the databases. “country” is the ISO-3 code of the country. “indicator” refers to the code representing a specific dataset in the database.</p>
-<div id="d586f950" class="cell" data-execution_count="6">
+<div id="e4abc39a" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>datasets_list <span class="op">=</span> [<span class="st">"QNEA"</span>, <span class="st">"ANEA"</span>, <span class="st">"WEO"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {}</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -708,7 +708,7 @@ Parameters for WEO:  ['country', 'indicator', 'frequency']</code></pre>
 </div>
 </div>
 <p>We’ll need to update the <code>load_or_fetch_dataset</code> function to handle the new database parameters:</p>
-<div id="a13d90b3" class="cell" data-execution_count="7">
+<div id="b90d00e2" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_or_fetch_dataset_with_params(database_id, filename_suffix, <span class="op">**</span>kwargs):</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Fetch dataset with flexible parameters for new IMF databases"""</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    file_name <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span>database_id<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>filename_suffix<span class="sc">}</span><span class="ss">.csv"</span></span>
@@ -744,7 +744,7 @@ Parameters for WEO:  ['country', 'indicator', 'frequency']</code></pre>
 <span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span></code></pre></div>
 </div>
 <p>Now fetch the datasets using the new databases:</p>
-<div id="f3c152a5" class="cell" data-execution_count="8">
+<div id="62b1fdd2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gender Inequality Index - Load from CSV (UN dataset, not available via IMF API)</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>GII_data <span class="op">=</span> pd.read_csv(<span class="st">"data/GENDER_EQUALITY.GE_GII.csv"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -801,12 +801,12 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 <section id="data-cleaning" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h2>
 <p>Since the GDP deflator was reported on a quarterly basis, we converted it to a yearly basis.</p>
-<div id="34dad6cc" class="cell" data-execution_count="9">
+<div id="4f6e8d61" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep only rows with a partial string match for "Q4" in the time_period column</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>GDP_deflator_data <span class="op">=</span> GDP_deflator_data[GDP_deflator_data</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>[<span class="st">'time_period'</span>].<span class="bu">str</span>.contains(<span class="st">"Q4"</span>)]</span></code></pre></div>
 </div>
-<div id="383e48ca" class="cell" data-execution_count="10">
+<div id="9f7b168d" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the time_period into year and quarter and keep the year only</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>GDP_deflator_data.loc[:, <span class="st">'time_period'</span>] <span class="op">=</span> GDP_deflator_data[<span class="st">'time_period'</span>].<span class="bu">str</span>[<span class="dv">0</span>:<span class="dv">4</span>]</span></code></pre></div>
 </div>
@@ -824,7 +824,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 <p>The new IMF API returns values in the correct units, so we no longer need to apply unit multipliers. The <code>unit_mult</code> column has been removed from most datasets.</p>
 </div>
 </div>
-<div id="464f0243" class="cell" data-execution_count="11">
+<div id="cf6562bd" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>datasets <span class="op">=</span> [GII_data, GDP_deflator_data, GDP_nominal_data, GDP_population_data]</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, dataset <span class="kw">in</span> <span class="bu">enumerate</span>(datasets):    </span>
@@ -839,7 +839,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 <h2 class="anchored" data-anchor-id="gii-percent-change-dependent-variable">GII Percent Change: Dependent Variable</h2>
 <p>We kept percents as decimals to make them easy to work with for calculation. Different countries have different baseline level of economic growth and gender equality. We calculated the percent change to make them comparable.</p>
 <p>Gender Inequality Index (GII) is a composite measure of gender inequality using three dimensions: reproductive health, empowerment, and labor market. GII ranges from 0 to 1. While 0 indicates gender equality, 1 indicates gender inequality, possibly the worst outcome for one gender in all three dimensions.</p>
-<div id="290139b0" class="cell" data-execution_count="12">
+<div id="1c29623c" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percent change for each country</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># First, create a copy and reset the index to avoid duplicate index issues</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>GII_data_sorted <span class="op">=</span> GII_data.sort_values(</span>
@@ -933,7 +933,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 <p>We subset the data frame to keep only the columns we want:</p>
-<div id="ce58ad74" class="cell" data-execution_count="13">
+<div id="883278a7" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new dataframe with only the required columns</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>GII_data <span class="op">=</span> GII_data[[<span class="st">'country'</span>, <span class="st">'time_period'</span>, <span class="st">'obs_value'</span>, <span class="st">'pct_change'</span>]].copy()</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1007,7 +1007,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 <p><span class="math inline">\text{Real GDP} = \frac{\text{Nominal GDP}}{\text{GDP Deflator Index}}\times 100</span></p>
 <p><span class="math inline">\text{Real GDP per capita} = \frac{\text{Real GDP}}{\text{Population}}</span></p>
 <p>GDP Deflator is a measure of price inflation and deflation with respect to a specific base year. The GDP deflator of a base year is equal to 100. A number of 200 indicates price inflation: the current year price of the good is twice its base year price. A number of 50 indicates price deflation: the current year price of the good is half its base year price. We kept the columns we want only for GDP-related datasets for easier table merging.</p>
-<div id="8f089cf8" class="cell" data-execution_count="14">
+<div id="bbba6ddf" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP Deflator Dataset</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new dataframe with only the required columns</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>GDP_deflator_data <span class="op">=</span> GDP_deflator_data[</span>
@@ -1064,7 +1064,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 <p>Nominal GDP is the total value of all goods and services produced in a given time period. It is usually higher than Real GDP and does not take into account cost of living in different countries or price change due to inflation/deflation.</p>
-<div id="ca1fd31f" class="cell" data-execution_count="15">
+<div id="33476711" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP Nominal Data</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new dataframe with only the required columns</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>GDP_nominal_data <span class="op">=</span> GDP_nominal_data[</span>
@@ -1121,7 +1121,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 <p>Population is the total number of people living in a country at a given time. This is where the “per capita” comes from. Real GDP is the total value of all goods and services produced in a country adjusted for inflation. Real GDP per capita is the total economic output per person in a country.</p>
-<div id="08de4599" class="cell" data-execution_count="16">
+<div id="38b40fa4" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GDP Population Data </span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new dataframe with only the required columns</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>GDP_population_data <span class="op">=</span> GDP_population_data[</span>
@@ -1177,7 +1177,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 </div>
-<div id="3e7147fd" class="cell" data-execution_count="17">
+<div id="bac315ce" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all the datasets above for further calculation</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>merged_df <span class="op">=</span> pd.merge(pd.merge(GDP_deflator_data, GDP_nominal_data, </span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>on<span class="op">=</span>[<span class="st">'time_period'</span>, <span class="st">'country'</span>], </span>
@@ -1257,7 +1257,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 <p>We wanted to compute the Real GDP per capita.</p>
-<div id="27385e3d" class="cell" data-execution_count="18">
+<div id="355a9d14" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Real GDP = (Nominal GDP / GDP Deflator Index)*100</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>merged_df[<span class="st">'Real_GDP_domestic'</span>] <span class="op">=</span> (merged_df[<span class="st">'nominal'</span>] <span class="op">/</span> merged_df[</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'deflator'</span>])<span class="op">*</span><span class="dv">100</span></span>
@@ -1352,7 +1352,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 <p>We calculated the percentage change in Real GDP per capita and put it in a new column.</p>
-<div id="923506ca" class="cell" data-execution_count="19">
+<div id="b7b9d2de" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate percent change for each country</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>merged_df[<span class="ss">f'GDP_change'</span>] <span class="op">=</span> merged_df.sort_values([<span class="st">'Country'</span>, <span class="st">'Time'</span>]).groupby(</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Country'</span>)[<span class="st">'Real GDP per Capita'</span>].pct_change()</span>
@@ -1440,7 +1440,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 </div>
 </div>
 </div>
-<div id="dd58d65f" class="cell" data-execution_count="20">
+<div id="18432f3d" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GII and GDP</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the datasets</span></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>combined_data <span class="op">=</span> pd.merge(GII_data, GDP_data, </span>
@@ -1547,7 +1547,7 @@ Dataset saved to data/WEO.LP.csv</code></pre>
 <h2 class="anchored" data-anchor-id="scatterplot">Scatterplot</h2>
 <p>Scatterplot use dots to represent values of two numeric variables. The horizontal axis was the percent change in Real GDP per capita. The vertical axis was the percent change in Gender Inequality Index(GII). Different colors represented different countries. We used a linear regression line to display the overall pattern.</p>
 <p>Based on the scatterplot, it seemed like there was a slight positive relationship between GDP change and GII change as shown by the flat regression line. Gender inequality was decreasing (gender equality was improving) a little faster in country-years with low GDP growth and a little slower in country-years with high GDP growth.</p>
-<div id="7d447980" class="cell" data-execution_count="21">
+<div id="b482bbab" class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert numeric columns to float</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>numeric_columns <span class="op">=</span> [</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'GII'</span>, <span class="st">'GII_change'</span>, <span class="st">'Nominal'</span>, <span class="st">'Deflator'</span>, <span class="st">'Population'</span>, </span>
@@ -1614,7 +1614,7 @@ dtype: int64 rows with NAs</code></pre>
 <p>FR: France</p>
 <p>MX: Mexico</p>
 <p>Based on the line plots, we saw GDP change and GII change have different patterns. For example, in Mexico, when there was a big change in real GDP per captia in 1995, the change in GII was pretty stable.</p>
-<div id="b4803467" class="cell" data-execution_count="22">
+<div id="9869c4b3" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Time Series Line plot for a few key countries</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>selected_countries  <span class="op">=</span> [<span class="st">'US'</span>, <span class="st">'JP'</span>, <span class="st">'GB'</span>, <span class="st">'FR'</span>, <span class="st">'MX'</span>]</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>combined_data_selected <span class="op">=</span> combined_data[combined_data[<span class="st">'Country'</span>].isin(selected_countries)]</span>
@@ -1656,7 +1656,7 @@ dtype: int64 rows with NAs</code></pre>
 <h2 class="anchored" data-anchor-id="barplot">Barplot</h2>
 <p>We used a barplot to show average changes in GII and GDP percent change for each country to visualize regions where inequality was improving or worsening.</p>
 <p>This plot supported our previous observation how GII change seemed to be not be correlated with GDP change. We also saw that, for country SI, Solvenia, there seems to be a large improvement in gender inequality.</p>
-<div id="896cc36b" class="cell" data-execution_count="23">
+<div id="5360c270" class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Barplot using average GII and GDP change</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate average change for each country</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>combined_data_avg <span class="op">=</span> combined_data.groupby(<span class="st">'Country'</span>)[</span>
@@ -1690,7 +1690,7 @@ dtype: int64 rows with NAs</code></pre>
 <h2 class="anchored" data-anchor-id="boxplot">Boxplot</h2>
 <p>We used boxplot to visualize the distribution of GDP and GII change by country, providing information about spread, median, and potential outliers. To provide a more informative view, we sequenced countries in an ascending order by the median of percent change in GDP.</p>
 <p>The boxplot displayed a slight upward trend with no obvious pattern between GDP and GII change. In coutries with higher GDP change median, they also tend to have a larger spread of the GDP change. The median of GII change remained stable regardless of the magnitude of GDP change, implying weak or no association between GDP and GII change. We observed a potential outlier for country SI, Solvenia, which may explained its large improvement in Gender inequality.</p>
-<div id="73517025" class="cell" data-execution_count="24">
+<div id="de680496" class="cell" data-execution_count="24">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Box plot for GII and GDP change</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Melt the dataframe to long format for combined boxplot</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>combined_data_melted <span class="op">=</span> combined_data.melt(id_vars<span class="op">=</span>[<span class="st">'Country'</span>], </span>
@@ -1731,7 +1731,7 @@ dtype: int64 rows with NAs</code></pre>
 <p>We created a heatmap to show the relationship between GII and GDP change.</p>
 <p>A positive correlation coefficient indicates a positive relationship: the larger the GDP change, the larger the GII change. A negative correlation coefficient indicates a negative relationship: the larger the GDP change, the smaller the GII change. A correlation coefficient closer to 0 indicates there is weak or no relationship.</p>
 <p>Based on the numeric values in the plot, there was a moderately strong positive correlation between GII and GDP change for country Estonia(EE) and Ireland(IE).</p>
-<div id="33d97669" class="cell" data-execution_count="25">
+<div id="bfc373be" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the correlation</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>country_correlation <span class="op">=</span> combined_data.groupby(<span class="st">'Country'</span>)[</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'GII_change'</span>, <span class="st">'GDP_change'</span>]].corr().iloc[<span class="dv">0</span>::<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>].reset_index(name<span class="op">=</span><span class="st">'Correlation'</span>)</span>
@@ -1779,7 +1779,7 @@ dtype: int64 rows with NAs</code></pre>
 <section id="descriptive-statistics" class="level2">
 <h2 class="anchored" data-anchor-id="descriptive-statistics">Descriptive Statistics</h2>
 <p>There was a total of 915 data points. The mean of the GII change in -0.0314868, which indicated the overall grand mean percent change in gender inequality index is -3.15%. The mean of the GDP change was 0.0234633, showing the overall grand mean percent change in real GDP per capita was 2.35%.</p>
-<div id="290baf9d" class="cell" data-execution_count="26">
+<div id="222088c2" class="cell" data-execution_count="26">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate summary statistics</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>combined_data.describe()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="26">
@@ -1903,7 +1903,7 @@ dtype: int64 rows with NAs</code></pre>
 <li><p>R-squared = 0.004. Only 0.4% of the variance in GII change could be explained by GDP change.</p></li>
 <li><p>We were 95% confident that the interval from -0.003 to 0.169 captured the true slope of GDP change. Because 0 was included, we are uncertain about the effect of GDP change on GII chnage.</p></li>
 </ul>
-<div id="ad433593" class="cell" data-execution_count="27">
+<div id="e50f727e" class="cell" data-execution_count="27">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get column data type summaries of combined_data</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>combined_data.info()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1926,7 +1926,7 @@ dtypes: float64(8), object(2)
 memory usage: 79.2+ KB</code></pre>
 </div>
 </div>
-<div id="864c824c" class="cell" data-execution_count="28">
+<div id="f0827358" class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define independent and depenent variables</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> combined_data[<span class="st">'GDP_change'</span>]</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> combined_data[<span class="st">'GII_change'</span>]</span>
@@ -1953,7 +1953,7 @@ memory usage: 79.2+ KB</code></pre>
   <th>Date:</th>             <td>Sun, 02 Aug 2026</td> <th>  Prob (F-statistic):</th>  <td> 0.345</td> 
 </tr>
 <tr>
-  <th>Time:</th>                 <td>15:05:28</td>     <th>  Log-Likelihood:    </th> <td>  1323.1</td>
+  <th>Time:</th>                 <td>15:06:54</td>     <th>  Log-Likelihood:    </th> <td>  1323.1</td>
 </tr>
 <tr>
   <th>No. Observations:</th>      <td>   922</td>      <th>  AIC:               </th> <td>  -2642.</td>
@@ -2011,7 +2011,7 @@ memory usage: 79.2+ KB</code></pre>
 <p>We wanted to use Augmented Dickey-Fuller (ADF) test to check whether a time series was stationary, which was the model assumption for many time series models.</p>
 <p>Stationarity implied constant mean and variance over time, making it more predictable and stable for forecasting.</p>
 <p>Based on the ADF test output, both GII and GDP change time series were stationary. We proceeded to the time series modeling section.</p>
-<div id="98cad26a" class="cell" data-execution_count="29">
+<div id="70be43bf" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Augmented Dickey-Fuller (ADF) test for stationarity check</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Create melted datasets</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>combined_data_time <span class="op">=</span> combined_data.melt(id_vars<span class="op">=</span>[<span class="st">'Time'</span>, <span class="st">'Country'</span>], </span>
@@ -2055,7 +2055,7 @@ Series is stationary</code></pre>
 <li><p>Past GII_change values significantly influenced current GII_change, as shown in the small p-values of lags 1 and 2.</p></li>
 <li><p>Lag 2 of GDP_change had a relatively low p-value but is not statistically significant.</p></li>
 </ul>
-<div id="7358169f" class="cell" data-execution_count="30">
+<div id="c1cd79da" class="cell" data-execution_count="30">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the dataset into training and testing sets</span></span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>split_ratio <span class="op">=</span> <span class="fl">0.7</span></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>split_index <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(combined_data) <span class="op">*</span> split_ratio)</span>
@@ -2073,7 +2073,7 @@ Series is stationary</code></pre>
 Test data: (277, 10)</code></pre>
 </div>
 </div>
-<div id="68760299" class="cell" data-execution_count="31">
+<div id="7e599f7b" class="cell" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a VAR model </span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>time_model <span class="op">=</span> VAR(train_data[[<span class="st">'GII_change'</span>, <span class="st">'GDP_change'</span>]])</span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>time_model_fitted <span class="op">=</span> time_model.fit(maxlags <span class="op">=</span> <span class="dv">15</span>, ic<span class="op">=</span><span class="st">"aic"</span>)</span>
@@ -2086,7 +2086,7 @@ Test data: (277, 10)</code></pre>
 Model:                         VAR
 Method:                        OLS
 Date:           Sun, 02, Aug, 2026
-Time:                     15:05:28
+Time:                     15:06:54
 --------------------------------------------------------------------
 No. of Equations:         2.00000    BIC:                   -12.0475
 Nobs:                     638.000    HQIC:                  -12.1758
@@ -2146,7 +2146,7 @@ GDP_change      0.000597    1.000000
 <section id="var-model-forecasting" class="level3">
 <h3 class="anchored" data-anchor-id="var-model-forecasting">VAR Model: Forecasting</h3>
 <p>We applied the model learned above to the test data. Based on the plot, the forecast values seem to follow the actual data well, indicating a good model fit caputuring the underlying trends.</p>
-<div id="aa12a3db" class="cell" data-execution_count="32">
+<div id="055f7c06" class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of steps to forecast (length of the test set)</span></span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>n_steps <span class="op">=</span> <span class="bu">len</span>(test_data)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2164,7 +2164,7 @@ GDP_change      0.000597    1.000000
 <span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure the index of the forecast_df matches the test_data index</span></span>
 <span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>forecast_df.index <span class="op">=</span> test_data.index</span></code></pre></div>
 </div>
-<div id="42e0320a" class="cell" data-execution_count="33">
+<div id="ecee1978" class="cell" data-execution_count="33">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>))</span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>plt.plot(train_data[<span class="st">'GII_change'</span>], label<span class="op">=</span><span class="st">'Training GII'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>plt.plot(test_data[<span class="st">'GII_change'</span>], label<span class="op">=</span><span class="st">'Actual GII'</span>, color<span class="op">=</span><span class="st">'orange'</span>)</span>
@@ -2199,7 +2199,7 @@ GDP_change      0.000597    1.000000
 <section id="var-model-model-performance" class="level3">
 <h3 class="anchored" data-anchor-id="var-model-model-performance">VAR Model: Model Performance</h3>
 <p>Low values of both MAE and RMSE indicate good model performance with small average errors in predictions.</p>
-<div id="4e2f9e19" class="cell" data-execution_count="34">
+<div id="760cd048" class="cell" data-execution_count="34">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>mae_gii <span class="op">=</span> mean_absolute_error(test_data[<span class="st">'GII_change'</span>], forecast_df[<span class="st">'GII_forecast'</span>])</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>mae_gdp <span class="op">=</span> mean_absolute_error(test_data[<span class="st">'GDP_change'</span>], forecast_df[<span class="st">'GDP_forecast'</span>])</span>
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -2210,7 +2210,7 @@ GDP_change      0.000597    1.000000
 Mean Absolute Error for GDP: 0.027404922069758388</code></pre>
 </div>
 </div>
-<div id="4d5b5462" class="cell" data-execution_count="35">
+<div id="d7bb1b41" class="cell" data-execution_count="35">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>rmse_gii <span class="op">=</span> np.sqrt(mean_squared_error(test_data[<span class="st">'GII_change'</span>], </span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>forecast_df[<span class="st">'GII_forecast'</span>]))</span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>rmse_gdp <span class="op">=</span> np.sqrt(mean_squared_error(test_data[<span class="st">'GDP_change'</span>], </span>
@@ -2228,7 +2228,7 @@ RMSE for GDP: 0.03831468829219206</code></pre>
 <h3 class="anchored" data-anchor-id="var-model-granger-causality-test">VAR Model: Granger causality test</h3>
 <p>Granger causality test evaluates whether one time series can predict another.</p>
 <p>Based on the output, the lowest p-value is when lag = 2. However, because p-value &gt; 0.05, we fail to reject the null hypothesis and conclude the GDP_change does not Granger-cause the GII_change.</p>
-<div id="4d48bed6" class="cell" data-execution_count="36">
+<div id="b3bb2a89" class="cell" data-execution_count="36">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform the Granger causality test</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>max_lag <span class="op">=</span> <span class="dv">3</span></span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>test_result <span class="op">=</span> grangercausalitytests(train_data[[<span class="st">'GII_change'</span>, <span class="st">'GDP_change'</span>]], max_lag,</span>

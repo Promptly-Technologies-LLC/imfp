@@ -323,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fetching-an-index-of-databases-with-the-imf_databases-function" class="level2">
 <h2 class="anchored" data-anchor-id="fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a> Function</h2>
 <p>To obtain the list of available databases and their corresponding IDs, use <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a>:</p>
-<div id="1685ef54" class="cell" data-execution_count="1">
+<div id="787b8154" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Fetch the list of databases available through the IMF API</span></span>
@@ -343,28 +343,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>0</th>
-      <td>ITS</td>
-      <td>International Trade in Services (ITS)</td>
+      <td>MFS_DC_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Depos...</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>PI_WCA</td>
-      <td>Production Indexes, World and Country Group Ag...</td>
+      <td>MCDREO</td>
+      <td>Middle East and Central Asia Regional Economic...</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>QGFS_2026_APR_VINTAGE</td>
-      <td>Quarterly Government Finance Statistics (QGFS)...</td>
+      <td>WHDREO_2025_OCT_VINTAGE</td>
+      <td>Western Hemisphere Regional Economic Outlook (...</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>EER_2026_JAN_VINTAGE</td>
-      <td>Effective Exchange Rates (ER) 2026 January</td>
+      <td>PCPS</td>
+      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>UNFCCC</td>
-      <td>Greenhouse Gas Emissions (UNFCCC)</td>
+      <td>MFS_DC</td>
+      <td>Monetary and Financial Statistics (MFS), Depos...</td>
     </tr>
   </tbody>
 </table>
@@ -377,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exploring-the-database-list" class="level1">
 <h1>Exploring the Database List</h1>
 <p>To view and explore the database list, it’s possible to explore subsets of the data frame by row number with <code>databases.loc</code>:</p>
-<div id="5a83ddd6" class="cell" data-execution_count="2">
+<div id="549ac7a6" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -394,28 +394,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>5</th>
-      <td>GS_ED</td>
-      <td>Gender Statistics (GS) Education</td>
+      <td>LS</td>
+      <td>Labor Statistics (LS)</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>BOP_2026_JAN_VINTAGE</td>
-      <td>Balance of Payments (BOP) 2026 January</td>
+      <td>MFS_FMP_2026_APR_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Finan...</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>SDG</td>
-      <td>IMF Reported SDG Data</td>
+      <td>MFS_OFC_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Other...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>QGFS_2026_FEB_VINTAGE</td>
-      <td>Quarterly Government Finance Statistics (QGFS)...</td>
+      <td>PIP</td>
+      <td>Portfolio Investment Positions by Counterpart ...</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>MFS_OFC</td>
-      <td>Monetary and Financial Statistics (MFS), Other...</td>
+      <td>ANEA_2026_JAN_VINTAGE</td>
+      <td>National Economic Accounts (NEA), Annual Data ...</td>
     </tr>
   </tbody>
 </table>
@@ -423,7 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using <code>str.contains</code> and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:</p>
-<div id="734714e8" class="cell" data-execution_count="3">
+<div id="59acdae3" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -438,14 +438,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>99</th>
-      <td>CTOT</td>
-      <td>Commodity Terms of Trade (CTOT)</td>
-    </tr>
-    <tr>
-      <th>178</th>
+      <th>3</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>CTOT</td>
+      <td>Commodity Terms of Trade (CTOT)</td>
     </tr>
   </tbody>
 </table>

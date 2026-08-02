@@ -199,17 +199,17 @@ databases[
 
 |     | database_id | description                                       |
 |-----|-------------|---------------------------------------------------|
-| 1   | MCDREO      | Middle East and Central Asia Regional Economic... |
-| 3   | PCPS        | Primary Commodity Price System (PCPS)             |
-| 4   | MFS_DC      | Monetary and Financial Statistics (MFS), Depos... |
-| 5   | LS          | Labor Statistics (LS)                             |
-| 8   | PIP         | Portfolio Investment Positions by Counterpart ... |
+| 0   | ITS         | International Trade in Services (ITS)             |
+| 1   | PI_WCA      | Production Indexes, World and Country Group Ag... |
+| 4   | UNFCCC      | Greenhouse Gas Emissions (UNFCCC)                 |
+| 5   | GS_ED       | Gender Statistics (GS) Education                  |
+| 7   | SDG         | IMF Reported SDG Data                             |
 | ... | ...         | ...                                               |
-| 210 | BOP_AGG     | Balance of Payments and International Investme... |
-| 212 | MFS_FC      | Monetary and Financial Statistics (MFS), Finan... |
-| 216 | AEA         | Air Emissions Accounts (AEA)                      |
-| 220 | FM          | Fiscal Monitor (FM)                               |
-| 221 | ANEA        | National Economic Accounts (NEA), Annual Data     |
+| 207 | FSICDM      | Financial Soundness Indicators (FSI), Concentr... |
+| 212 | GFS_SSUC    | GFS Statement of Sources and Uses of Cash         |
+| 214 | ANEA        | National Economic Accounts (NEA), Annual Data     |
+| 216 | FSIC        | Financial Soundness Indicators (FSI), Core and... |
+| 220 | GFS_COFOG   | GFS Government Expenditures by Function           |
 
 101 rows × 2 columns
 
@@ -234,9 +234,9 @@ databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
 
 |     | database_id | description                                      |
 |-----|-------------|--------------------------------------------------|
-| 74  | QNEA        | National Economic Accounts (NEA), Quarterly Data |
-| 166 | WEO         | World Economic Outlook (WEO)                     |
-| 221 | ANEA        | National Economic Accounts (NEA), Annual Data    |
+| 16  | QNEA        | National Economic Accounts (NEA), Quarterly Data |
+| 161 | WEO         | World Economic Outlook (WEO)                     |
+| 214 | ANEA        | National Economic Accounts (NEA), Annual Data    |
 
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -982,7 +982,7 @@ model.summary()
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.8936 |
 | Date:             | Sun, 02 Aug 2026 | Prob (F-statistic): | 0.345  |
-| Time:             | 15:05:28         | Log-Likelihood:     | 1323.1 |
+| Time:             | 15:06:54         | Log-Likelihood:     | 1323.1 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2633. |
 | Df Model:         | 1                |                     |        |
@@ -1118,7 +1118,7 @@ time_model_fitted.summary()
     Model:                         VAR
     Method:                        OLS
     Date:           Sun, 02, Aug, 2026
-    Time:                     15:05:28
+    Time:                     15:06:54
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0475
     Nobs:                     638.000    HQIC:                  -12.1758
