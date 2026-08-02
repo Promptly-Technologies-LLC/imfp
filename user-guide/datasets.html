@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2025-11-10">v1.3.0</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-02">v1.3.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -306,7 +306,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="making-a-request" class="level1">
 <h1>Making a Request</h1>
 <p>To retrieve data from an IMF database, you’ll need the database ID and any relevant <a href="../user-guide/parameters.html">filter parameters</a>. Here’s a basic example using the Producer Price Index (PPI) database from 2000 to 2015:</p>
-<div id="7713bdc7" class="cell" data-execution_count="1">
+<div id="5b8fc320" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get parameters and their valid codes</span></span>
@@ -332,7 +332,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Decoding Returned Data</h1>
 <p>When you retrieve data using <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a>, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from <a href="../reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a>, so that codes like “A” (Annual) or “W00” (World) become self-explanatory labels.</p>
 <p>For example, suppose we want to decode the <code>frequency</code>, <code>country</code>, and <code>type_of_transformation</code> (unit) columns in our dataset. We’ll merge the parameter descriptions into our data frame:</p>
-<div id="94b715a0" class="cell" data-execution_count="2">
+<div id="73bc1e83" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode frequency codes (e.g., "A" → "Annual")</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>decoded_df <span class="op">=</span> df.merge(</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select code-description pairs</span></span>

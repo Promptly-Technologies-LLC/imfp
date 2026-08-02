@@ -34,7 +34,7 @@ df.info()
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:582: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
+    /home/runner/work/imfp/imfp/imfp/data.py:637: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
       warn(
 
 
@@ -265,7 +265,7 @@ exchange_rate = imfp.imf_dataset(
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:748: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
+    /home/runner/work/imfp/imfp/imfp/data.py:786: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
       warn(
 
 
