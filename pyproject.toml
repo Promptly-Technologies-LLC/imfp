@@ -98,15 +98,32 @@ insecure = false
 dist_glob_patterns = ["dist/*"]
 upload_to_vcs_release = true
 
+[tool.black]
+# Generate syntax compatible with the oldest supported runtime. Listing newer
+# targets makes Black's safety check require a matching interpreter.
+target-version = ["py310"]
+
 [dependency-groups]
 dev = [
-    "pyarrow>=19.0.0",
+    "pyarrow>=23.0.1",
     "responses == 0.23.3",
     "pytest == 7.4.4",
     "pytest-runner == 6.0.1",
-    "black == 24.10.0",
+    "black == 26.5.1",
     "pytest-mock == 3.14.0",
     "jupyter == 1.1.1",
+    # Floor transitive Jupyter/docs stack packages at patched releases
+    # reported by Dependabot against uv.lock.
+    "jupyter-server>=2.20.0",
+    "jupyterlab>=4.6.2",
+    "notebook>=7.5.6",
+    "nbconvert>=7.17.1",
+    "mistune>=3.3.0",
+    "soupsieve>=2.8.4",
+    "tornado>=6.5.7",
+    "pillow>=12.3.0",
+    "gitpython>=3.1.55",
+    "urllib3>=2.7.0",
     "seaborn == 0.13.2",
     "quarto == 0.1.0",
     "scikit-learn == 1.5.2",
