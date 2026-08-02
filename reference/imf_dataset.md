@@ -7,9 +7,13 @@ Download a data series from the IMF.
 Usage
 
 ``` python
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> DataFrame
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> DataFrame
  
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], DataFrame]
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], DataFrame]
+ 
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> dict[str, Any]
+ 
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], dict[str, Any]]
 ```
 
 

@@ -199,17 +199,17 @@ databases[
 
 |     | database_id | description                                       |
 |-----|-------------|---------------------------------------------------|
-| 6   | HPD         | Historical Public Debt (HPD)                      |
-| 13  | BOP_AGG     | Balance of Payments and International Investme... |
-| 15  | GPT         | IMF Global Policy Tracker: How Countries are R... |
-| 16  | FFS         | Fossil Fuel Subsidies                             |
-| 17  | GFS_SFCP    | GFS Stocks and Flows by Counterparty              |
+| 0   | ITS         | International Trade in Services (ITS)             |
+| 1   | PI_WCA      | Production Indexes, World and Country Group Ag... |
+| 4   | UNFCCC      | Greenhouse Gas Emissions (UNFCCC)                 |
+| 5   | GS_ED       | Gender Statistics (GS) Education                  |
+| 7   | SDG         | IMF Reported SDG Data                             |
 | ... | ...         | ...                                               |
-| 214 | GFS_BS      | GFS Balance Sheet                                 |
-| 215 | EER         | Effective Exchange Rate (EER)                     |
-| 216 | ITG         | International Trade in Goods (ITG)                |
-| 220 | APDREO      | Asia and Pacific Regional Economic Outlook (AP... |
-| 221 | MCDREO      | Middle East and Central Asia Regional Economic... |
+| 207 | FSICDM      | Financial Soundness Indicators (FSI), Concentr... |
+| 212 | GFS_SSUC    | GFS Statement of Sources and Uses of Cash         |
+| 214 | ANEA        | National Economic Accounts (NEA), Annual Data     |
+| 216 | FSIC        | Financial Soundness Indicators (FSI), Core and... |
+| 220 | GFS_COFOG   | GFS Government Expenditures by Function           |
 
 101 rows × 2 columns
 
@@ -234,9 +234,9 @@ databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
 
 |     | database_id | description                                      |
 |-----|-------------|--------------------------------------------------|
-| 141 | ANEA        | National Economic Accounts (NEA), Annual Data    |
-| 157 | QNEA        | National Economic Accounts (NEA), Quarterly Data |
-| 187 | WEO         | World Economic Outlook (WEO)                     |
+| 16  | QNEA        | National Economic Accounts (NEA), Quarterly Data |
+| 161 | WEO         | World Economic Outlook (WEO)                     |
+| 214 | ANEA        | National Economic Accounts (NEA), Annual Data    |
 
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -982,7 +982,7 @@ model.summary()
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.8936 |
 | Date:             | Sun, 02 Aug 2026 | Prob (F-statistic): | 0.345  |
-| Time:             | 23:34:33         | Log-Likelihood:     | 1323.1 |
+| Time:             | 23:42:36         | Log-Likelihood:     | 1323.1 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2633. |
 | Df Model:         | 1                |                     |        |
@@ -1063,8 +1063,8 @@ adf_test(GDP['Value'])
     ADF Statistic: -14.389003678493355
     p-value: 8.889678684263258e-27
     Series is stationary
-    ADF Statistic: -11.532202190284565
-    p-value: 3.8078866344337845e-21
+    ADF Statistic: -11.53220219028458
+    p-value: 3.807886634433481e-21
     Series is stationary
 
 
@@ -1118,7 +1118,7 @@ time_model_fitted.summary()
     Model:                         VAR
     Method:                        OLS
     Date:           Sun, 02, Aug, 2026
-    Time:                     23:34:33
+    Time:                     23:42:36
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0475
     Nobs:                     638.000    HQIC:                  -12.1758
@@ -1241,7 +1241,7 @@ print(f'Mean Absolute Error for GDP: {mae_gdp}')
 ```
 
 
-    Mean Absolute Error for GII: 0.02921647430121139
+    Mean Absolute Error for GII: 0.029216474301211395
     Mean Absolute Error for GDP: 0.027404922069758388
 
 
