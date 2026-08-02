@@ -365,13 +365,12 @@ def imf_dataset(
     parameters: dict | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
-    return_raw: bool = False,
+    return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -380,13 +379,40 @@ def imf_dataset(
     parameters: dict | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
-    return_raw: bool = False,
+    return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs,
-) -> tuple[dict, DataFrame]:
-    ...
+) -> tuple[dict, DataFrame]: ...
+
+
+@overload
+def imf_dataset(
+    database_id: str,
+    parameters: dict | None = None,
+    start_year: int | str | None = None,
+    end_year: int | str | None = None,
+    return_raw: Literal[True] = True,
+    print_url: bool = False,
+    times: int = 3,
+    include_metadata: Literal[False] = False,
+    **kwargs,
+) -> dict: ...
+
+
+@overload
+def imf_dataset(
+    database_id: str,
+    parameters: dict | None = None,
+    start_year: int | str | None = None,
+    end_year: int | str | None = None,
+    return_raw: Literal[True] = True,
+    print_url: bool = False,
+    times: int = 3,
+    include_metadata: Literal[True] = True,
+    **kwargs,
+) -> tuple[dict, dict]: ...
 
 
 @type_enforced.Enforcer
@@ -400,7 +426,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: bool = False,
     **kwargs,
-) -> DataFrame | tuple[dict, DataFrame]:
+) -> DataFrame | dict | tuple[dict, DataFrame | dict]:
     """
     Download a data series from the IMF.
 
