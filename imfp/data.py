@@ -601,7 +601,8 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs: Any,
-) -> DataFrame: ...
+) -> DataFrame:
+    ...
 
 
 @overload
@@ -615,7 +616,8 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs: Any,
-) -> tuple[dict[str, Any], DataFrame]: ...
+) -> tuple[dict[str, Any], DataFrame]:
+    ...
 
 
 @overload
@@ -629,7 +631,8 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs: Any,
-) -> dict[str, Any]: ...
+) -> dict[str, Any]:
+    ...
 
 
 @overload
@@ -643,7 +646,8 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs: Any,
-) -> tuple[dict[str, Any], dict[str, Any]]: ...
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    ...
 
 
 @type_enforced.Enforcer
