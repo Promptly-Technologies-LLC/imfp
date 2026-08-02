@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import overload, Literal
+from typing import Any, overload, Literal
 from warnings import warn
 from urllib.parse import urlencode
 from pandas import DataFrame
@@ -24,7 +24,7 @@ _PERIOD_MONTH = re.compile(r"^\d{4}-\d{2}$")
 _PERIOD_YEAR = re.compile(r"^\d{4}$")
 
 
-def _parse_imf_sdmx_json(message: dict) -> DataFrame:
+def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
     """
     Parse SDMX JSON message from new API into a DataFrame.
 
@@ -55,7 +55,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
     obs_dim = obs_dims[0] if obs_dims and len(obs_dims) >= 1 else None
 
     # Helper to map index -> code/id
-    def index_to_code(dim_def, idx):
+    def index_to_code(dim_def: dict[str, Any] | None, idx: Any) -> Any:
         if not dim_def or not dim_def.get("values") or len(dim_def["values"]) < 1:
             return None
         try:
@@ -68,7 +68,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
         except (ValueError, IndexError, TypeError):
             return None
 
-    def obs_index_to_period(idx):
+    def obs_index_to_period(idx: Any) -> Any:
         if not obs_dim or not obs_dim.get("values") or len(obs_dim["values"]) < 1:
             return None
         try:
@@ -150,7 +150,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
     return df
 
 
-def _normalize_year_arg(value, arg_name: str) -> str | None:
+def _normalize_year_arg(value: Any, arg_name: str) -> str | None:
     """Validate and normalize a four-digit year argument to a string."""
     if value is None:
         return None
@@ -182,9 +182,11 @@ def _map_parameter_alias(key: str, available_keys: set[str]) -> str:
     return kl
 
 
-def _coerce_input_keys_for_dataset(input_dict: dict, available_keys: set[str]) -> dict:
+def _coerce_input_keys_for_dataset(
+    input_dict: dict[str, Any], available_keys: set[str]
+) -> dict[str, Any]:
     """Coerce legacy input parameter names to dataset-specific keys."""
-    coerced: dict = {}
+    coerced: dict[str, Any] = {}
     for k, v in input_dict.items():
         new_k = _map_parameter_alias(k, available_keys)
         if new_k in coerced and new_k != k:
@@ -194,12 +196,12 @@ def _coerce_input_keys_for_dataset(input_dict: dict, available_keys: set[str]) -
     return coerced
 
 
-def _codes_from_parameters(parameters: dict) -> dict[str, list]:
+def _codes_from_parameters(parameters: dict[str, Any]) -> dict[str, list[Any]]:
     return {key: list(frame["input_code"]) for key, frame in parameters.items()}
 
 
-def _codes_from_kwargs(kwargs: dict) -> dict[str, list]:
-    selected: dict[str, list] = {}
+def _codes_from_kwargs(kwargs: dict[str, Any]) -> dict[str, list[Any]]:
+    selected: dict[str, list[Any]] = {}
     for key, value in kwargs.items():
         selected[key] = value if isinstance(value, list) else [value]
     return selected
@@ -207,7 +209,7 @@ def _codes_from_kwargs(kwargs: dict) -> dict[str, list]:
 
 def _apply_selected_codes(
     data_dimensions: dict[str, DataFrame],
-    selected: dict[str, list],
+    selected: dict[str, list[Any]],
     database_id: str,
 ) -> None:
     """Filter data_dimensions in place to the selected input codes."""
@@ -240,21 +242,41 @@ def _apply_selected_codes(
             data_dimensions[key] = data_dimensions[key].iloc[0:0]
 
 
+def _codes_in_parameter_order(
+    selected: list[str] | set[str], codebook: DataFrame
+) -> list[str]:
+    """Return selected input codes in ``imf_parameters`` / codelist order.
+
+    The IMF series key joins multiple codes for a dimension with '+'. The API
+    expects those codes in the same order they appear in the parameter
+    codebook (for frequency, that matches alphabetized-by-description order
+    for A/M/Q), not the caller's list order.
+    """
+    if codebook.empty or not selected:
+        return []
+    selected_set = set(selected)
+    return [code for code in codebook["input_code"].tolist() if code in selected_set]
+
+
 def _normalized_dimension_filters(
     data_dimensions: dict[str, DataFrame],
-) -> dict[str, list]:
-    return {
-        key.upper(): codes
-        for key, frame in data_dimensions.items()
-        if (codes := frame["input_code"].tolist())
-    }
+    parameter_codebooks: dict[str, DataFrame],
+) -> dict[str, list[str]]:
+    """Build uppercased dimension filters with codes in codebook order."""
+    norm_dims: dict[str, list[str]] = {}
+    for key, frame in data_dimensions.items():
+        selected = frame["input_code"].tolist()
+        codes = _codes_in_parameter_order(selected, parameter_codebooks[key])
+        if codes:
+            norm_dims[key.upper()] = codes
+    return norm_dims
 
 
-def _series_key_rows(components: dict) -> list[dict]:
+def _series_key_rows(components: dict[str, Any]) -> list[dict[str, Any]]:
     """Return non-time dimensions sorted by position for series-key construction."""
     dims = components.get("dimensionList", {}).get("dimensions", [])
     time_dims = components.get("dimensionList", {}).get("timeDimensions", [])
-    all_dim_rows = []
+    all_dim_rows: list[dict[str, Any]] = []
     for dim in list(dims) + list(time_dims or []):
         if not dim:
             continue
@@ -274,7 +296,9 @@ def _series_key_rows(components: dict) -> list[dict]:
     return key_rows
 
 
-def _build_series_key(key_rows: list[dict], norm_dims: dict[str, list]) -> str:
+def _build_series_key(
+    key_rows: list[dict[str, Any]], norm_dims: dict[str, list[str]]
+) -> str:
     available_dims = {row["id"] for row in key_rows}
     unknown = set(norm_dims) - available_dims
     if unknown:
@@ -285,12 +309,24 @@ def _build_series_key(key_rows: list[dict], norm_dims: dict[str, list]) -> str:
     segments = []
     for row in key_rows:
         vals = norm_dims.get(row["id"], [])
+        # Omitted dimensions (including omitted frequency) become '*' wildcards.
         segments.append("*" if not vals else "+".join(vals))
     return ".".join(segments)
 
 
-def _transform_period_for_frequency(period, frequency):
-    """Transform a user time period into the SDMX filter form for a frequency."""
+def _transform_period_for_frequency(
+    period: str | None,
+    frequency: list[str] | None,
+    bound: Literal["start", "end"] = "start",
+) -> str | None:
+    """Transform a user time period into the SDMX filter form for a frequency.
+
+    When ``frequency`` is a single code, year bounds use that frequency's first
+    (start) or last (end) period of the year. When frequency is omitted or
+    multi-valued, start uses the earliest cross-frequency suffix (``-A1``) and
+    end uses a high sentinel (``-W99``) so quarterly/monthly periods in the
+    requested year are not excluded by lexicographic comparison.
+    """
     if not period:
         return period
     if _PERIOD_FREQ_SUFFIX.match(period):
@@ -299,11 +335,14 @@ def _transform_period_for_frequency(period, frequency):
         year, month = period.split("-")
         return f"{year}-M{month}"
     if _PERIOD_YEAR.match(period):
+        start_suffixes = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
+        end_suffixes = {"A": "-A1", "Q": "-Q4", "M": "-M12", "W": "-W53"}
         if frequency and len(frequency) == 1:
-            freq_map = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
-            suffix = freq_map.get(frequency[0].upper(), "-A1")
+            freq = frequency[0].upper()
+            suffix_map = end_suffixes if bound == "end" else start_suffixes
+            suffix = suffix_map.get(freq, "-A1" if bound == "start" else "-W99")
         else:
-            suffix = "-A1"
+            suffix = "-A1" if bound == "start" else "-W99"
         return f"{period}{suffix}"
     return period
 
@@ -311,7 +350,7 @@ def _transform_period_for_frequency(period, frequency):
 def _build_time_query_params(
     start_period: str | None,
     end_period: str | None,
-    user_frequency,
+    user_frequency: list[str] | None,
     provider_agency: str,
 ) -> dict[str, str]:
     query_params = {
@@ -322,11 +361,11 @@ def _build_time_query_params(
     time_filters = []
     if start_period:
         time_filters.append(
-            f"ge:{_transform_period_for_frequency(start_period, user_frequency)}"
+            f"ge:{_transform_period_for_frequency(start_period, user_frequency, bound='start')}"
         )
     if end_period:
         time_filters.append(
-            f"le:{_transform_period_for_frequency(end_period, user_frequency)}"
+            f"le:{_transform_period_for_frequency(end_period, user_frequency, bound='end')}"
         )
     if time_filters:
         if provider_agency == "IMF.STA":
@@ -440,9 +479,10 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
         else:
             raise ValueError(e)
 
-    def fetch_parameter_data(k, times):
-        codelist_id = codelist.loc[k, "code"]
-        codelist_agency = codelist.loc[k, "agency"]
+    def fetch_parameter_data(k: int, times: int) -> DataFrame:
+        codelist_id = str(codelist.loc[k, "code"])
+        agency_raw = codelist.loc[k, "agency"]
+        codelist_agency = None if agency_raw is None else str(agency_raw)
 
         # Fetch codelist using new API
         # Try agency-specific path first to get the correct version,
@@ -493,8 +533,8 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
             }
         )
 
-    parameter_list = {
-        codelist.loc[k, "parameter"]: fetch_parameter_data(k, times)
+    parameter_list: dict[str, DataFrame] = {
+        str(codelist.loc[k, "parameter"]): fetch_parameter_data(k, times)
         for k in range(codelist.shape[0])
     }
 
@@ -553,75 +593,71 @@ def imf_parameter_defs(
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
-    **kwargs,
-) -> DataFrame:
-    ...
+    **kwargs: Any,
+) -> DataFrame: ...
 
 
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
-    **kwargs,
-) -> tuple[dict, DataFrame]:
-    ...
+    **kwargs: Any,
+) -> tuple[dict[str, Any], DataFrame]: ...
 
 
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: Literal[True] = True,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
-    **kwargs,
-) -> dict:
-    ...
+    **kwargs: Any,
+) -> dict[str, Any]: ...
 
 
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: Literal[True] = True,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
-    **kwargs,
-) -> tuple[dict, dict]:
-    ...
+    **kwargs: Any,
+) -> tuple[dict[str, Any], dict[str, Any]]: ...
 
 
 @type_enforced.Enforcer
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: bool = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: bool = False,
-    **kwargs,
-) -> DataFrame | dict | tuple[dict, DataFrame | dict]:
+    **kwargs: Any,
+) -> DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]:
     """
     Download a data series from the IMF.
 
@@ -662,7 +698,10 @@ def imf_dataset(
     start_period = _normalize_year_arg(start_year, "start_year")
     end_period = _normalize_year_arg(end_year, "end_year")
 
+    # Keep an unfiltered copy so multi-value key segments can be ordered by
+    # codebook position even if filtered frames are later rearranged.
     data_dimensions = imf_parameters(database_id, times)
+    parameter_codebooks = {key: frame.copy() for key, frame in data_dimensions.items()}
     available_keys = set(data_dimensions.keys())
 
     if parameters is not None:
@@ -687,7 +726,7 @@ def imf_dataset(
         for key in data_dimensions:
             data_dimensions[key] = data_dimensions[key].iloc[0:0]
 
-    norm_dims = _normalized_dimension_filters(data_dimensions)
+    norm_dims = _normalized_dimension_filters(data_dimensions, parameter_codebooks)
 
     # One dataflow lookup serves both DSD resolution and provider agency.
     flow_row = _find_dataflow(database_id, times=times)
@@ -716,7 +755,7 @@ def imf_dataset(
 
     if return_raw:
         if include_metadata:
-            metadata: dict = {}
+            metadata: dict[str, Any] = {}
             return metadata, message
         return message
 
