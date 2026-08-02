@@ -20,7 +20,11 @@ import pytest
 import responses
 
 from imfp import imf_dataset, imf_parameters, set_imf_wait_time
-from imfp.data import _parse_imf_sdmx_json
+from imfp.data import (
+    _normalize_year_arg,
+    _parse_imf_sdmx_json,
+    _transform_period_for_frequency,
+)
 from imfp.utils import _imf_save_response, _imf_use_cache
 
 wait_time = 0
@@ -249,6 +253,32 @@ def test_parse_imf_sdmx_json_performance_large_message():
     # Generous ceiling: current implementation is well under this on CI/dev CPUs.
     # The goal is to catch pathological regressions (e.g. accidental O(n^2) copies).
     assert elapsed < 2.0, f"parse took {elapsed:.3f}s for {len(df)} rows"
+
+
+# ---------------------------------------------------------------------------
+# Year / period helpers extracted from imf_dataset
+# ---------------------------------------------------------------------------
+
+
+def test_normalize_year_arg_accepts_int_and_str():
+    assert _normalize_year_arg(None, "start_year") is None
+    assert _normalize_year_arg(2010, "start_year") == "2010"
+    assert _normalize_year_arg("2010", "end_year") == "2010"
+    with pytest.raises(ValueError, match="start_year must be a four-digit"):
+        _normalize_year_arg(10, "start_year")
+    with pytest.raises(ValueError, match="end_year must be a four-digit"):
+        _normalize_year_arg("abcd", "end_year")
+
+
+def test_transform_period_for_frequency_variants():
+    assert _transform_period_for_frequency(None, ["A"]) is None
+    assert _transform_period_for_frequency("2019-M01", ["M"]) == "2019-M01"
+    assert _transform_period_for_frequency("2019-01", ["M"]) == "2019-M01"
+    assert _transform_period_for_frequency("2015", ["A"]) == "2015-A1"
+    assert _transform_period_for_frequency("2015", ["Q"]) == "2015-Q1"
+    assert _transform_period_for_frequency("2015", ["M"]) == "2015-M01"
+    assert _transform_period_for_frequency("2015", None) == "2015-A1"
+    assert _transform_period_for_frequency("2015", ["A", "Q"]) == "2015-A1"
 
 
 # ---------------------------------------------------------------------------
@@ -515,10 +545,11 @@ def test_imf_dataset_request_count_ceiling(set_options):
         rsps.stop()
         rsps.reset()
 
-    # Observed baseline: 15 total requests / 3 dataflow list fetches / 8 unique URLs
-    assert len(urls) <= 15
+    # Baseline after sharing one dataflow lookup for DSD + agency resolution.
+    # imf_parameters() still performs its own catalog/DSD fetches upstream.
+    assert len(urls) <= 14
     dataflow_list_fetches = sum(
         1 for u in urls if "structure/dataflow/all/" in u and "/data/" not in u
     )
-    assert dataflow_list_fetches <= 3
+    assert dataflow_list_fetches <= 2
     assert len(_data_request_urls(urls)) == 1
