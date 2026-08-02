@@ -10,11 +10,18 @@ from .utils import (
     _download_parse,
     _imf_dimensions,
     _extract_first,
+    _find_dataflow,
     _get_datastructure_components,
     IMF_API_BASE_URL,
 )
 
 logger = logging.getLogger(__name__)
+
+_FREQ_ALIASES = ("freq", "frequency")
+_REF_AREA_ALIASES = ("ref_area", "refarea", "ref-area", "country", "geo")
+_PERIOD_FREQ_SUFFIX = re.compile(r"^\d{4}-(M|Q|A|W)\d+$")
+_PERIOD_MONTH = re.compile(r"^\d{4}-\d{2}$")
+_PERIOD_YEAR = re.compile(r"^\d{4}$")
 
 
 def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
@@ -143,6 +150,98 @@ def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
     return df
 
 
+def _normalize_year_arg(value: Any, arg_name: str) -> str | None:
+    """Validate and normalize a four-digit year argument to a string."""
+    if value is None:
+        return None
+    if arg_name == "start_year":
+        message = "start_year must be a four-digit number, either integer or string."
+    else:
+        message = "end_year must be a four-digit number, either integer or string"
+    try:
+        year = str(value)
+        if year.isdigit() and len(year) == 4:
+            return year
+        raise ValueError(message)
+    except Exception:
+        raise ValueError(message)
+
+
+def _map_parameter_alias(key: str, available_keys: set[str]) -> str:
+    """Map a legacy/alias parameter name onto a dataset-specific key."""
+    kl = key.lower()
+    if kl in available_keys:
+        return kl
+    for aliases in (_FREQ_ALIASES, _REF_AREA_ALIASES):
+        if kl in aliases:
+            for cand in aliases:
+                if cand in available_keys:
+                    if cand != kl:
+                        warn(f"Coercing parameter '{key}' to '{cand}' for this dataset")
+                    return cand
+    return kl
+
+
+def _coerce_input_keys_for_dataset(
+    input_dict: dict[str, Any], available_keys: set[str]
+) -> dict[str, Any]:
+    """Coerce legacy input parameter names to dataset-specific keys."""
+    coerced: dict[str, Any] = {}
+    for k, v in input_dict.items():
+        new_k = _map_parameter_alias(k, available_keys)
+        if new_k in coerced and new_k != k:
+            warn(f"Duplicate values for '{new_k}' after coercion; keeping the first")
+            continue
+        coerced[new_k] = v
+    return coerced
+
+
+def _codes_from_parameters(parameters: dict[str, Any]) -> dict[str, list[Any]]:
+    return {key: list(frame["input_code"]) for key, frame in parameters.items()}
+
+
+def _codes_from_kwargs(kwargs: dict[str, Any]) -> dict[str, list[Any]]:
+    selected: dict[str, list[Any]] = {}
+    for key, value in kwargs.items():
+        selected[key] = value if isinstance(value, list) else [value]
+    return selected
+
+
+def _apply_selected_codes(
+    data_dimensions: dict[str, DataFrame],
+    selected: dict[str, list[Any]],
+    database_id: str,
+) -> None:
+    """Filter data_dimensions in place to the selected input codes."""
+    for key, codes in selected.items():
+        if key not in data_dimensions:
+            raise ValueError(
+                f"{key} not valid parameter(s) for the "
+                f"{database_id} database. Use "
+                f"imf_parameters('{database_id}') to get "
+                "valid parameters."
+            )
+        valid_codes = data_dimensions[key]["input_code"].tolist()
+        invalid = [x for x in codes if x not in valid_codes]
+        if invalid:
+            warn(
+                f"{invalid} not valid value(s) for {key} and will "
+                f"be ignored. Use imf_parameters('{database_id}') to get "
+                "valid parameters."
+            )
+        # Empty or all-codes selection means "no filter" (wildcard in the key).
+        if set(codes) == set(valid_codes) or len(codes) == 0:
+            data_dimensions[key] = data_dimensions[key].iloc[0:0]
+        else:
+            data_dimensions[key] = data_dimensions[key][
+                data_dimensions[key]["input_code"].isin(codes)
+            ]
+
+    for key in data_dimensions:
+        if key not in selected:
+            data_dimensions[key] = data_dimensions[key].iloc[0:0]
+
+
 def _codes_in_parameter_order(
     selected: list[str] | set[str], codebook: DataFrame
 ) -> list[str]:
@@ -157,6 +256,62 @@ def _codes_in_parameter_order(
         return []
     selected_set = set(selected)
     return [code for code in codebook["input_code"].tolist() if code in selected_set]
+
+
+def _normalized_dimension_filters(
+    data_dimensions: dict[str, DataFrame],
+    parameter_codebooks: dict[str, DataFrame],
+) -> dict[str, list[str]]:
+    """Build uppercased dimension filters with codes in codebook order."""
+    norm_dims: dict[str, list[str]] = {}
+    for key, frame in data_dimensions.items():
+        selected = frame["input_code"].tolist()
+        codes = _codes_in_parameter_order(selected, parameter_codebooks[key])
+        if codes:
+            norm_dims[key.upper()] = codes
+    return norm_dims
+
+
+def _series_key_rows(components: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return non-time dimensions sorted by position for series-key construction."""
+    dims = components.get("dimensionList", {}).get("dimensions", [])
+    time_dims = components.get("dimensionList", {}).get("timeDimensions", [])
+    all_dim_rows: list[dict[str, Any]] = []
+    for dim in list(dims) + list(time_dims or []):
+        if not dim:
+            continue
+        dim_id = _extract_first(dim.get("id"))
+        position = dim.get("position")
+        dim_type = _extract_first(dim.get("type"))
+        if dim_id and position is not None:
+            all_dim_rows.append(
+                {
+                    "id": dim_id.upper(),
+                    "position": int(position),
+                    "type": dim_type,
+                }
+            )
+    key_rows = [row for row in all_dim_rows if row["type"] != "TimeDimension"]
+    key_rows.sort(key=lambda x: x["position"])
+    return key_rows
+
+
+def _build_series_key(
+    key_rows: list[dict[str, Any]], norm_dims: dict[str, list[str]]
+) -> str:
+    available_dims = {row["id"] for row in key_rows}
+    unknown = set(norm_dims) - available_dims
+    if unknown:
+        raise ValueError(
+            f"Unknown dimension(s): {', '.join(sorted(unknown))}. "
+            f"Available dimensions: {', '.join(sorted(available_dims))}"
+        )
+    segments = []
+    for row in key_rows:
+        vals = norm_dims.get(row["id"], [])
+        # Omitted dimensions (including omitted frequency) become '*' wildcards.
+        segments.append("*" if not vals else "+".join(vals))
+    return ".".join(segments)
 
 
 def _transform_period_for_frequency(
@@ -174,15 +329,12 @@ def _transform_period_for_frequency(
     """
     if not period:
         return period
-
-    if re.match(r"^\d{4}-(M|Q|A|W)\d+$", period):
+    if _PERIOD_FREQ_SUFFIX.match(period):
         return period
-
-    if re.match(r"^\d{4}-\d{2}$", period):
+    if _PERIOD_MONTH.match(period):
         year, month = period.split("-")
         return f"{year}-M{month}"
-
-    if re.match(r"^\d{4}$", period):
+    if _PERIOD_YEAR.match(period):
         start_suffixes = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
         end_suffixes = {"A": "-A1", "Q": "-Q4", "M": "-M12", "W": "-W53"}
         if frequency and len(frequency) == 1:
@@ -192,8 +344,38 @@ def _transform_period_for_frequency(
         else:
             suffix = "-A1" if bound == "start" else "-W99"
         return f"{period}{suffix}"
-
     return period
+
+
+def _build_time_query_params(
+    start_period: str | None,
+    end_period: str | None,
+    user_frequency: list[str] | None,
+    provider_agency: str,
+) -> dict[str, str]:
+    query_params = {
+        "dimensionAtObservation": "TIME_PERIOD",
+        "attributes": "dsd",
+        "measures": "all",
+    }
+    time_filters = []
+    if start_period:
+        time_filters.append(
+            f"ge:{_transform_period_for_frequency(start_period, user_frequency, bound='start')}"
+        )
+    if end_period:
+        time_filters.append(
+            f"le:{_transform_period_for_frequency(end_period, user_frequency, bound='end')}"
+        )
+    if time_filters:
+        if provider_agency == "IMF.STA":
+            query_params["c[TIME_PERIOD]"] = "+".join(time_filters)
+        else:
+            warn(
+                f"Agency {provider_agency} does not support time filters; "
+                "time window will be ignored."
+            )
+    return query_params
 
 
 @type_enforced.Enforcer
@@ -232,12 +414,6 @@ def imf_databases(times: int = 3) -> DataFrame:
     # In the R implementation, these are lists and we take the first element [[1]]
     database_id = []
     description = []
-
-    def _extract_first(value: Any) -> Any:
-        """Extract first element from list, or return value if not a list."""
-        if isinstance(value, list) and len(value) > 0:
-            return value[0]
-        return value
 
     for dataflow in raw_dataflows:
         # Extract id (database_id)
@@ -420,7 +596,7 @@ def imf_dataset(
     parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
-    return_raw: bool = False,
+    return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
@@ -435,12 +611,42 @@ def imf_dataset(
     parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
-    return_raw: bool = False,
+    return_raw: Literal[False] = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs: Any,
 ) -> tuple[dict[str, Any], DataFrame]:
+    ...
+
+
+@overload
+def imf_dataset(
+    database_id: str,
+    parameters: dict[str, DataFrame] | None = None,
+    start_year: int | str | None = None,
+    end_year: int | str | None = None,
+    return_raw: Literal[True] = True,
+    print_url: bool = False,
+    times: int = 3,
+    include_metadata: Literal[False] = False,
+    **kwargs: Any,
+) -> dict[str, Any]:
+    ...
+
+
+@overload
+def imf_dataset(
+    database_id: str,
+    parameters: dict[str, DataFrame] | None = None,
+    start_year: int | str | None = None,
+    end_year: int | str | None = None,
+    return_raw: Literal[True] = True,
+    print_url: bool = False,
+    times: int = 3,
+    include_metadata: Literal[True] = True,
+    **kwargs: Any,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     ...
 
 
@@ -493,169 +699,29 @@ def imf_dataset(
         database header, and whose second item is the pandas DataFrame. If
         return_raw == True, returns the raw JSON fetched from the API endpoint.
     """
-    # Normalize start_year and end_year to strings
-    start_period = None
-    end_period = None
+    start_period = _normalize_year_arg(start_year, "start_year")
+    end_period = _normalize_year_arg(end_year, "end_year")
 
-    if start_year is not None:
-        try:
-            start_year = str(start_year)
-            if start_year.isdigit() and len(start_year) == 4:
-                start_period = start_year
-            else:
-                raise ValueError(
-                    "start_year must be a four-digit number, "
-                    "either integer or string."
-                )
-        except Exception:
-            raise ValueError(
-                "start_year must be a four-digit number, either integer or string."
-            )
-
-    if end_year is not None:
-        try:
-            end_year = str(end_year)
-            if end_year.isdigit() and len(end_year) == 4:
-                end_period = end_year
-            else:
-                raise ValueError(
-                    "end_year must be a four-digit number, either integer or string"
-                )
-        except Exception:
-            raise ValueError(
-                "end_year must be a four-digit number, either integer or string"
-            )
-
-    # Get available parameters for validation. Keep an unfiltered copy so
-    # multi-value key segments can be ordered by codebook position even if
-    # filtered frames are later rearranged.
+    # Keep an unfiltered copy so multi-value key segments can be ordered by
+    # codebook position even if filtered frames are later rearranged.
     data_dimensions = imf_parameters(database_id, times)
     parameter_codebooks = {key: frame.copy() for key, frame in data_dimensions.items()}
-
-    # Helper to coerce legacy input parameter names to dataset-specific keys
-    def _coerce_input_keys_for_dataset(
-        input_dict: dict, available_keys: set[str]
-    ) -> dict:
-        def map_key(k: str) -> str:
-            kl = k.lower()
-            if kl in available_keys:
-                return kl
-            # Frequency aliases
-            if kl in ("freq", "frequency"):
-                for cand in ("frequency", "freq"):
-                    if cand in available_keys:
-                        if cand != kl:
-                            warn(
-                                f"Coercing parameter '{k}' to '{cand}' for this dataset"
-                            )
-                        return cand
-            # ref_area aliases
-            if kl in ("ref_area", "refarea", "ref-area", "country", "geo"):
-                for cand in ("ref_area", "refarea", "ref-area", "country", "geo"):
-                    if cand in available_keys:
-                        if cand != kl:
-                            warn(
-                                f"Coercing parameter '{k}' to '{cand}' for this dataset"
-                            )
-                        return cand
-            return kl
-
-        coerced: dict = {}
-        for k, v in input_dict.items():
-            new_k = map_key(k)
-            if new_k in coerced and new_k != k:
-                warn(
-                    f"Duplicate values for '{new_k}' after coercion; keeping the first"
-                )
-                continue
-            coerced[new_k] = v
-        return coerced
+    available_keys = set(data_dimensions.keys())
 
     if parameters is not None:
-        # Coerce legacy keys in provided parameters dict
-        parameters = _coerce_input_keys_for_dataset(
-            parameters, set(data_dimensions.keys())
-        )
+        parameters = _coerce_input_keys_for_dataset(parameters, available_keys)
         if kwargs:
             warn(
                 "Parameters list argument cannot be combined with character "
                 "vector parameters arguments. Character vector parameters "
                 "arguments will be ignored."
             )
-        for key in parameters:
-            if key not in data_dimensions:
-                raise ValueError(
-                    f"{key} not valid parameter(s) for the "
-                    f"{database_id} database. Use "
-                    f"imf_parameters('{database_id}') to get "
-                    "valid parameters."
-                )
-            invalid_keys = []
-            for x in list(parameters[key]["input_code"]):
-                if x not in list(data_dimensions[key]["input_code"]):
-                    invalid_keys.append(x)
-            if len(invalid_keys) > 0:
-                warn(
-                    f"{invalid_keys} not valid value(s) for {key} and will "
-                    f"be ignored. Use imf_parameters('{database_id}') to get "
-                    "valid parameters."
-                )
-            if (
-                set(parameters[key]["input_code"])
-                == set(data_dimensions[key]["input_code"])
-                or len(parameters[key]) == 0
-            ):
-                data_dimensions[key] = data_dimensions[key].iloc[0:0]
-            data_dimensions[key] = data_dimensions[key].iloc[
-                [
-                    index
-                    for index, x in enumerate(data_dimensions[key]["input_code"])
-                    if x in list(parameters[key]["input_code"])
-                ]
-            ]
-        for key in data_dimensions:
-            if key not in parameters:
-                data_dimensions[key] = data_dimensions[key].iloc[0:0]
-
+        _apply_selected_codes(
+            data_dimensions, _codes_from_parameters(parameters), database_id
+        )
     elif kwargs:
-        # Coerce legacy keys in kwargs
-        kwargs = _coerce_input_keys_for_dataset(kwargs, set(data_dimensions.keys()))
-        for key in kwargs:
-            if key not in data_dimensions:
-                raise ValueError(
-                    f"{key} not valid parameter(s) for the "
-                    f"{database_id} database. Use "
-                    f"imf_parameters('{database_id}') to get "
-                    "valid parameters."
-                )
-            invalid_vals = []
-            if not isinstance(kwargs[key], list):
-                kwargs[key] = [kwargs[key]]
-            for x in kwargs[key]:
-                if x not in data_dimensions[key]["input_code"].tolist():
-                    invalid_vals.append(x)
-            if len(invalid_vals) > 0:
-                warn(
-                    f"{invalid_vals} not valid value(s) for {key} and will "
-                    f"be ignored. Use imf_parameters('{database_id}') to get "
-                    "valid parameters."
-                )
-            if (
-                set(kwargs[key]) == set(data_dimensions[key]["input_code"].tolist())
-                or len(kwargs[key]) == 0
-            ):
-                data_dimensions[key] = data_dimensions[key].iloc[0:0]
-            data_dimensions[key] = data_dimensions[key].iloc[
-                [
-                    index
-                    for index, x in enumerate(data_dimensions[key]["input_code"])
-                    if x in kwargs[key]
-                ]
-            ]
-        for key in data_dimensions:
-            if key not in kwargs:
-                data_dimensions[key] = data_dimensions[key].iloc[0:0]
-
+        kwargs = _coerce_input_keys_for_dataset(kwargs, available_keys)
+        _apply_selected_codes(data_dimensions, _codes_from_kwargs(kwargs), database_id)
     else:
         print(
             "User supplied no filter parameters for the API request. "
@@ -664,134 +730,25 @@ def imf_dataset(
         for key in data_dimensions:
             data_dimensions[key] = data_dimensions[key].iloc[0:0]
 
-    # Normalize dimension filters (build dict mapping dimension names to code lists).
-    # Codes are ordered by the parameter codebook so multi-value key segments
-    # (e.g. A+M+Q) ignore caller list order such as ["A", "Q", "M"].
-    norm_dims = {}
-    for key in data_dimensions:
-        selected = data_dimensions[key]["input_code"].tolist()
-        codes = _codes_in_parameter_order(selected, parameter_codebooks[key])
-        if codes:
-            norm_dims[key.upper()] = codes
+    norm_dims = _normalized_dimension_filters(data_dimensions, parameter_codebooks)
 
-    # Fetch DSD components to get dimension order
-    components = _get_datastructure_components(database_id, times)
-    dims = components.get("dimensionList", {}).get("dimensions", [])
-    time_dims = components.get("dimensionList", {}).get("timeDimensions", [])
+    # One dataflow lookup serves both DSD resolution and provider agency.
+    flow_row = _find_dataflow(database_id, times=times)
+    components = _get_datastructure_components(
+        database_id, times=times, flow_row=flow_row
+    )
+    key_rows = _series_key_rows(components)
+    key = _build_series_key(key_rows, norm_dims)
 
-    # Build list of all dimensions with position
-    all_dim_rows = []
-    for dim in dims:
-        if dim:
-            dim_id = _extract_first(dim.get("id"))
-            position = dim.get("position")
-            dim_type = _extract_first(dim.get("type"))
-            if dim_id and position is not None:
-                all_dim_rows.append(
-                    {
-                        "id": dim_id.upper(),
-                        "position": int(position),
-                        "type": dim_type,
-                    }
-                )
-
-    if time_dims:
-        for dim in time_dims:
-            if dim:
-                dim_id = _extract_first(dim.get("id"))
-                position = dim.get("position")
-                dim_type = _extract_first(dim.get("type"))
-                if dim_id and position is not None:
-                    all_dim_rows.append(
-                        {
-                            "id": dim_id.upper(),
-                            "position": int(position),
-                            "type": dim_type,
-                        }
-                    )
-
-    # Series key uses non-time dimensions (TIME_PERIOD varies at observation)
-    key_rows = [row for row in all_dim_rows if row["type"] != "TimeDimension"]
-    key_rows.sort(key=lambda x: x["position"])
-
-    # Validate requested dimension names exist
-    requested_dims = set(norm_dims.keys())
     available_dims = {row["id"] for row in key_rows}
-    unknown = requested_dims - available_dims
-    if unknown:
-        raise ValueError(
-            f"Unknown dimension(s): {', '.join(sorted(unknown))}. "
-            f"Available dimensions: {', '.join(sorted(available_dims))}"
-        )
-
-    # Build dot-separated key with plus-separated codes per position.
-    # Omitted dimensions (including omitted frequency) become '*' wildcards.
-    segments = []
-    for row in key_rows:
-        dim_id = row["id"]
-        vals = norm_dims.get(dim_id, [])
-        if not vals:
-            segments.append("*")
-        else:
-            segments.append("+".join(vals))
-
-    key = ".".join(segments)
-
-    # Extract frequency from user's dimension filter (if provided), dynamically resolving the dimension id
-    freq_dim_candidates = ["FREQUENCY", "FREQ"]
-    freq_dim_id = next((d for d in freq_dim_candidates if d in available_dims), None)
+    freq_dim_id = next((d for d in ("FREQUENCY", "FREQ") if d in available_dims), None)
     user_frequency = norm_dims.get(freq_dim_id) if freq_dim_id else None
+    provider_agency = _extract_first(flow_row.get("agencyID")) or "all"
+    query_params = _build_time_query_params(
+        start_period, end_period, user_frequency, provider_agency
+    )
 
-    # Build query params
-    query_params = {
-        "dimensionAtObservation": "TIME_PERIOD",
-        "attributes": "dsd",
-        "measures": "all",
-    }
-
-    # Apply time filters
-    time_filters = []
-    if start_period:
-        transformed_start = _transform_period_for_frequency(
-            start_period, user_frequency, bound="start"
-        )
-        time_filters.append(f"ge:{transformed_start}")
-    if end_period:
-        transformed_end = _transform_period_for_frequency(
-            end_period, user_frequency, bound="end"
-        )
-        time_filters.append(f"le:{transformed_end}")
-
-    # Determine dataflow agency (owner)
-    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
-    raw_dataflows = raw_dl.get("data", {}).get("dataflows", [])
-    flow_row = None
-    for flow in raw_dataflows:
-        flow_id = _extract_first(flow.get("id"))
-        if flow_id == database_id:
-            flow_row = flow
-            break
-
-    if flow_row is None:
-        raise ValueError(f"Dataflow not found or not unique: {database_id}.")
-
-    provider_agency = _extract_first(flow_row.get("agencyID"))
-    if not provider_agency:
-        provider_agency = "all"
-
-    # Apply time filter only for IMF.STA via c[TIME_PERIOD]
-    if time_filters:
-        if provider_agency == "IMF.STA":
-            query_params["c[TIME_PERIOD]"] = "+".join(time_filters)
-        else:
-            warn(
-                f"Agency {provider_agency} does not support time filters; "
-                "time window will be ignored."
-            )
-
-    # Build path and perform request
     data_path = f"data/dataflow/{provider_agency}/{database_id}/+/{key}"
-
     if print_url:
         full_url = f"{IMF_API_BASE_URL.rstrip('/')}/{data_path}"
         if query_params:
@@ -802,26 +759,19 @@ def imf_dataset(
 
     if return_raw:
         if include_metadata:
-            # For now, return empty metadata dict (could be enhanced later)
             metadata: dict[str, Any] = {}
             return metadata, message
-        else:
-            return message
+        return message
 
-    # Parse SDMX JSON message into DataFrame
     result = _parse_imf_sdmx_json(message)
-
     if result.empty:
         raise ValueError(
             "No data found for that combination of parameters. "
             "Try making your request less restrictive."
         )
 
-    # Convert column names to lowercase for backward compatibility
     result.columns = result.columns.str.lower()
-
-    if not include_metadata:
-        return result
-    else:
-        metadata = {}  # Could be enhanced to extract from message later
+    if include_metadata:
+        metadata = {}
         return metadata, result
+    return result

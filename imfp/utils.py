@@ -412,12 +412,40 @@ def _parse_codelist_urn(urn: str) -> dict[str, Optional[str]]:
     }
 
 
-def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict[str, Any]:
+def _find_dataflow(dataflow_id: str, times: int = 3) -> dict[str, Any]:
+    """
+    (Internal) Look up a dataflow object by ID from the IMF dataflow catalog.
+
+    Args:
+        dataflow_id (str): The ID of the dataflow (database_id).
+        times (int, optional): The number of times to retry the request.
+            Defaults to 3.
+
+    Returns:
+        dict: The matching dataflow object from the API response.
+    """
+    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
+    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
+    if raw_dataflows is None:
+        raise ValueError("No dataflows found in API response.")
+
+    for flow in raw_dataflows:
+        if _extract_first(flow.get("id")) == dataflow_id:
+            return flow
+
+    raise ValueError(f"Dataflow not found or not unique: {dataflow_id}.")
+
+
+def _get_datastructure_components(
+    dataflow_id: str,
+    times: int = 3,
+    flow_row: Optional[dict[str, Any]] = None,
+) -> dict[str, Any]:
     """
     (Internal) Retrieve raw datastructure components for a dataflow.
 
     This function:
-    1. Gets the dataflow to find its structure URN
+    1. Gets the dataflow to find its structure URN (or uses a provided flow)
     2. Parses the structure URN to get agency and ID
     3. Fetches the DSD (datastructure definition)
     4. Returns the dataStructureComponents
@@ -426,41 +454,29 @@ def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict[str,
         dataflow_id (str): The ID of the dataflow (database_id).
         times (int, optional): The number of times to retry the request.
             Defaults to 3.
+        flow_row (dict, optional): Pre-fetched dataflow object. When provided,
+            skips the dataflow catalog request.
 
     Returns:
         dict: The dataStructureComponents dictionary containing dimensionList,
             measureList, etc.
     """
-    # Step 1: Get dataflow to find its structure URN
-    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
-    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
-    if raw_dataflows is None:
-        raise ValueError("No dataflows found in API response.")
-
-    # Find the matching dataflow
-    flow_row = None
-    for flow in raw_dataflows:
-        flow_id = _extract_first(flow.get("id"))
-        if flow_id == dataflow_id:
-            flow_row = flow
-            break
-
     if flow_row is None:
-        raise ValueError(f"Dataflow not found or not unique: {dataflow_id}.")
+        flow_row = _find_dataflow(dataflow_id, times=times)
 
     # Extract structure URN
     structure_urn = _extract_first(flow_row.get("structure"))
     if not structure_urn:
         raise ValueError(f"Invalid structure URN for dataflow {dataflow_id}.")
 
-    # Step 2: Parse structure URN
+    # Parse structure URN
     dsd_ref = _parse_datastructure_urn(structure_urn)
     if not dsd_ref.get("agency") or not dsd_ref.get("id"):
         raise ValueError(
             f"Invalid structure URN for dataflow {dataflow_id}: {structure_urn}"
         )
 
-    # Step 3: Fetch DSD
+    # Fetch DSD
     dsd_path = f"structure/datastructure/{dsd_ref['agency']}/{dsd_ref['id']}/+"
     dsd_body = _download_parse(dsd_path, times=times)
 
@@ -468,7 +484,6 @@ def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict[str,
     if not dsds or len(dsds) < 1:
         raise ValueError(f"No dataStructures found in DSD response for {dataflow_id}.")
 
-    # Step 4: Extract components
     components = dsds[0].get("dataStructureComponents")
     if components is None:
         raise ValueError(f"No dataStructureComponents found in DSD for {dataflow_id}.")
@@ -732,22 +747,12 @@ def _imf_metadata(database_id: str, times: int = 3) -> dict[str, Any]:
     if not database_id:
         raise ValueError("Must supply database_id.")
 
-    # Get all dataflows to find the matching one
-    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
-    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
-    if raw_dataflows is None:
-        raise ValueError("No dataflows found in API response.")
-
-    # Find the matching dataflow
-    flow_row = None
-    for flow in raw_dataflows:
-        flow_id = _extract_first(flow.get("id"))
-        if flow_id == database_id:
-            flow_row = flow
-            break
-
-    if flow_row is None:
-        raise ValueError(f"Dataflow not found: {database_id}.")
+    try:
+        flow_row = _find_dataflow(database_id, times=times)
+    except ValueError as e:
+        if "Dataflow not found" in str(e):
+            raise ValueError(f"Dataflow not found: {database_id}.") from e
+        raise
 
     # Extract agency ID and version for detailed metadata query
     agency_id = _extract_first(flow_row.get("agencyID"))
