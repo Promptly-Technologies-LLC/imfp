@@ -13,6 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Typing :: Typed",
 ]
 requires-python = ">=3.10"
 dependencies = [
@@ -31,6 +32,9 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 packages = ["imfp"]
+
+[tool.setuptools.package-data]
+imfp = ["py.typed"]
 
 [tool.semantic_release]
 assets = []
