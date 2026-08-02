@@ -7,9 +7,9 @@ Download a data series from the IMF.
 Usage
 
 ``` python
-imf_dataset(database_id: str, parameters: dict | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs={}) -> DataFrame
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> DataFrame
  
-imf_dataset(database_id: str, parameters: dict | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs={}) -> tuple[dict, DataFrame]
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], DataFrame]
 ```
 
 
@@ -40,14 +40,14 @@ Maximum number of requests to attempt.
 `include_metadata: bool = ``False`  
 Whether to return the database metadata header along with the data series.
 
-`**kwargs`  
+`**kwargs: Any`  
 Additional keyword arguments for specifying parameters as separate arguments. Use imf_parameters() to identify which parameters to use for requests from a given database and to see all valid input codes for each parameter.
 
 
 ## Returns
 
 
-`DataFrame | tuple[dict, DataFrame]`  
+`DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]`  
 If return_raw == False and include_metadata == False, returns a pandas
 
 DataFrame with the data series. If return_raw == False but

@@ -90,7 +90,7 @@ Examples
 # the Primary Commodity Price System database
 param_defs = imf_parameter_defs(database_id='PCPS')
 
-imf_dataset(database_id: str, parameters: dict | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: bool = False, **kwargs) -> pandas.core.frame.DataFrame | tuple[dict, pandas.core.frame.DataFrame]
+imf_dataset(database_id: str, parameters: dict[str, pandas.core.frame.DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: bool = False, **kwargs: Any) -> pandas.core.frame.DataFrame | dict[str, typing.Any] | tuple[dict[str, typing.Any], pandas.core.frame.DataFrame | dict[str, typing.Any]]
 
 Download a data series from the IMF.
 
