@@ -30,11 +30,11 @@ databases.head()
 
 |  | database_id | description |
 |----|----|----|
-| 0 | MFS_DC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Depos... |
-| 1 | MCDREO | Middle East and Central Asia Regional Economic... |
-| 2 | WHDREO_2025_OCT_VINTAGE | Western Hemisphere Regional Economic Outlook (... |
-| 3 | PCPS | Primary Commodity Price System (PCPS) |
-| 4 | MFS_DC | Monetary and Financial Statistics (MFS), Depos... |
+| 0 | PI_WCA_2026_APR_VINTAGE | Production Indexes, World and Country Group Ag... |
+| 1 | FSIBSIS | Financial Soundness Indicators (FSI), Balance ... |
+| 2 | ITG | International Trade in Goods (ITG) |
+| 3 | ITG_2026_JAN_VINTAGE | International Trade in Goods (ITG) 2026 January |
+| 4 | BOP_2026_MAY_VINTAGE | Balance of Payments (BOP) 2026 May |
 
 
 This function returns the IMF's listing of 71 databases available through the API.
@@ -53,11 +53,11 @@ databases.loc[5:9]
 
 |  | database_id | description |
 |----|----|----|
-| 5 | LS | Labor Statistics (LS) |
-| 6 | MFS_FMP_2026_APR_VINTAGE | Monetary and Financial Statistics (MFS), Finan... |
-| 7 | MFS_OFC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Other... |
-| 8 | PIP | Portfolio Investment Positions by Counterpart ... |
-| 9 | ANEA_2026_JAN_VINTAGE | National Economic Accounts (NEA), Annual Data ... |
+| 5 | MFS_MA_2026_JAN_VINTAGE | Monetary and Financial Statistics (MFS), Monet... |
+| 6 | MFS_FC_2026_FEB_VINTAGE | Monetary and Financial Statistics (MFS), Finan... |
+| 7 | PI_2026_JAN_VINTAGE | Production Indexes (PI) 2026 January |
+| 8 | FSICDM | Financial Soundness Indicators (FSI), Concentr... |
+| 9 | EER_2026_MAY_VINTAGE | Effective Exchange Rates (ER) 2026 May |
 
 
 Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using `str.contains` and subsetting the data frame for matching rows. For instance, here's how to search for commodities data:
@@ -70,8 +70,8 @@ databases[databases['description'].str.contains("Commodity")]
 
 |     | database_id | description                           |
 |-----|-------------|---------------------------------------|
-| 3   | PCPS        | Primary Commodity Price System (PCPS) |
 | 114 | CTOT        | Commodity Terms of Trade (CTOT)       |
+| 216 | PCPS        | Primary Commodity Price System (PCPS) |
 
 
 See also [Working with Large Data Frames](usage.md#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window.

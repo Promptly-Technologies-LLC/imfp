@@ -982,7 +982,7 @@ model.summary()
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.8936 |
 | Date:             | Sun, 02 Aug 2026 | Prob (F-statistic): | 0.345  |
-| Time:             | 22:38:27         | Log-Likelihood:     | 1323.1 |
+| Time:             | 22:46:19         | Log-Likelihood:     | 1323.1 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2633. |
 | Df Model:         | 1                |                     |        |
@@ -1118,7 +1118,7 @@ time_model_fitted.summary()
     Model:                         VAR
     Method:                        OLS
     Date:           Sun, 02, Aug, 2026
-    Time:                     22:38:27
+    Time:                     22:46:19
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0475
     Nobs:                     638.000    HQIC:                  -12.1758
