@@ -1,5 +1,5 @@
 import logging
-from typing import overload, Literal
+from typing import Any, overload, Literal
 from warnings import warn
 from urllib.parse import urlencode
 from pandas import DataFrame
@@ -16,7 +16,7 @@ from .utils import (
 logger = logging.getLogger(__name__)
 
 
-def _parse_imf_sdmx_json(message: dict) -> DataFrame:
+def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
     """
     Parse SDMX JSON message from new API into a DataFrame.
 
@@ -47,7 +47,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
     obs_dim = obs_dims[0] if obs_dims and len(obs_dims) >= 1 else None
 
     # Helper to map index -> code/id
-    def index_to_code(dim_def, idx):
+    def index_to_code(dim_def: dict[str, Any] | None, idx: Any) -> Any:
         if not dim_def or not dim_def.get("values") or len(dim_def["values"]) < 1:
             return None
         try:
@@ -60,7 +60,7 @@ def _parse_imf_sdmx_json(message: dict) -> DataFrame:
         except (ValueError, IndexError, TypeError):
             return None
 
-    def obs_index_to_period(idx):
+    def obs_index_to_period(idx: Any) -> Any:
         if not obs_dim or not obs_dim.get("values") or len(obs_dim["values"]) < 1:
             return None
         try:
@@ -179,7 +179,7 @@ def imf_databases(times: int = 3) -> DataFrame:
     database_id = []
     description = []
 
-    def _extract_first(value):
+    def _extract_first(value: Any) -> Any:
         """Extract first element from list, or return value if not a list."""
         if isinstance(value, list) and len(value) > 0:
             return value[0]
@@ -249,9 +249,10 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
         else:
             raise ValueError(e)
 
-    def fetch_parameter_data(k, times):
-        codelist_id = codelist.loc[k, "code"]
-        codelist_agency = codelist.loc[k, "agency"]
+    def fetch_parameter_data(k: int, times: int) -> DataFrame:
+        codelist_id = str(codelist.loc[k, "code"])
+        agency_raw = codelist.loc[k, "agency"]
+        codelist_agency = None if agency_raw is None else str(agency_raw)
 
         # Fetch codelist using new API
         # Try agency-specific path first to get the correct version,
@@ -302,8 +303,8 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
             }
         )
 
-    parameter_list = {
-        codelist.loc[k, "parameter"]: fetch_parameter_data(k, times)
+    parameter_list: dict[str, DataFrame] = {
+        str(codelist.loc[k, "parameter"]): fetch_parameter_data(k, times)
         for k in range(codelist.shape[0])
     }
 
@@ -362,45 +363,43 @@ def imf_parameter_defs(
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: bool = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
-    **kwargs,
-) -> DataFrame:
-    ...
+    **kwargs: Any,
+) -> DataFrame: ...
 
 
 @overload
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: bool = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
-    **kwargs,
-) -> tuple[dict, DataFrame]:
-    ...
+    **kwargs: Any,
+) -> tuple[dict[str, Any], DataFrame]: ...
 
 
 @type_enforced.Enforcer
 def imf_dataset(
     database_id: str,
-    parameters: dict | None = None,
+    parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
     end_year: int | str | None = None,
     return_raw: bool = False,
     print_url: bool = False,
     times: int = 3,
     include_metadata: bool = False,
-    **kwargs,
-) -> DataFrame | tuple[dict, DataFrame]:
+    **kwargs: Any,
+) -> DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]:
     """
     Download a data series from the IMF.
 
@@ -678,7 +677,9 @@ def imf_dataset(
     key = ".".join(segments)
 
     # Helper to transform time periods for API compatibility
-    def transform_period_for_frequency(period, frequency):
+    def transform_period_for_frequency(
+        period: str | None, frequency: list[str] | None
+    ) -> str | None:
         if not period:
             return period
 
@@ -764,7 +765,7 @@ def imf_dataset(
     if return_raw:
         if include_metadata:
             # For now, return empty metadata dict (could be enhanced later)
-            metadata = {}
+            metadata: dict[str, Any] = {}
             return metadata, message
         else:
             return message

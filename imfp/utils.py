@@ -1,25 +1,31 @@
 from os import environ, path
 import hashlib
 from time import sleep, perf_counter
-from requests import get
+from requests import get, Response
 from json import loads, load, dump, JSONDecodeError
 from pandas import DataFrame
 from urllib.parse import urlparse, urljoin
 import re
 import logging
-from typing import Optional
+from collections.abc import Callable
+from typing import Any, Optional, ParamSpec, TypeVar
 
 logger = logging.getLogger(__name__)
 
 # New IMF API base URL
 IMF_API_BASE_URL = "https://api.imf.org/external/sdmx/3.0/"
 
+P = ParamSpec("P")
+R = TypeVar("R")
 
-def _min_wait_time_limited(default_wait_time=1.5):
-    def decorator(func):
+
+def _min_wait_time_limited(
+    default_wait_time: float = 1.5,
+) -> Callable[[Callable[P, R]], Callable[P, R]]:
+    def decorator(func: Callable[P, R]) -> Callable[P, R]:
         last_called = [0.0]
 
-        def wrapper(*args, **kwargs):
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> R:
             min_wait_time = float(environ.get("IMF_WAIT_TIME", default_wait_time))
             elapsed = perf_counter() - last_called[0]
             left_to_wait = min_wait_time - elapsed
@@ -35,7 +41,9 @@ def _min_wait_time_limited(default_wait_time=1.5):
 
 
 @_min_wait_time_limited()
-def _imf_get(url, headers, timeout=None):
+def _imf_get(
+    url: str, headers: dict[str, str], timeout: Optional[float] = None
+) -> Response:
     """
     A rate-limited wrapper around the requests.get method.
 
@@ -64,13 +72,13 @@ _imf_save_response = False
 
 
 def _download_parse(
-    resource_or_url,
-    times=3,
-    base_url=None,
-    query_params=None,
-    timeout_seconds=30.0,
-    low_speed_seconds=15.0,
-):
+    resource_or_url: str,
+    times: int = 3,
+    base_url: Optional[str] = None,
+    query_params: Optional[dict[str, Any]] = None,
+    timeout_seconds: float = 30.0,
+    low_speed_seconds: float = 15.0,
+) -> dict[str, Any]:
     """
     (Internal) Download and parse JSON content from the IMF API with rate limiting
     and retries.
@@ -163,7 +171,7 @@ def _download_parse(
             cached_status, cached_content = _load_cached_response(url)
             if cached_content is not None:
                 content = cached_content
-                status = cached_status
+                status = 0 if cached_status is None else cached_status
             else:
                 response = _imf_get(url, headers=headers, timeout=timeout_seconds)
                 content = response.text
@@ -294,8 +302,12 @@ def _download_parse(
                             f"Content preview: {preview}"
                         )
 
+    raise ValueError(
+        f"Content from API could not be parsed as JSON. Resource={resource}."
+    )
 
-def _load_cached_response(URL):
+
+def _load_cached_response(URL: str) -> tuple[Optional[int], Optional[str]]:
     file_name = hashlib.sha256(URL.encode()).hexdigest()
     file_path = f"tests/responses/{file_name}.json"
 
@@ -306,7 +318,7 @@ def _load_cached_response(URL):
     return None, None
 
 
-def _extract_first(value):
+def _extract_first(value: Any) -> Any:
     """Extract first element from list, or return value if not a list.
 
     This matches R's [[1]] behavior for extracting scalar values from lists.
@@ -400,7 +412,7 @@ def _parse_codelist_urn(urn: str) -> dict[str, Optional[str]]:
     }
 
 
-def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict:
+def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict[str, Any]:
     """
     (Internal) Retrieve raw datastructure components for a dataflow.
 
@@ -464,7 +476,9 @@ def _get_datastructure_components(dataflow_id: str, times: int = 3) -> dict:
     return components
 
 
-def _imf_dimensions(database_id, times=3, inputs_only=True):
+def _imf_dimensions(
+    database_id: str, times: int = 3, inputs_only: bool = True
+) -> DataFrame:
     """
     (Internal) Retrieve the list of codes for dimensions of an individual IMF
     database.
@@ -695,7 +709,7 @@ def _imf_dimensions(database_id, times=3, inputs_only=True):
     return result_df
 
 
-def _imf_metadata(database_id, times=3):
+def _imf_metadata(database_id: str, times: int = 3) -> dict[str, Any]:
     """
     (Internal) Access metadata for a dataset.
 
