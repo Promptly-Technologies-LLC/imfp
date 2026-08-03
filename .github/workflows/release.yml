@@ -11,6 +11,12 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
+    # Serialize releases so concurrent merges cannot race on the same tag
+    # or leave version bumps uncommitted on main.
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+
     steps:
       - name: Generate token for version incrementer app
         id: create_token
@@ -42,38 +48,41 @@ jobs:
         run: |
           uv sync
 
-      - name: Python Semantic Release
-        id: release
-        uses: python-semantic-release/python-semantic-release@v9.16.1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          commit: false
-
-      - name: Build project wheel and test that it installs without errors
-        run: |
-          uv build
-          uv sync
-          uv pip install dist/imfp-*.whl
-
+      # Validate before stamping/pushing a release so a long test window does
+      # not sit between tag creation and the version-bump commit.
       - name: Run tests
         run: |
           uv run pytest
 
+      - name: Evaluate | Verify upstream has NOT changed
+        run: |
+          git fetch origin "${{ github.ref_name }}" --quiet
+          head_sha="$(git rev-parse HEAD)"
+          upstream_sha="$(git rev-parse "origin/${{ github.ref_name }}")"
+          if [ "$head_sha" != "$upstream_sha" ]; then
+            echo "::error::Upstream branch moved while this workflow ran ($head_sha -> $upstream_sha). Aborting to avoid a conflicting release commit."
+            exit 1
+          fi
+
+      # Use the project-managed PSR CLI (not the Docker action) so build_command
+      # can refresh uv.lock with the same uv toolchain used elsewhere in CI.
+      - name: Python Semantic Release
+        id: release
+        env:
+          GH_TOKEN: ${{ steps.create_token.outputs.token }}
+          GIT_COMMIT_AUTHOR: github-actions <41898282+github-actions[bot]@users.noreply.github.com>
+        run: |
+          uv run semantic-release -v version
+
       - name: Release to PyPI
+        if: steps.release.outputs.released == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
 
       - name: Publish | Upload to GitHub Release Assets
-        uses: python-semantic-release/publish-action@v9.16.1
         if: steps.release.outputs.released == 'true'
+        uses: python-semantic-release/publish-action@v10.5.2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.create_token.outputs.token }}
           tag: ${{ steps.release.outputs.tag }}
-
-      - name: Commit version change
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Release ${{ steps.release.outputs.tag }} [skip ci]"
-          branch: ${{ github.ref_name }}
-          file_pattern: "pyproject.toml changelog.md uv.lock"

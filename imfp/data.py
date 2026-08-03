@@ -1,6 +1,6 @@
 import logging
 import re
-from typing import Any, overload, Literal
+from typing import Any, TypeVar, overload, Literal
 from warnings import warn
 from urllib.parse import urlencode
 from pandas import DataFrame
@@ -22,6 +22,10 @@ _REF_AREA_ALIASES = ("ref_area", "refarea", "ref-area", "country", "geo")
 _PERIOD_FREQ_SUFFIX = re.compile(r"^\d{4}-(M|Q|A|W)\d+$")
 _PERIOD_MONTH = re.compile(r"^\d{4}-\d{2}$")
 _PERIOD_YEAR = re.compile(r"^\d{4}$")
+
+# Dimension filter kwargs accept one code or a list of codes.
+DimensionFilter = str | list[str]
+_T = TypeVar("_T")
 
 
 def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
@@ -183,10 +187,10 @@ def _map_parameter_alias(key: str, available_keys: set[str]) -> str:
 
 
 def _coerce_input_keys_for_dataset(
-    input_dict: dict[str, Any], available_keys: set[str]
-) -> dict[str, Any]:
+    input_dict: dict[str, _T], available_keys: set[str]
+) -> dict[str, _T]:
     """Coerce legacy input parameter names to dataset-specific keys."""
-    coerced: dict[str, Any] = {}
+    coerced: dict[str, _T] = {}
     for k, v in input_dict.items():
         new_k = _map_parameter_alias(k, available_keys)
         if new_k in coerced and new_k != k:
@@ -196,12 +200,38 @@ def _coerce_input_keys_for_dataset(
     return coerced
 
 
-def _codes_from_parameters(parameters: dict[str, Any]) -> dict[str, list[Any]]:
-    return {key: list(frame["input_code"]) for key, frame in parameters.items()}
+def _codes_from_parameters(parameters: dict[str, DataFrame]) -> dict[str, list[str]]:
+    return {
+        key: [str(code) for code in frame["input_code"]]
+        for key, frame in parameters.items()
+    }
 
 
-def _codes_from_kwargs(kwargs: dict[str, Any]) -> dict[str, list[Any]]:
-    selected: dict[str, list[Any]] = {}
+def _validate_dimension_filters(kwargs: dict[str, Any]) -> dict[str, DimensionFilter]:
+    """Narrow and validate **kwargs dimension filters to str | list[str]."""
+    validated: dict[str, DimensionFilter] = {}
+    for key, value in kwargs.items():
+        if isinstance(value, str):
+            validated[key] = value
+            continue
+        if isinstance(value, list):
+            bad = [type(item).__name__ for item in value if not isinstance(item, str)]
+            if bad:
+                raise TypeError(
+                    f"Dimension filter '{key}' must be a str or list[str]; "
+                    f"got list containing {', '.join(sorted(set(bad)))}"
+                )
+            validated[key] = value
+            continue
+        raise TypeError(
+            f"Dimension filter '{key}' must be a str or list[str]; "
+            f"got {type(value).__name__}"
+        )
+    return validated
+
+
+def _codes_from_kwargs(kwargs: dict[str, DimensionFilter]) -> dict[str, list[str]]:
+    selected: dict[str, list[str]] = {}
     for key, value in kwargs.items():
         selected[key] = value if isinstance(value, list) else [value]
     return selected
@@ -209,7 +239,7 @@ def _codes_from_kwargs(kwargs: dict[str, Any]) -> dict[str, list[Any]]:
 
 def _apply_selected_codes(
     data_dimensions: dict[str, DataFrame],
-    selected: dict[str, list[Any]],
+    selected: dict[str, list[str]],
     database_id: str,
 ) -> None:
     """Filter data_dimensions in place to the selected input codes."""
@@ -600,7 +630,7 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
-    **kwargs: Any,
+    **kwargs: DimensionFilter,
 ) -> DataFrame:
     ...
 
@@ -615,7 +645,7 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
-    **kwargs: Any,
+    **kwargs: DimensionFilter,
 ) -> tuple[dict[str, Any], DataFrame]:
     ...
 
@@ -630,7 +660,7 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[False] = False,
-    **kwargs: Any,
+    **kwargs: DimensionFilter,
 ) -> dict[str, Any]:
     ...
 
@@ -645,12 +675,11 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: Literal[True] = True,
-    **kwargs: Any,
+    **kwargs: DimensionFilter,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     ...
 
 
-@type_enforced.Enforcer
 def imf_dataset(
     database_id: str,
     parameters: dict[str, DataFrame] | None = None,
@@ -660,7 +689,7 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: bool = False,
-    **kwargs: Any,
+    **kwargs: DimensionFilter,
 ) -> DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]:
     """
     Download a data series from the IMF.
@@ -687,10 +716,10 @@ def imf_dataset(
         include_metadata (bool, optional): Whether to return the database
                                            metadata header along with the data
                                            series.
-        **kwargs: Additional keyword arguments for specifying parameters as
-                  separate arguments. Use imf_parameters() to identify which
-                  parameters to use for requests from a given database and to
-                  see all valid input codes for each parameter.
+        **kwargs: Dimension filters as keyword arguments. Each value must be a
+                  code string or a list of code strings. Use imf_parameters() to
+                  identify which parameters to use for requests from a given
+                  database and to see all valid input codes for each parameter.
 
     Returns:
         If return_raw == False and include_metadata == False, returns a pandas
@@ -701,6 +730,7 @@ def imf_dataset(
     """
     start_period = _normalize_year_arg(start_year, "start_year")
     end_period = _normalize_year_arg(end_year, "end_year")
+    dimension_filters = _validate_dimension_filters(kwargs)
 
     # Keep an unfiltered copy so multi-value key segments can be ordered by
     # codebook position even if filtered frames are later rearranged.
@@ -710,7 +740,7 @@ def imf_dataset(
 
     if parameters is not None:
         parameters = _coerce_input_keys_for_dataset(parameters, available_keys)
-        if kwargs:
+        if dimension_filters:
             warn(
                 "Parameters list argument cannot be combined with character "
                 "vector parameters arguments. Character vector parameters "
@@ -719,9 +749,13 @@ def imf_dataset(
         _apply_selected_codes(
             data_dimensions, _codes_from_parameters(parameters), database_id
         )
-    elif kwargs:
-        kwargs = _coerce_input_keys_for_dataset(kwargs, available_keys)
-        _apply_selected_codes(data_dimensions, _codes_from_kwargs(kwargs), database_id)
+    elif dimension_filters:
+        dimension_filters = _coerce_input_keys_for_dataset(
+            dimension_filters, available_keys
+        )
+        _apply_selected_codes(
+            data_dimensions, _codes_from_kwargs(dimension_filters), database_id
+        )
     else:
         print(
             "User supplied no filter parameters for the API request. "

@@ -24,10 +24,25 @@ from imfp.data import (
     _normalize_year_arg,
     _parse_imf_sdmx_json,
     _transform_period_for_frequency,
+    _validate_dimension_filters,
 )
 from imfp.utils import _imf_save_response, _imf_use_cache
 
 wait_time = 0
+
+
+def test_validate_dimension_filters_narrows_str_and_list():
+    assert _validate_dimension_filters({"freq": "A", "indicator": ["X", "Y"]}) == {
+        "freq": "A",
+        "indicator": ["X", "Y"],
+    }
+
+
+def test_validate_dimension_filters_rejects_non_str_values():
+    with pytest.raises(TypeError, match="Dimension filter 'freq'.*got int"):
+        _validate_dimension_filters({"freq": 1})
+    with pytest.raises(TypeError, match="Dimension filter 'indicator'.*int"):
+        _validate_dimension_filters({"indicator": ["X", 2]})
 
 
 @pytest.fixture
