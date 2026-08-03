@@ -1,95 +1,95 @@
 {
-  "build_time": "2026-08-02T23:48:06Z",
-  "total_seconds": 668.397,
+  "build_time": "2026-08-03T03:13:59Z",
+  "total_seconds": 613.756,
   "pages": [
     {
       "page": "user-guide/usage.qmd",
-      "seconds": 217.431,
+      "seconds": 195.613,
       "frozen": true
     },
     {
       "page": "user-guide/demo.qmd",
-      "seconds": 205.911,
+      "seconds": 186.178,
       "frozen": true
     },
     {
       "page": "user-guide/parameters.qmd",
-      "seconds": 106.884,
+      "seconds": 96.352,
       "frozen": true
     },
     {
       "page": "index.qmd",
-      "seconds": 68.865,
+      "seconds": 66.853,
       "frozen": true
     },
     {
       "page": "user-guide/datasets.qmd",
-      "seconds": 57.054,
+      "seconds": 54.278,
       "frozen": true
     },
     {
       "page": "user-guide/databases.qmd",
-      "seconds": 4.041,
+      "seconds": 4.721,
       "frozen": true
     },
     {
       "page": "user-guide/rate_limits.qmd",
-      "seconds": 3.589,
+      "seconds": 4.41,
       "frozen": true
     },
     {
       "page": "package-info.qmd",
-      "seconds": 0.708,
+      "seconds": 0.83,
       "frozen": false
     },
     {
       "page": "reference/imf_dataset.qmd",
-      "seconds": 0.431,
-      "frozen": false
-    },
-    {
-      "page": "reference/imf_databases.qmd",
-      "seconds": 0.411,
-      "frozen": false
-    },
-    {
-      "page": "license.qmd",
-      "seconds": 0.405,
+      "seconds": 0.499,
       "frozen": false
     },
     {
       "page": "user-guide/installation.qmd",
-      "seconds": 0.404,
+      "seconds": 0.476,
       "frozen": false
     },
     {
-      "page": "reference/set_imf_app_name.qmd",
-      "seconds": 0.395,
-      "frozen": false
-    },
-    {
-      "page": "reference/imf_parameter_defs.qmd",
-      "seconds": 0.381,
+      "page": "license.qmd",
+      "seconds": 0.473,
       "frozen": false
     },
     {
       "page": "reference/imf_parameters.qmd",
-      "seconds": 0.378,
+      "seconds": 0.446,
+      "frozen": false
+    },
+    {
+      "page": "reference/set_imf_app_name.qmd",
+      "seconds": 0.446,
+      "frozen": false
+    },
+    {
+      "page": "reference/imf_parameter_defs.qmd",
+      "seconds": 0.443,
       "frozen": false
     },
     {
       "page": "reference/set_imf_wait_time.qmd",
-      "seconds": 0.376,
+      "seconds": 0.442,
       "frozen": false
     },
     {
       "page": "skills.qmd",
-      "seconds": 0.369,
+      "seconds": 0.437,
+      "frozen": false
+    },
+    {
+      "page": "reference/imf_databases.qmd",
+      "seconds": 0.433,
       "frozen": false
     },
     {
       "page": "reference/index.qmd",
-      "seconds": 0.364,
+      "seconds": 0.426,
       "frozen": false
     }
   ]

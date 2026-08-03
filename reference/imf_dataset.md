@@ -7,13 +7,13 @@ Download a data series from the IMF.
 Usage
 
 ``` python
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> DataFrame
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: DimensionFilter = {}) -> DataFrame
  
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], DataFrame]
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[False] = False, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: DimensionFilter = {}) -> tuple[dict[str, Any], DataFrame]
  
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: Any = {}) -> dict[str, Any]
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[False] = False, kwargs: DimensionFilter = {}) -> dict[str, Any]
  
-imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: Any = {}) -> tuple[dict[str, Any], dict[str, Any]]
+imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: Literal[True] = True, print_url: bool = False, times: int = 3, include_metadata: Literal[True] = True, kwargs: DimensionFilter = {}) -> tuple[dict[str, Any], dict[str, Any]]
 ```
 
 
@@ -44,8 +44,8 @@ Maximum number of requests to attempt.
 `include_metadata: bool = ``False`  
 Whether to return the database metadata header along with the data series.
 
-`**kwargs: Any`  
-Additional keyword arguments for specifying parameters as separate arguments. Use imf_parameters() to identify which parameters to use for requests from a given database and to see all valid input codes for each parameter.
+`**kwargs: DimensionFilter`  
+Dimension filters as keyword arguments. Each value must be a code string or a list of code strings. Use imf_parameters() to identify which parameters to use for requests from a given database and to see all valid input codes for each parameter.
 
 
 ## Returns

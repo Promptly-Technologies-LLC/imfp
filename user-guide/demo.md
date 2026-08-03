@@ -981,8 +981,8 @@ model.summary()
 | Dep. Variable:    | GII_change       | R-squared:          | 0.001  |
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.8936 |
-| Date:             | Sun, 02 Aug 2026 | Prob (F-statistic): | 0.345  |
-| Time:             | 23:42:36         | Log-Likelihood:     | 1323.1 |
+| Date:             | Mon, 03 Aug 2026 | Prob (F-statistic): | 0.345  |
+| Time:             | 03:08:59         | Log-Likelihood:     | 1323.1 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2633. |
 | Df Model:         | 1                |                     |        |
@@ -1063,8 +1063,8 @@ adf_test(GDP['Value'])
     ADF Statistic: -14.389003678493355
     p-value: 8.889678684263258e-27
     Series is stationary
-    ADF Statistic: -11.53220219028458
-    p-value: 3.807886634433481e-21
+    ADF Statistic: -11.532202190284565
+    p-value: 3.8078866344337845e-21
     Series is stationary
 
 
@@ -1117,8 +1117,8 @@ time_model_fitted.summary()
     ==================================
     Model:                         VAR
     Method:                        OLS
-    Date:           Sun, 02, Aug, 2026
-    Time:                     23:42:36
+    Date:           Mon, 03, Aug, 2026
+    Time:                     03:08:59
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0475
     Nobs:                     638.000    HQIC:                  -12.1758
@@ -1241,7 +1241,7 @@ print(f'Mean Absolute Error for GDP: {mae_gdp}')
 ```
 
 
-    Mean Absolute Error for GII: 0.029216474301211395
+    Mean Absolute Error for GII: 0.02921647430121139
     Mean Absolute Error for GDP: 0.027404922069758388
 
 

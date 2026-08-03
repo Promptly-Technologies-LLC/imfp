@@ -90,7 +90,7 @@ Examples
 # the Primary Commodity Price System database
 param_defs = imf_parameter_defs(database_id='PCPS')
 
-imf_dataset(database_id: str, parameters: dict[str, pandas.core.frame.DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: bool = False, **kwargs: Any) -> pandas.core.frame.DataFrame | dict[str, typing.Any] | tuple[dict[str, typing.Any], pandas.core.frame.DataFrame | dict[str, typing.Any]]
+imf_dataset(database_id: str, parameters: dict[str, pandas.core.frame.DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: bool = False, **kwargs: str | list[str]) -> pandas.core.frame.DataFrame | dict[str, typing.Any] | tuple[dict[str, typing.Any], pandas.core.frame.DataFrame | dict[str, typing.Any]]
 
 Download a data series from the IMF.
 
@@ -116,10 +116,10 @@ Args:
     include_metadata (bool, optional): Whether to return the database
                                        metadata header along with the data
                                        series.
-    **kwargs: Additional keyword arguments for specifying parameters as
-              separate arguments. Use imf_parameters() to identify which
-              parameters to use for requests from a given database and to
-              see all valid input codes for each parameter.
+    **kwargs: Dimension filters as keyword arguments. Each value must be a
+              code string or a list of code strings. Use imf_parameters() to
+              identify which parameters to use for requests from a given
+              database and to see all valid input codes for each parameter.
 
 Returns:
     If return_raw == False and include_metadata == False, returns a pandas
