@@ -651,7 +651,7 @@ def imf_dataset(
 
 
 @type_enforced.Enforcer
-def imf_dataset(
+def imf_dataset(  # type: ignore[no-untyped-def]
     database_id: str,
     parameters: dict[str, DataFrame] | None = None,
     start_year: int | str | None = None,
@@ -660,8 +660,10 @@ def imf_dataset(
     print_url: bool = False,
     times: int = 3,
     include_metadata: bool = False,
-    **kwargs: Any,
-) -> DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]:
+    # Leave **kwargs and the return type unannotated: type_enforced 1.x
+    # (pulled on Python 3.10) mishandles typing.Any for both.
+    **kwargs,
+):
     """
     Download a data series from the IMF.
 
