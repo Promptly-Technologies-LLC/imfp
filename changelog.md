@@ -1,108 +1,55 @@
 # CHANGELOG
 
+
+## v1.3.4 (2026-08-03)
+
+### Bug Fixes
+
+- Make imf_dataset compatible with type_enforced 1.x on Python 3.10
+  ([`96167be`](https://github.com/Promptly-Technologies-LLC/imfp/commit/96167bef3f48b1069ebbf3e257ed53f2b9d655df))
+
+- Narrow imf_dataset dimension filters to str | list[str]
+  ([`e1114d1`](https://github.com/Promptly-Technologies-LLC/imfp/commit/e1114d17e0d38bead5519bd3b5242320e01345c5))
+
+### Continuous Integration
+
+- Repair release workflow race and sync version to 1.3.3
+  ([`a243df3`](https://github.com/Promptly-Technologies-LLC/imfp/commit/a243df3c0a328392cb0250134d3dd4b831ae6d85))
+
+
 ## v1.3.3 (2026-08-02)
 
 ### Chores
 
-- **deps**: Bump the uv group across 1 directory with 5 updates ([`b342ac3`](https://github.com/Promptly-Technologies-LLC/imfp/commit/b342ac34f7155e25c765978d5f21ffad28fe4d6e))
+- **deps**: Bump the uv group across 1 directory with 5 updates
+  ([`b342ac3`](https://github.com/Promptly-Technologies-LLC/imfp/commit/b342ac34f7155e25c765978d5f21ffad28fe4d6e))
 
-Bumps the uv group with 5 updates in the / directory:
-
-| Package | From | To | | --- | --- | --- | | [requests](https://github.com/psf/requests) | `2.32.4` | `2.33.0` | | [pytest](https://github.com/pytest-dev/pytest) | `7.4.4` | `9.0.3` | | [bleach](https://github.com/mozilla/bleach) | `6.3.0` | `6.4.0` | | [fonttools](https://github.com/fonttools/fonttools) | `4.60.1` | `4.60.2` | | [idna](https://github.com/kjd/idna) | `3.11` | `3.15` |
-
-Updates `requests` from 2.32.4 to 2.33.0 - [Release notes](https://github.com/psf/requests/releases) - [Changelog](https://github.com/psf/requests/blob/main/HISTORY.md) - [Commits](https://github.com/psf/requests/compare/v2.32.4...v2.33.0)
-
-Updates `pytest` from 7.4.4 to 9.0.3 - [Release notes](https://github.com/pytest-dev/pytest/releases) - [Changelog](https://github.com/pytest-dev/pytest/blob/main/CHANGELOG.rst) - [Commits](https://github.com/pytest-dev/pytest/compare/7.4.4...9.0.3)
-
-Updates `bleach` from 6.3.0 to 6.4.0 - [Changelog](https://github.com/mozilla/bleach/blob/main/CHANGES) - [Commits](https://github.com/mozilla/bleach/compare/v6.3.0...v6.4.0)
-
-Updates `fonttools` from 4.60.1 to 4.60.2 - [Release notes](https://github.com/fonttools/fonttools/releases) - [Changelog](https://github.com/fonttools/fonttools/blob/main/NEWS.rst) - [Commits](https://github.com/fonttools/fonttools/compare/4.60.1...4.60.2)
-
-Updates `idna` from 3.11 to 3.15 - [Release notes](https://github.com/kjd/idna/releases) - [Changelog](https://github.com/kjd/idna/blob/master/HISTORY.md) - [Commits](https://github.com/kjd/idna/compare/v3.11...v3.15)
-
---- updated-dependencies: - dependency-name: requests dependency-version: 2.33.0
-
-dependency-type: direct:production
-
-dependency-group: uv
-
-- dependency-name: pytest dependency-version: 9.0.3
-
-dependency-type: direct:development
-
-- dependency-name: bleach dependency-version: 6.4.0
-
-dependency-type: indirect
-
-- dependency-name: fonttools dependency-version: 4.60.2
-
-- dependency-name: idna dependency-version: '3.15'
-
-...
-
-Signed-off-by: dependabot[bot] <support@github.com>
 
 ## v1.3.2 (2026-08-02)
 
 ### Bug Fixes
 
-- Order series-key codes by parameter codebook (issue #18) ([#98](https://github.com/Promptly-Technologies-LLC/imfp/pull/98), [`91f8b8c`](https://github.com/Promptly-Technologies-LLC/imfp/commit/91f8b8c9f76067e37e74aca656996c0990f47d6b))
+- Order series-key codes by parameter codebook (issue #18) (#98)
+  ([#98](https://github.com/Promptly-Technologies-LLC/imfp/pull/98),
+  [`91f8b8c`](https://github.com/Promptly-Technologies-LLC/imfp/commit/91f8b8c9f76067e37e74aca656996c0990f47d6b))
 
-* fix: order series-key codes by parameter codebook (issue #18)
-
-Reorder multi-value dimension codes into imf_parameters/codelist order before building the SDMX key so caller lists like frequency=["A","Q","M"] become A+M+Q. Omitted dimensions continue to use '*' wildcards.
-
-Also fix TIME_PERIOD year bounds so end_year uses the last period of the requested frequency (or a cross-frequency sentinel when frequency is omitted/multi-valued), avoiding lexicographic exclusion of Q/M data.
-
-Co-authored-by: Christopher Carroll Smith <chriscarrollsmith@users.noreply.github.com>
-
-* Automated code format
-
----------
-
-Co-authored-by: Cursor Agent <cursoragent@cursor.com>
-
-Co-authored-by: cursor[bot] <206951365+cursor[bot]@users.noreply.github.com>
 
 ## v1.3.1 (2026-08-02)
 
 ### Bug Fixes
 
-- Bump Dependabot-flagged vulnerable lockfile dependencies ([`5fe795e`](https://github.com/Promptly-Technologies-LLC/imfp/commit/5fe795e9de7794ac40b9b80f0bacbab031529380))
-
-Raise floors for the Jupyter/docs stack and related transitive packages that Dependabot reported against uv.lock, and upgrade black/pyarrow to patched releases. Configure Black for py310 so local/CI safety checks stay aligned with supported runtimes.
-
-Co-authored-by: Christopher Carroll Smith <chriscarrollsmith@users.noreply.github.com>
+- Bump Dependabot-flagged vulnerable lockfile dependencies
+  ([`5fe795e`](https://github.com/Promptly-Technologies-LLC/imfp/commit/5fe795e9de7794ac40b9b80f0bacbab031529380))
 
 ### Documentation
 
-- Add AGENTS.md with Cursor Cloud setup instructions ([#92](https://github.com/Promptly-Technologies-LLC/imfp/pull/92), [`c399618`](https://github.com/Promptly-Technologies-LLC/imfp/commit/c399618e7f09dcdd2ca080bf68149140e0a9d387))
+- Add AGENTS.md with Cursor Cloud setup instructions (#92)
+  ([#92](https://github.com/Promptly-Technologies-LLC/imfp/pull/92),
+  [`c399618`](https://github.com/Promptly-Technologies-LLC/imfp/commit/c399618e7f09dcdd2ca080bf68149140e0a9d387))
 
-Co-authored-by: Cursor Agent <cursoragent@cursor.com>
-
-Co-authored-by: Christopher Carroll Smith <chriscarrollsmith@users.noreply.github.com>
-
-- Migrate documentation to great-docs (user-guide flow) ([#93](https://github.com/Promptly-Technologies-LLC/imfp/pull/93), [`5c22d28`](https://github.com/Promptly-Technologies-LLC/imfp/commit/5c22d2886d0e546c23faa68e58ce9a0da5cd09d2))
-
-* docs: migrate documentation to great-docs (user-guide flow)
-
-Replace the hand-maintained Quarto site with Great Docs. Narrative pages move to user-guide/ with explicit section ordering in great-docs.yml, and CI builds/publishes great-docs/_site.
-
-Closes #91
-
-Co-authored-by: Christopher Carroll Smith <chriscarrollsmith@users.noreply.github.com>
-
-* docs: pin publish Python and disable broken releases changelog
-
-Use Python 3.12 in publish.yml so great-docs installs despite the package's 3.10 floor. Disable GitHub Releases changelog generation because Dependabot release bodies contain YAML that breaks Quarto, and ignore Quarto freeze cache output.
-
-* chore: ignore Quarto freeze cache directory
-
-great-docs build writes execution freeze artifacts under _freeze/.
-
----------
-
-Co-authored-by: Cursor Agent <cursoragent@cursor.com>
+- Migrate documentation to great-docs (user-guide flow) (#93)
+  ([#93](https://github.com/Promptly-Technologies-LLC/imfp/pull/93),
+  [`5c22d28`](https://github.com/Promptly-Technologies-LLC/imfp/commit/5c22d2886d0e546c23faa68e58ce9a0da5cd09d2))
 
 
 ## v1.3.0 (2025-11-10)
@@ -140,22 +87,6 @@ Co-authored-by: Cursor Agent <cursoragent@cursor.com>
 
 - **deps**: Bump requests in the pip group across 1 directory
   ([`52ac3a3`](https://github.com/Promptly-Technologies-LLC/imfp/commit/52ac3a3187c5ceaf5ec97d8c7f15ca73cd5c4479))
-
-Bumps the pip group with 1 update in the / directory: [requests](https://github.com/psf/requests).
-
-Updates `requests` from 2.32.3 to 2.32.4 - [Release notes](https://github.com/psf/requests/releases)
-  - [Changelog](https://github.com/psf/requests/blob/main/HISTORY.md) -
-  [Commits](https://github.com/psf/requests/compare/v2.32.3...v2.32.4)
-
---- updated-dependencies: - dependency-name: requests dependency-version: 2.32.4
-
-dependency-type: direct:production
-
-dependency-group: pip
-
-...
-
-Signed-off-by: dependabot[bot] <support@github.com>
 
 
 ## v1.2.0 (2025-02-08)
