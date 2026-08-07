@@ -27,10 +27,7 @@ params = imfp.imf_parameters("PCPS")
 
 # Fetch data with specific parameters
 df = imfp.imf_dataset(
-    database_id="PCPS",
-    frequency=["A"],
-    start_year=2000,
-    end_year=2015
+    database_id="PCPS", frequency=["A"], start_year=2000, end_year=2015
 )
 ```
 

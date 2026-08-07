@@ -1,14 +1,15 @@
-from os import environ, path
 import hashlib
-from time import sleep, perf_counter
-from requests import get, Response
-from json import loads, load, dump, JSONDecodeError
-from pandas import DataFrame
-from urllib.parse import urlparse, urljoin
-import re
 import logging
+import re
 from collections.abc import Callable
-from typing import Any, Optional, ParamSpec, TypeVar
+from json import JSONDecodeError, dump, load, loads
+from os import environ, path
+from time import perf_counter, sleep
+from typing import Any, ParamSpec, TypeVar
+from urllib.parse import urljoin, urlparse
+
+from pandas import DataFrame
+from requests import Response, get
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ def _min_wait_time_limited(
 
 @_min_wait_time_limited()
 def _imf_get(
-    url: str, headers: dict[str, str], timeout: Optional[float] = None
+    url: str, headers: dict[str, str], timeout: float | None = None
 ) -> Response:
     """
     A rate-limited wrapper around the requests.get method.
@@ -74,8 +75,8 @@ _imf_save_response = False
 def _download_parse(
     resource_or_url: str,
     times: int = 3,
-    base_url: Optional[str] = None,
-    query_params: Optional[dict[str, Any]] = None,
+    base_url: str | None = None,
+    query_params: dict[str, Any] | None = None,
     timeout_seconds: float = 30.0,
     low_speed_seconds: float = 15.0,
 ) -> dict[str, Any]:
@@ -307,12 +308,12 @@ def _download_parse(
     )
 
 
-def _load_cached_response(URL: str) -> tuple[Optional[int], Optional[str]]:
+def _load_cached_response(URL: str) -> tuple[int | None, str | None]:
     file_name = hashlib.sha256(URL.encode()).hexdigest()
     file_path = f"tests/responses/{file_name}.json"
 
     if path.exists(file_path):
-        with open(file_path, "r") as file:
+        with open(file_path) as file:
             data = load(file)
             return data.get("status_code"), data.get("content")
     return None, None
@@ -328,7 +329,7 @@ def _extract_first(value: Any) -> Any:
     return value
 
 
-def _parse_datastructure_urn(urn: str) -> dict[str, Optional[str]]:
+def _parse_datastructure_urn(urn: str) -> dict[str, str | None]:
     """Parse a datastructure URN into its components.
 
     Matches the R implementation exactly.
@@ -356,7 +357,7 @@ def _parse_datastructure_urn(urn: str) -> dict[str, Optional[str]]:
     }
 
 
-def _parse_concept_urn(urn: str) -> dict[str, Optional[str]]:
+def _parse_concept_urn(urn: str) -> dict[str, str | None]:
     """Parse a concept URN into its components.
 
     Example: "urn:sdmx:org.sdmx.infomodel.conceptscheme.Concept=IMF:CS_CONCEPT(1.0).CONCEPT_NAME"
@@ -384,7 +385,7 @@ def _parse_concept_urn(urn: str) -> dict[str, Optional[str]]:
     }
 
 
-def _parse_codelist_urn(urn: str) -> dict[str, Optional[str]]:
+def _parse_codelist_urn(urn: str) -> dict[str, str | None]:
     """Parse a codelist URN into its components.
 
     Matches the R implementation exactly.
@@ -439,7 +440,7 @@ def _find_dataflow(dataflow_id: str, times: int = 3) -> dict[str, Any]:
 def _get_datastructure_components(
     dataflow_id: str,
     times: int = 3,
-    flow_row: Optional[dict[str, Any]] = None,
+    flow_row: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """
     (Internal) Retrieve raw datastructure components for a dataflow.
@@ -555,7 +556,7 @@ def _imf_dimensions(
         raise ValueError(f"No dimensions found for database {database_id}.")
 
     # Build dimension map: dimension_id -> conceptIdentity, local enumeration, and type
-    dim_map = {}
+    dim_map: dict[str, dict[str, Any]] = {}
     for source_type, dim in dims_to_process:
         dim_id = _extract_first(dim.get("id"))
         concept_identity = _extract_first(dim.get("conceptIdentity"))
