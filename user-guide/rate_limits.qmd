@@ -47,7 +47,7 @@ You can modify retry behavior:
 ``` {python}
 #| eval: false
 # Retry 4 times rather than the default 3
-df = imfp.imf_dataset("PPI", "WPI", times=4)
+df = imfp.imf_get("PPI", indicator="WPI", max_tries=4)
 ```
 
 ### Caching Strategy
@@ -61,21 +61,21 @@ Note that to run this code, you will need to install the `pyarrow` library, whic
 import os
 import pandas as pd
 
-# Fetch imf databases from file if available, else from API
-cache_path = f"data/imf_databases.parquet"
+# Fetch imf dataflows from file if available, else from API
+cache_path = "data/imf_dataflows.parquet"
 if os.path.exists(cache_path):
-    databases = pd.read_parquet(cache_path)
+    dataflows = pd.read_parquet(cache_path)
 else:
-    databases = imfp.imf_databases()
+    dataflows = imfp.imf_get_dataflows()
     os.makedirs("data", exist_ok=True)
-    databases.to_parquet(cache_path)
+    dataflows.to_parquet(cache_path)
 ```
 
 You can also functionalize this logic to permit reuse several times in the same script or notebook. See Jenny Xu's excellent [demo notebook](demo.qmd#utility-functions) for example caching functions.
 
 ## Performance Tips
 
-1. **Filter Early**: Use parameters to limit data at the API level
+1. **Filter Early**: Use dimension filters to limit data at the API level
 2. **Parallelize Carefully**: Avoid running parallel API requests, even from multiple clients
 3. **Use Efficient Formats**: Store cached data in parquet or feather files
 4. **Validate Data**: Check for errors and empty responses

@@ -6,7 +6,13 @@
 
 `imfp`, created and maintained by [Promptly Technologies](https://promptlytechnologies.com), is a Python package for downloading data from the [International Monetary Fund's](http://data.imf.org/) [RESTful JSON API](http://datahelp.imf.org/knowledgebase/articles/667681-using-json-restful-web-service).
 
-**NOTE: The IMF recently discontinued their SDMX 2.0 API, which `imfp` used, and migrated to 3.0. Version 1.3.0 of `imfp` represents my best effort to make a semi-backward compatible version of the library. Function names remain the same, and I have added a few helpers to map old parameters to the new ones. But the honest truth is that the structure of the API and the data returned by it has changed very significantly, and your old code is very unlikely to work without some modifications. I apologize for the inconvenience. `imfp` version 2.0.0 will be released soon, and will rewrite the library more comprehensively to follow the patterns of the new API.**
+`imfp` follows the conventions of the [econdataverse](https://econdataverse.org/), a family of open-source packages for working with economic data in R and Python. Its API mirrors the R package [imfapi](https://github.com/Teal-Insights/r-imfapi), so the same workflow reads the same way in either language.
+
+::: {.callout-important}
+## Upgrading from imfp 1.x
+
+Version 2.0.0 replaces `imf_databases`, `imf_parameters`, `imf_parameter_defs`, and `imf_dataset` with `imf_get_dataflows`, `imf_get_datastructure`, `imf_get_codelists`, and `imf_get`. The old functions still work but now emit a `DeprecationWarning`, and will be removed in 3.0.0. See the [migration guide](user-guide/migration.qmd).
+:::
 
 ## Installation
 
@@ -24,89 +30,95 @@ import imfp
 
 ## Workflow
 
-The `imfp` package introduces four core functions: `imf_databases`, `imf_parameters`, `imf_parameter_defs`, and `imf_dataset`. The function for downloading datasets is `imf_dataset`, but you will need the other functions to determine what arguments to supply to your `imf_dataset` function call.
+Fetching data from the IMF takes four steps, one per function. Each step tells you what to pass to the next.
 
-### Fetching a List of Databases with `imf_databases`
+### 1. Find a dataset with `imf_get_dataflows`
 
-For instance, all calls to `imf_dataset` require a `database_id`. This is because the IMF serves many different databases through its API, and the API needs to know which of these many databases you're requesting data from.
-
-To fetch a list of available databases, use:
+The IMF serves hundreds of datasets, called *dataflows*, and every request has to name one. `imf_get_dataflows` lists them all:
 
 ``` {python}
-# Fetch list of available databases
-databases = imfp.imf_databases()
+dataflows = imfp.imf_get_dataflows()
+dataflows[["id", "name"]].head()
 ```
 
-See [Working with Databases](user-guide/databases.qmd) for more information.
-
-### Fetching a List of Parameters and Input Codes with `imf_parameters`
-
-Requests to fetch data from IMF databases are complicated by the fact that each database uses a different set of parameters when making a request. (At last count, there were 43 unique parameters used in making API requests from the various databases!) You also have to have the list of valid input codes for each parameter. See [Working with Parameters](user-guide/parameters.qmd) for a more detailed explanation of parameters and input codes and how they work.
-
-To obtain the full list of parameters and valid input codes for a given database, use:
+We want the Primary Commodity Price System, whose ID is `PCPS`:
 
 ``` {python}
-# Fetch list of valid parameters and input codes for commodity price database
-params = imfp.imf_parameters("PCPS")
+dataflows[dataflows["id"] == "PCPS"][["id", "name", "last_updated"]]
 ```
 
-The `imf_parameters` function returns a dictionary of data frames. Each dictionary key name corresponds to a parameter used in making requests from the database:
+See [Discovering Datasets](user-guide/databases.qmd) for more.
+
+### 2. Find its dimensions with `imf_get_datastructure`
+
+Each dataset is filtered on its own set of *dimensions*, so the next step is to ask which ones `PCPS` has:
 
 ``` {python}
-# Get key names from the params object
-params.keys()
+dimensions = imfp.imf_get_datastructure("PCPS")
+dimensions
 ```
 
-Each named list item is a data frame containing the valid input codes (and their descriptions) that can be used with the named parameter.
+### 3. Find valid codes with `imf_get_codelists`
 
-To access the data frame containing valid values for each parameter, subset the `params` dict by the parameter name:
+Dimensions are categorical: each accepts a fixed set of *codes*. `imf_get_codelists` returns them as a tidy DataFrame:
 
 ``` {python}
-# View the data frame of valid input codes for the frequency parameter
-params['frequency']
+codes = imfp.imf_get_codelists(["INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY"], "PCPS")
+codes.head()
 ```
 
-### Supplying Parameter Arguments to `imf_dataset`
-
-To make a request to fetch data from the IMF API, just call `imfp.imf_dataset` with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.
-
-For instance, on exploring the `frequency` parameter of the Primary Commodity Price System database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imfp.imf_dataset` with `frequency = ["A"]`.
-
-Similarly, we might search the dataframes of valid input codes for the `indicator` and `data_transformation` parameters to find the input codes for coal and index:
+Because the result is one DataFrame, finding the code you want is an ordinary pandas filter:
 
 ``` {python}
-# Find the 'indicator' input code for coal
-params['indicator'].loc[
-    params['indicator']['description'].str.contains("Coal")
-]
+# Find the indicator code for coal
+codes[
+    (codes["dimension_id"] == "INDICATOR")
+    & codes["name"].str.contains("Coal index", na=False)
+][["code", "name"]]
 ```
 
 ``` {python}
-# Find the 'data_transformation' input code for index
-params['data_transformation'].loc[
-    params['data_transformation']['description'].str.contains("Index")
-]
+# Find the data transformation code for an index
+codes[
+    (codes["dimension_id"] == "DATA_TRANSFORMATION")
+    & codes["name"].str.contains("Index", na=False)
+][["code", "name"]]
 ```
 
-Finally, we can use the information we've gathered to make the request to fetch the data:
+See [Dimensions and Codes](user-guide/parameters.qmd) for more.
+
+### 4. Fetch the data with `imf_get`
+
+Now pass those codes to `imf_get`. Dimensions you leave out are wildcarded:
 
 ``` {python}
-# Request data from the API
-df = imfp.imf_dataset(database_id = "PCPS",
-         frequency = ["A"], indicator = ["PCOAL"],
-         data_transformation = ["INDEX"])
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
+)
 
-# Display the first few entries in the retrieved data frame
 df.head()
 ```
 
-## Working with the Returned Data Frame
-
-Note that all columns in the returned data frame are string objects, and to plot the series we will need to convert to valid numeric or date formats:
+Dimensions can also be passed as keyword arguments, which is terser for short queries:
 
 ``` {python}
-# Convert obs_value to numeric and time_period to integer year
-df = df.astype({"time_period" : int, "obs_value" : float})
+#| eval: false
+df = imfp.imf_get("PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A")
+```
+
+See [Fetching Data](user-guide/datasets.qmd) for more.
+
+## Working with the Returned Data Frame
+
+`imf_get` returns tidy data: one observation per row, one variable per column. `OBS_VALUE` is already numeric, but `TIME_PERIOD` is a string, because its format depends on the frequency of the series ("2000" for annual data, "2000-Q1" for quarterly, "2000-M01" for monthly). For an annual series it converts directly:
+
+``` {python}
+df = df.astype({"TIME_PERIOD": int})
 ```
 
 Then, using `seaborn` with `hue`, we can plot different indicators in different colors:
@@ -115,7 +127,7 @@ Then, using `seaborn` with `hue`, we can plot different indicators in different 
 import seaborn as sns
 
 # Plot prices of different commodities in different colors with seaborn
-sns.lineplot(data=df, x='time_period', y='obs_value', hue='indicator');
+sns.lineplot(data=df, x="TIME_PERIOD", y="OBS_VALUE", hue="INDICATOR");
 ```
 
 ## Contributing

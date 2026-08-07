@@ -12,9 +12,10 @@ Run everything through `uv run` (do not activate the venv manually). Key command
 - Tests: `uv run pytest tests` — fully offline. `tests/conftest.py` mocks HTTP by hashing
   request URLs (SHA256) and replaying cached JSON from `tests/responses/`, so no network
   or API key is needed.
-- Format check: `uv run black --check .` (CI's `format.yml` auto-formats on push via
-  action-black, so a local reformat finding is expected, not a setup failure).
-- Type check: `uv run mypy imfp` (config in `mypy.ini`).
+- Format: `uv run ruff format .` (or `--check` to verify; CI's `format.yml` auto-formats
+  on push, and `test.yml` runs the check on pull requests).
+- Lint: `uv run ruff check .` (config under `[tool.ruff]` in `pyproject.toml`).
+- Type check: `uv run ty check` (config under `[tool.ty.rules]` in `pyproject.toml`).
 - Build: `uv build` (wheel + sdist into `dist/`).
 - Docs: `uv run great-docs build` (output in `great-docs/_site/`; requires Quarto CLI and
   Python >= 3.11 for the `great-docs` dependency).

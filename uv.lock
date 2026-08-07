@@ -849,13 +849,11 @@ wheels = [
 
 [[package]]
 name = "imfp"
-version = "1.3.4"
+version = "2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "pandas" },
     { name = "requests" },
-    { name = "type-enforced", version = "1.10.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "type-enforced", version = "2.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
 
 [package.dev-dependencies]
@@ -896,7 +894,6 @@ dev = [
 requires-dist = [
     { name = "pandas", specifier = "==2.2.3" },
     { name = "requests", specifier = "==2.33.0" },
-    { name = "type-enforced", specifier = ">=1.10.1" },
 ]
 
 [package.metadata.requires-dev]
@@ -3385,32 +3382,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/e4/43/78a658d18b2a4ccf35b053392f2213bf12e3c63b2abea512d3b6751d1f4c/ty-0.0.69-py3-none-win32.whl", hash = "sha256:ec460e01586b1eb91894c4a8403bee3e045a47e7a4ada943cc27ce8e348e88cf", size = 11787774, upload-time = "2026-08-06T10:04:18.622Z" },
     { url = "https://files.pythonhosted.org/packages/3a/5e/88db1f674403f2b81316a853a44a81ed220621fa96f8f7ae586fb6ca7513/ty-0.0.69-py3-none-win_amd64.whl", hash = "sha256:18976ca26a4e28fc3249477f79a695d5502e670803f2e080d89ac905baef3c6e", size = 12864038, upload-time = "2026-08-06T10:04:20.748Z" },
     { url = "https://files.pythonhosted.org/packages/4d/7b/6fc6efd00c69103d70f2bdbe824343089cd70b17b3079170057d3e5a3ac0/ty-0.0.69-py3-none-win_arm64.whl", hash = "sha256:7d4ca3bb74d91cb9947ba3f3b4cb131ad6a2b3ecc76d34040c4ec6092d2e411d", size = 12196693, upload-time = "2026-08-06T10:04:22.902Z" },
-]
-
-[[package]]
-name = "type-enforced"
-version = "1.10.2"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version < '3.11'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/50/6c/3e39989a24bc364f1469b695555c4fe77caadff1ed0bb6ddc63514a443ed/type_enforced-1.10.2.tar.gz", hash = "sha256:a23907b943711acc25760236cf8d6c1742f44d2b55b60b1bb4afac3ae61b05cc", size = 23420, upload-time = "2025-03-05T20:06:33.029Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/6e/4e/f449d99089ac47040bbfa03949ce14956b5f4ec23ca103a0c47716d22c24/type_enforced-1.10.2-py3-none-any.whl", hash = "sha256:4a85fa440e8451310eb1038c55f4296f42e65ead0b34a14947a5b0d79d2c8a9d", size = 16501, upload-time = "2025-03-05T20:06:23.606Z" },
-]
-
-[[package]]
-name = "type-enforced"
-version = "2.3.0"
-source = { registry = "https://pypi.org/simple" }
-resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version >= '3.12' and python_full_version < '3.14'",
-    "python_full_version == '3.11.*'",
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/cd/39228f1927fbafe21018244582368667521ee4662892c6b48aa89d6c9afc/type_enforced-2.3.0.tar.gz", hash = "sha256:de75ab9198b869c003d02f331f7ff40ee816760760420e9d80e054e0b3bc360c", size = 32286, upload-time = "2025-11-04T16:29:19.377Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/08/cb/ff0f60eb34283fb233fd3556331a81efdfbd8a9bdcb5601e1e10a8c6ffd8/type_enforced-2.3.0-py3-none-any.whl", hash = "sha256:c804771d5645f916517c7e4b3424651a34b5b4dc3683d804f947e9b7bc3f7f2c", size = 22149, upload-time = "2025-11-04T16:29:13.888Z" },
 ]
 
 [[package]]

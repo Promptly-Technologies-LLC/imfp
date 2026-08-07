@@ -5,8 +5,9 @@ from collections.abc import Callable
 from json import JSONDecodeError, dump, load, loads
 from os import environ, path
 from time import perf_counter, sleep
-from typing import Any, ParamSpec, TypeVar
+from typing import Any, Literal, ParamSpec, TypeVar
 from urllib.parse import urljoin, urlparse
+from warnings import warn
 
 from pandas import DataFrame
 from requests import Response, get
@@ -18,6 +19,58 @@ IMF_API_BASE_URL = "https://api.imf.org/external/sdmx/3.0/"
 
 P = ParamSpec("P")
 R = TypeVar("R")
+
+
+# --- Argument validation -----------------------------------------------------
+#
+# Public functions validate their own arguments rather than relying on a runtime
+# enforcement decorator. Most callers reach this library from notebooks and never
+# run a type checker, so a bad argument needs to fail at the call site with a
+# message naming the argument. Wrong type raises TypeError; a value of the right
+# type that is out of range raises ValueError.
+
+
+def _require_str(value: Any, name: str) -> str:
+    """Return ``value`` if it is a string, else raise TypeError naming ``name``."""
+    if not isinstance(value, str):
+        raise TypeError(
+            f"{name} must be a string; got {type(value).__name__} ({value!r})."
+        )
+    return value
+
+
+def _require_bool(value: Any, name: str) -> bool:
+    """Return ``value`` if it is a bool, else raise TypeError naming ``name``."""
+    if not isinstance(value, bool):
+        raise TypeError(
+            f"{name} must be True or False; got {type(value).__name__} ({value!r})."
+        )
+    return value
+
+
+def _require_int(value: Any, name: str, minimum: int | None = None) -> int:
+    """
+    Return ``value`` if it is an int (and at least ``minimum``, when given).
+
+    ``bool`` is rejected even though it subclasses ``int``: passing True where a
+    retry count belongs is a mistake, not a request for one attempt.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise TypeError(
+            f"{name} must be an integer; got {type(value).__name__} ({value!r})."
+        )
+    if minimum is not None and value < minimum:
+        raise ValueError(f"{name} must be at least {minimum}; got {value}.")
+    return value
+
+
+def _require_number(value: Any, name: str) -> int | float:
+    """Return ``value`` if it is a real number, else raise TypeError."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(
+            f"{name} must be a number; got {type(value).__name__} ({value!r})."
+        )
+    return value
 
 
 def _min_wait_time_limited(
@@ -413,6 +466,27 @@ def _parse_codelist_urn(urn: str) -> dict[str, str | None]:
     }
 
 
+def _get_dataflow_rows(times: int = 3) -> list[dict[str, Any]]:
+    """
+    (Internal) Fetch the raw list of dataflow objects from the IMF catalog.
+
+    Args:
+        times (int, optional): The number of times to retry the request.
+            Defaults to 3.
+
+    Returns:
+        list: Raw dataflow dictionaries as returned by the API.
+
+    Raises:
+        ValueError: If the response contains no dataflows.
+    """
+    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
+    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
+    if raw_dataflows is None:
+        raise ValueError("No dataflows found in API response.")
+    return raw_dataflows
+
+
 def _find_dataflow(dataflow_id: str, times: int = 3) -> dict[str, Any]:
     """
     (Internal) Look up a dataflow object by ID from the IMF dataflow catalog.
@@ -425,16 +499,19 @@ def _find_dataflow(dataflow_id: str, times: int = 3) -> dict[str, Any]:
     Returns:
         dict: The matching dataflow object from the API response.
     """
-    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
-    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
-    if raw_dataflows is None:
-        raise ValueError("No dataflows found in API response.")
-
-    for flow in raw_dataflows:
+    for flow in _get_dataflow_rows(times=times):
         if _extract_first(flow.get("id")) == dataflow_id:
             return flow
 
     raise ValueError(f"Dataflow not found or not unique: {dataflow_id}.")
+
+
+def _annotation_value(obj: dict[str, Any], annotation_id: str) -> str | None:
+    """Return the value of a named annotation on an SDMX artefact, if present."""
+    for annotation in obj.get("annotations", []) or []:
+        if annotation.get("id") == annotation_id:
+            return annotation.get("value")
+    return None
 
 
 def _get_datastructure_components(
@@ -492,6 +569,201 @@ def _get_datastructure_components(
     return components
 
 
+def _component_codelist(
+    component: dict[str, Any],
+    times: int = 3,
+    memo: dict[str, Any] | None = None,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    """
+    (Internal) Resolve the codelist that enumerates a datastructure component.
+
+    A component's codelist is normally declared indirectly, via the concept it
+    points at through ``conceptIdentity``; some components instead declare it
+    inline through ``localRepresentation``. This resolves either form and
+    fetches the codelist.
+
+    Args:
+        component (dict): A raw dimension, time dimension, or measure object
+            from a datastructure definition.
+        times (int, optional): The number of times to retry each request.
+            Defaults to 3.
+        memo (dict, optional): Mutable cache, keyed by URN, shared across calls
+            so that dimensions sharing a codelist only trigger one request.
+
+    Returns:
+        tuple: ``(ref, codes)``, where ``ref`` is a dict with ``id``, ``agency``,
+        ``version``, and ``name`` keys (values are None when unresolved) and
+        ``codes`` is the list of raw code objects (empty when unenumerated).
+    """
+    if memo is None:
+        memo = {}
+
+    empty_ref: dict[str, Any] = {
+        "id": None,
+        "agency": None,
+        "version": None,
+        "name": None,
+    }
+
+    concept_identity = _extract_first(component.get("conceptIdentity"))
+
+    local_enum = None
+    local_rep = component.get("localRepresentation") or {}
+    if local_rep:
+        local_enum = _extract_first(local_rep.get("enumeration"))
+
+    if not concept_identity:
+        # Without a concept identity there is nothing to resolve beyond the
+        # component's own inline representation.
+        enum_urn = local_enum
+    else:
+        cref = _parse_concept_urn(concept_identity)
+        enum_urn = local_enum
+        if cref.get("agency") and cref.get("scheme") and cref.get("concept"):
+            cs_key = f"conceptscheme:{cref['agency']}:{cref['scheme']}"
+            if cs_key in memo:
+                cs_body = memo[cs_key]
+            else:
+                cs_body = None
+                for cs_path in (
+                    f"structure/conceptscheme/{cref['agency']}/{cref['scheme']}/+",
+                    f"structure/conceptscheme/all/{cref['scheme']}/+",
+                ):
+                    try:
+                        cs_body = _download_parse(cs_path, times=times)
+                        break
+                    except ValueError:
+                        continue
+                memo[cs_key] = cs_body
+
+            if cs_body is not None:
+                concept = None
+                for cs in cs_body.get("data", {}).get("conceptSchemes", []):
+                    for cn in cs.get("concepts", []) or []:
+                        if _extract_first(cn.get("id")) == cref["concept"]:
+                            concept = cn
+                            break
+                    if concept:
+                        break
+
+                enum_from_concept = None
+                if concept:
+                    core_rep = concept.get("coreRepresentation") or {}
+                    if core_rep:
+                        enum_from_concept = _extract_first(core_rep.get("enumeration"))
+
+                enum_urn = enum_from_concept if enum_from_concept else local_enum
+
+    if not enum_urn:
+        return empty_ref, []
+
+    cl = _parse_codelist_urn(enum_urn)
+    if not cl.get("agency") or not cl.get("id"):
+        return empty_ref, []
+
+    cl_key = f"codelist:{cl['agency']}:{cl['id']}"
+    if cl_key in memo:
+        cl_body = memo[cl_key]
+    else:
+        cl_body = None
+        # Try the agency-specific path first so we pick up the right version,
+        # then fall back to the wildcard agency.
+        for cl_path in (
+            f"structure/codelist/{cl['agency']}/{cl['id']}/+",
+            f"structure/codelist/all/{cl['id']}/+",
+        ):
+            try:
+                cl_body = _download_parse(cl_path, times=times)
+                break
+            except ValueError:
+                continue
+        memo[cl_key] = cl_body
+
+    if cl_body is None:
+        return empty_ref, []
+
+    clists = cl_body.get("data", {}).get("codelists", [])
+    if not clists:
+        return empty_ref, []
+
+    codes = clists[0].get("codes", []) or []
+    if not codes:
+        return empty_ref, []
+
+    return (
+        {
+            "id": cl["id"],
+            "agency": cl["agency"],
+            "version": _extract_first(clists[0].get("version")) or cl.get("version"),
+            "name": _extract_first(clists[0].get("name")) or cl["id"],
+        },
+        codes,
+    )
+
+
+def _dsd_component_rows(
+    dataflow_id: str,
+    times: int = 3,
+    include_time: bool = False,
+    include_measures: bool = False,
+    flow_row: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """
+    (Internal) List a dataflow's datastructure components in positional order.
+
+    Args:
+        dataflow_id (str): The ID of the dataflow.
+        times (int, optional): The number of times to retry each request.
+            Defaults to 3.
+        include_time (bool, optional): Whether to include time dimensions.
+        include_measures (bool, optional): Whether to include measures.
+        flow_row (dict, optional): Pre-fetched dataflow object, to avoid a
+            redundant catalog request when the caller already has one.
+
+    Returns:
+        list: Dicts with ``dimension_id``, ``type``, ``position``, and the raw
+        ``component`` object. Dimensions come first, in DSD position order,
+        followed by time dimensions and then measures.
+    """
+    components = _get_datastructure_components(dataflow_id, times, flow_row=flow_row)
+    dimension_list = components.get("dimensionList", {}) or {}
+
+    def _rows(items: list[Any] | None, default_type: str) -> list[dict[str, Any]]:
+        collected = []
+        for item in items or []:
+            if not item:
+                continue
+            dim_id = _extract_first(item.get("id"))
+            if not dim_id:
+                continue
+            position = item.get("position")
+            collected.append(
+                {
+                    "dimension_id": dim_id,
+                    "type": _extract_first(item.get("type")) or default_type,
+                    "position": int(position) if position is not None else None,
+                    "component": item,
+                }
+            )
+        return collected
+
+    rows = _rows(dimension_list.get("dimensions"), "Dimension")
+    # Components without a declared position sort last rather than blowing up.
+    rows.sort(key=lambda row: (row["position"] is None, row["position"] or 0))
+
+    if include_time:
+        rows.extend(_rows(dimension_list.get("timeDimensions"), "TimeDimension"))
+
+    if include_measures:
+        measure_list = components.get("measureList", {}) or {}
+        rows.extend(_rows(measure_list.get("measures"), "Measure"))
+
+    if not rows:
+        raise ValueError(f"No dimensions found for database {dataflow_id}.")
+
+    return rows
+
+
 def _imf_dimensions(
     database_id: str, times: int = 3, inputs_only: bool = True
 ) -> DataFrame:
@@ -510,219 +782,292 @@ def _imf_dimensions(
         pandas.DataFrame: A DataFrame containing the parameter names and their
         corresponding codes and descriptions.
     """
-    # Get DSD components
-    components = _get_datastructure_components(database_id, times)
+    memo: dict[str, Any] = {}
+    rows = _dsd_component_rows(
+        database_id,
+        times=times,
+        include_time=not inputs_only,
+        include_measures=not inputs_only,
+    )
 
-    # Extract dimensions from dimensionList
-    dimension_list = components.get("dimensionList", {})
-    dimensions = dimension_list.get("dimensions", [])
-    time_dimensions = dimension_list.get("timeDimensions", [])
-
-    # Extract measures from measureList (only when inputs_only=False)
-    measures = []
-    if not inputs_only:
-        measure_list = components.get("measureList", {})
-        measures = measure_list.get("measures", [])
-
-    # Combine dimensions (always), time dimensions (only if inputs_only=False),
-    # and measures (only if inputs_only=False)
-    dims_to_process = []
-    time_dim_ids = set()
-    measure_ids = set()
-
-    # Regular dimensions
-    for d in dimensions:
-        if d is not None:
-            dims_to_process.append(("dimension", d))
-
-    # Time dimensions (only if inputs_only=False)
-    if not inputs_only:
-        for d in time_dimensions:
-            if d is not None:
-                dim_id = _extract_first(d.get("id"))
-                if dim_id:
-                    time_dim_ids.add(dim_id)
-                dims_to_process.append(("time_dimension", d))
-
-        # Measures (only if inputs_only=False)
-        for d in measures:
-            if d is not None:
-                dim_id = _extract_first(d.get("id"))
-                if dim_id:
-                    measure_ids.add(dim_id)
-                dims_to_process.append(("measure", d))
-
-    if not dims_to_process:
-        raise ValueError(f"No dimensions found for database {database_id}.")
-
-    # Build dimension map: dimension_id -> conceptIdentity, local enumeration, and type
-    dim_map: dict[str, dict[str, Any]] = {}
-    for source_type, dim in dims_to_process:
-        dim_id = _extract_first(dim.get("id"))
-        concept_identity = _extract_first(dim.get("conceptIdentity"))
-        dim_type = _extract_first(dim.get("type"))
-        local_enum = None
-        try:
-            local_rep = dim.get("localRepresentation", {})
-            if local_rep:
-                local_enum = _extract_first(local_rep.get("enumeration"))
-        except (AttributeError, KeyError, TypeError):
-            pass
-
-        dim_map[dim_id] = {
-            "concept_identity": concept_identity,
-            "local_enum": local_enum,
-            "type": dim_type,
-            "is_time_dimension": dim_id in time_dim_ids,
-            "is_measure": dim_id in measure_ids,
-        }
-
-    # For each dimension, resolve its codelist and get codes
     params = []
     codes = []
     agencies = []
     descriptions = []
+    seen = set()
 
-    for dim_id, dim_info in dim_map.items():
-        concept_identity = dim_info["concept_identity"]
-        local_enum = dim_info["local_enum"]
-        dim_type = dim_info["type"]
-        is_time_dimension = dim_info["is_time_dimension"]
-        is_measure = dim_info["is_measure"]
+    for row in rows:
+        dim_id = row["dimension_id"]
+        if dim_id in seen:
+            continue
+        seen.add(dim_id)
 
-        # Try to resolve codelist for this dimension/measure
-        codelist_id = None
-        codelist_agency = None
-        codelist_name = None
+        ref, _codes = _component_codelist(row["component"], times=times, memo=memo)
+        codelist_id = ref["id"]
+        codelist_name = ref["name"]
 
-        if concept_identity:
-            # Parse concept URN to get concept scheme info
-            cref = _parse_concept_urn(concept_identity)
-            if cref.get("agency") and cref.get("scheme") and cref.get("concept"):
-                # Fetch concept scheme to find enumeration
-                cs_paths = [
-                    f"structure/conceptscheme/{cref['agency']}/{cref['scheme']}/+",
-                    f"structure/conceptscheme/all/{cref['scheme']}/+",
-                ]
-
-                cs_body = None
-                for cs_path in cs_paths:
-                    try:
-                        cs_body = _download_parse(cs_path, times=times)
-                        break
-                    except ValueError:
-                        continue
-
-                if cs_body is not None:
-                    # Find the concept in the concept scheme
-                    cs_list = cs_body.get("data", {}).get("conceptSchemes", [])
-                    concept = None
-                    for cs in cs_list:
-                        cands = cs.get("concepts", [])
-                        if not cands:
-                            continue
-                        for cn in cands:
-                            cn_id = _extract_first(cn.get("id"))
-                            if cn_id == cref["concept"]:
-                                concept = cn
-                                break
-                        if concept:
-                            break
-
-                    # Get enumeration from concept or fall back to local enum
-                    enum_from_concept = None
-                    if concept:
-                        core_rep = concept.get("coreRepresentation", {})
-                        if core_rep:
-                            enum_from_concept = _extract_first(
-                                core_rep.get("enumeration")
-                            )
-
-                    enum_urn = enum_from_concept if enum_from_concept else local_enum
-                else:
-                    # If concept scheme not found, try local enum directly
-                    enum_urn = local_enum
-            else:
-                # If concept URN parsing fails, try to use local enum directly
-                enum_urn = local_enum
-
-            # Try to parse and fetch codelist if we have an enum URN
-            if enum_urn:
-                cl = _parse_codelist_urn(enum_urn)
-                if cl.get("agency") and cl.get("id"):
-                    # Fetch codelist - try agency-specific path first to get the correct version,
-                    # then fall back to 'all' if the agency path fails
-                    cl_paths = [
-                        f"structure/codelist/{cl['agency']}/{cl['id']}/+",
-                        f"structure/codelist/all/{cl['id']}/+",
-                    ]
-
-                    cl_body = None
-                    for cl_path in cl_paths:
-                        try:
-                            cl_body = _download_parse(cl_path, times=times)
-                            break
-                        except ValueError:
-                            continue
-
-                    if cl_body is not None:
-                        clists = cl_body.get("data", {}).get("codelists", [])
-                        if clists and len(clists) > 0:
-                            codes_list = clists[0].get("codes", [])
-                            if codes_list:
-                                # Extract codelist ID and agency for the code column
-                                codelist_id = cl["id"]
-                                codelist_agency = cl["agency"]
-
-                                # Get codelist name/description from codelist metadata
-                                codelist_name = _extract_first(clists[0].get("name"))
-                                if not codelist_name:
-                                    # Fallback to codelist ID if no name available
-                                    codelist_name = codelist_id
-
-        # Add parameter (always add, even if no codelist found)
-        # For inputs_only=True, skip dimensions without codelists
-        # For inputs_only=False, include all dimensions/measures even without codelists
+        # Enumerated dimensions are the only ones usable as request filters.
         if inputs_only and codelist_id is None:
             continue
 
-        # For time dimensions and measures without codelists, use their ID as the code
-        # but leave description as None (this matches the expected behavior where
-        # only descriptions are NA, not codes)
-        if codelist_id is None and not inputs_only:
-            # Check if this is a time dimension or measure
-            if (
-                is_time_dimension
-                or is_measure
-                or dim_type in ("TimeDimension", "Measure")
-            ):
-                codelist_id = dim_id.lower()
-                # Ensure description is None (not a string)
-                codelist_name = None
+        # Time dimensions and measures are never enumerated; surface them under
+        # their own ID so callers can still see that they exist.
+        if codelist_id is None and row["type"] in ("TimeDimension", "Measure"):
+            codelist_id = dim_id.lower()
+            codelist_name = None
 
         params.append(dim_id.lower())
         codes.append(codelist_id)
-        agencies.append(codelist_agency)
+        agencies.append(ref["agency"])
         descriptions.append(codelist_name)
 
-    # Build DataFrames
     param_code_df = DataFrame({"parameter": params, "code": codes, "agency": agencies})
 
-    # Create codelist description DataFrame
-    # Filter out None codes before creating codelist_df to avoid duplicates with None
+    # Build the code -> description lookup from enumerated components only, so
+    # that unenumerated components do not collide on a None key.
     codelist_df = DataFrame(
         {
             "code": [c for c in codes if c is not None],
             "description": [d for c, d in zip(codes, descriptions) if c is not None],
         }
     )
-    # Remove duplicates while preserving order
     codelist_df = codelist_df.drop_duplicates(subset=["code"], keep="first")
 
-    # Use left join to keep all parameters and fill in descriptions where available
+    # Left join so parameters without a description are kept.
     result_df = param_code_df.merge(codelist_df, on="code", how="left")
 
     return result_df
+
+
+_PERIOD_FREQ_SUFFIX = re.compile(r"^\d{4}-(M|Q|A|W)\d+$")
+_PERIOD_MONTH = re.compile(r"^\d{4}-\d{2}$")
+_PERIOD_YEAR = re.compile(r"^\d{4}$")
+
+
+def _transform_period_for_frequency(
+    period: str | None,
+    frequency: list[str] | None,
+    bound: Literal["start", "end"] = "start",
+) -> str | None:
+    """Transform a user time period into the SDMX filter form for a frequency.
+
+    When ``frequency`` is a single code, year bounds use that frequency's first
+    (start) or last (end) period of the year. When frequency is omitted or
+    multi-valued, start uses the earliest cross-frequency suffix (``-A1``) and
+    end uses a high sentinel (``-W99``) so quarterly/monthly periods in the
+    requested year are not excluded by lexicographic comparison.
+    """
+    if not period:
+        return period
+    if _PERIOD_FREQ_SUFFIX.match(period):
+        return period
+    if _PERIOD_MONTH.match(period):
+        year, month = period.split("-")
+        return f"{year}-M{month}"
+    if _PERIOD_YEAR.match(period):
+        start_suffixes = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
+        end_suffixes = {"A": "-A1", "Q": "-Q4", "M": "-M12", "W": "-W53"}
+        if frequency and len(frequency) == 1:
+            freq = frequency[0].upper()
+            suffix_map = end_suffixes if bound == "end" else start_suffixes
+            suffix = suffix_map.get(freq, "-A1" if bound == "start" else "-W99")
+        else:
+            suffix = "-A1" if bound == "start" else "-W99"
+        return f"{period}{suffix}"
+    return period
+
+
+def _build_time_query_params(
+    start_period: str | None,
+    end_period: str | None,
+    user_frequency: list[str] | None,
+    provider_agency: str,
+) -> dict[str, str]:
+    """
+    (Internal) Build the query parameters for a data request, including the
+    time window when the publishing agency supports server-side filtering.
+    """
+    query_params = {
+        "dimensionAtObservation": "TIME_PERIOD",
+        "attributes": "dsd",
+        "measures": "all",
+    }
+    time_filters = []
+    if start_period:
+        start = _transform_period_for_frequency(
+            start_period, user_frequency, bound="start"
+        )
+        time_filters.append(f"ge:{start}")
+    if end_period:
+        end = _transform_period_for_frequency(end_period, user_frequency, bound="end")
+        time_filters.append(f"le:{end}")
+    if time_filters:
+        if provider_agency == "IMF.STA":
+            query_params["c[TIME_PERIOD]"] = "+".join(time_filters)
+        else:
+            warn(
+                f"Agency {provider_agency} does not support time filters; "
+                "time window will be ignored."
+            )
+    return query_params
+
+
+def _build_data_request(
+    dataflow_id: str,
+    dimension_filters: dict[str, list[str]],
+    start_period: str | None = None,
+    end_period: str | None = None,
+    times: int = 3,
+    flow_row: dict[str, Any] | None = None,
+) -> tuple[str, dict[str, str]]:
+    """
+    (Internal) Build the resource path and query parameters for a data request.
+
+    The series key is positional: each dimension in the datastructure occupies
+    one dot-separated slot, in DSD position order, and a slot is wildcarded with
+    ``*`` when the caller supplied no codes for it. Multiple codes for one
+    dimension are joined with ``+``.
+
+    Args:
+        dataflow_id (str): The ID of the dataflow to query.
+        dimension_filters (dict): Maps upper-cased dimension IDs to lists of
+            codes. Dimensions absent from the dict are wildcarded.
+        start_period (str, optional): Lower bound on the time period.
+        end_period (str, optional): Upper bound on the time period.
+        times (int, optional): The number of times to retry each request.
+        flow_row (dict, optional): Pre-fetched dataflow object. Supplying it
+            keeps the whole request to a single catalog lookup.
+
+    Returns:
+        tuple: ``(data_path, query_params)``.
+
+    Raises:
+        ValueError: If a requested dimension is not part of the datastructure.
+    """
+    # One catalog lookup serves both DSD resolution and provider agency.
+    if flow_row is None:
+        flow_row = _find_dataflow(dataflow_id, times=times)
+
+    rows = _dsd_component_rows(dataflow_id, times=times, flow_row=flow_row)
+    key_rows = [row for row in rows if row["type"] != "TimeDimension"]
+
+    available_dims = {row["dimension_id"].upper() for row in key_rows}
+    unknown = set(dimension_filters) - available_dims
+    if unknown:
+        raise ValueError(
+            f"Unknown dimension(s): {', '.join(sorted(unknown))}. "
+            f"Available dimensions: {', '.join(sorted(available_dims))}"
+        )
+
+    segments = []
+    for row in key_rows:
+        codes = dimension_filters.get(row["dimension_id"].upper(), [])
+        segments.append("+".join(codes) if codes else "*")
+    key = ".".join(segments)
+
+    # A bare year is expanded using the requested frequency, so find whichever
+    # frequency dimension this datastructure happens to use.
+    freq_dim_id = next((d for d in ("FREQUENCY", "FREQ") if d in available_dims), None)
+    user_frequency = dimension_filters.get(freq_dim_id) if freq_dim_id else None
+
+    provider_agency = _extract_first(flow_row.get("agencyID")) or "all"
+
+    query_params = _build_time_query_params(
+        start_period, end_period, user_frequency, provider_agency
+    )
+
+    return f"data/dataflow/{provider_agency}/{dataflow_id}/+/{key}", query_params
+
+
+def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
+    """
+    (Internal) Flatten an SDMX-JSON data message into one row per observation.
+
+    The message stores observations under compact numeric keys: a series key
+    like ``"0:3:1"`` indexes into each dimension's value list, and each
+    observation key indexes into the time dimension's value list. Both are
+    expanded back into codes here.
+
+    Args:
+        message (dict): The parsed JSON response from the API.
+
+    Returns:
+        pandas.DataFrame: One row per observation, with a column per series
+        dimension plus TIME_PERIOD and OBS_VALUE. Empty if the message carries
+        no observations.
+    """
+    if not message or not message.get("data"):
+        return DataFrame()
+
+    data_sets = message.get("data", {}).get("dataSets")
+    structures = message.get("data", {}).get("structures")
+
+    if not data_sets or not structures:
+        return DataFrame()
+
+    ds = data_sets[0]
+    st = structures[0]
+
+    series_dims = st.get("dimensions", {}).get("series", [])
+    obs_dims = st.get("dimensions", {}).get("observation", [])
+    obs_dim = obs_dims[0] if obs_dims else None
+
+    def index_to_value(
+        dim_def: dict[str, Any] | None, idx: Any, keys: tuple[str, ...]
+    ) -> Any:
+        """Look up a dimension value by its positional index."""
+        if not dim_def or not dim_def.get("values"):
+            return None
+        try:
+            i = int(idx)
+        except (ValueError, TypeError):
+            return None
+        values = dim_def["values"]
+        if i < 0 or i >= len(values):
+            return None
+        entry = values[i]
+        for k in keys:
+            if entry.get(k) is not None:
+                return entry[k]
+        return None
+
+    if not ds.get("series"):
+        return DataFrame()
+
+    series_dim_ids = [_extract_first(dim.get("id")) for dim in series_dims or []]
+
+    rows = []
+    for series_key, series in ds["series"].items():
+        observations = series.get("observations", {})
+        if not observations:
+            continue
+
+        key_parts: list[Any] = series_key.split(":")
+        # Pad so a short key still lines up with the dimension list.
+        if len(key_parts) < len(series_dim_ids):
+            key_parts.extend([None] * (len(series_dim_ids) - len(key_parts)))
+
+        series_codes = [
+            index_to_value(dim_def, idx, ("id", "value")) if idx is not None else None
+            for dim_def, idx in zip(series_dims or [], key_parts)
+        ]
+
+        for obs_key, obs in observations.items():
+            raw_value = obs[0] if obs else None
+            obs_value = None
+            if raw_value is not None:
+                try:
+                    obs_value = float(raw_value)
+                except (ValueError, TypeError):
+                    # Non-numeric missing-value flags stay None.
+                    obs_value = None
+
+            row = dict(zip(series_dim_ids, series_codes))
+            row["TIME_PERIOD"] = index_to_value(obs_dim, obs_key, ("value", "id"))
+            row["OBS_VALUE"] = obs_value
+            rows.append(row)
+
+    return DataFrame(rows) if rows else DataFrame()
 
 
 def _imf_metadata(database_id: str, times: int = 3) -> dict[str, Any]:
@@ -768,12 +1113,7 @@ def _imf_metadata(database_id: str, times: int = 3) -> dict[str, Any]:
     dataflow = dataflows[0] if dataflows else {}
 
     # Find lastUpdatedAt from annotations
-    last_updated = None
-    annotations = dataflow.get("annotations", [])
-    for ann in annotations:
-        if ann.get("id") == "lastUpdatedAt":
-            last_updated = ann.get("value")
-            break
+    last_updated = _annotation_value(dataflow, "lastUpdatedAt")
 
     # Build output similar to old format but adapted for new API
     output = {

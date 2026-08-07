@@ -1,10 +1,9 @@
 from os import environ
 from warnings import warn
 
-import type_enforced
+from .utils import _require_number, _require_str
 
 
-@type_enforced.Enforcer
 def set_imf_app_name(name: str = "imfp") -> None:
     """
     Set the IMF Application Name.
@@ -20,12 +19,14 @@ def set_imf_app_name(name: str = "imfp") -> None:
         None
 
     Raises:
-        ValueError: If the provided name is not a valid string or contains
-        forbidden characters.
+        TypeError: If the provided name is not a string.
+        ValueError: If the provided name is too long or contains forbidden
+        characters.
 
     Examples:
         imf_app_name("my_custom_app_name")
     """
+    _require_str(name, "name")
 
     if len(name) > 255:
         raise ValueError("Application name must be no longer than 255 characters.")
@@ -51,19 +52,21 @@ def set_imf_app_name(name: str = "imfp") -> None:
     return None
 
 
-@type_enforced.Enforcer
 def set_imf_wait_time(wait_time: int | float = 1.5) -> None:
     """
     Set the IMF wait time as an environment variable.
 
     Args:
-        wait_time (Union[int, float], optional): The wait time in seconds to be set as an environment variable. Defaults to 1.5.
+        wait_time (int or float, optional): The wait time in seconds to be set as
+        an environment variable. Defaults to 1.5.
 
     Raises:
         TypeError: If the provided wait_time is not a numeric value (int or float).
-        ValueError: If the provided wait_time is not greater than 0.
+        ValueError: If the provided wait_time is negative.
     """
-    if wait_time >= 0:
-        environ["IMF_WAIT_TIME"] = str(wait_time)
-    else:
+    _require_number(wait_time, "wait_time")
+
+    if wait_time < 0:
         raise ValueError("Rate limit wait time must be greater than or equal to 0.")
+
+    environ["IMF_WAIT_TIME"] = str(wait_time)

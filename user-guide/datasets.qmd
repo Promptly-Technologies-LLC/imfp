@@ -1,72 +1,161 @@
 ---
-title: "Requesting Datasets"
+title: "Fetching Data"
 ---
 
 ## Making a Request
 
-To retrieve data from an IMF database, you'll need the database ID and any relevant [filter parameters](parameters.qmd). Here's a basic example using the Producer Price Index (PPI) database from 2000 to 2015:
+`imf_get` takes a dataflow ID and the dimension filters you found with [`imf_get_codelists`](parameters.qmd):
 
 ``` {python}
 import imfp
 
-# Get parameters and their valid codes
-params = imfp.imf_parameters("PPI")
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
+)
+df.head()
+```
 
-# Fetch annual coal price index data
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=["A"],  # Annual frequency
-    indicator=["WPI"],  # Wholesale Price Index
-    type_of_transformation=["IX"],
-    start_year=2000,
-    end_year=2015
+Dimensions you do not mention are wildcarded, so the request above returns coal for every country in the dataset.
+
+## Two Ways to Pass Dimensions
+
+Filters can go in the `dimensions` dict, or in as keyword arguments, whichever reads better. Keyword names are matched case-insensitively:
+
+``` {python}
+df = imfp.imf_get("PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A")
+df.head(3)
+```
+
+A single code can be given as a bare string; several go in a list:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS",
+    indicator=["PCOAL", "PNGAS"],
+    data_transformation="INDEX",
+    frequency="A",
+)
+sorted(df["INDICATOR"].unique())
+```
+
+Passing the same dimension both ways is an error rather than a silent precedence rule:
+
+``` {python}
+try:
+    imfp.imf_get("PCPS", dimensions={"INDICATOR": "PCOAL"}, indicator="PNGAS")
+except ValueError as e:
+    print(e)
+```
+
+## The Returned Data
+
+`imf_get` returns tidy data — one observation per row, one variable per column:
+
+``` {python}
+df.dtypes
+```
+
+There is one column per dimension, named with its SDMX dimension ID, plus two more:
+
+- `TIME_PERIOD` — the period of the observation, as a string
+- `OBS_VALUE` — the observed value, as a float
+
+`OBS_VALUE` arrives already converted to `float64`, with non-numeric missing-value flags turned into `NaN`.
+
+`TIME_PERIOD` stays a string because its format depends on the frequency of the series: `"2000"` for annual data, `"2000-Q1"` for quarterly, `"2000-M01"` for monthly. See [Suggestions for Usage](usage.qmd#time-period-conversion) for conversion recipes.
+
+## Time Filtering
+
+`start_period` and `end_period` bound the time window. They accept a year, a quarter, or a month:
+
+``` {python}
+#| eval: false
+imfp.imf_get("GFS_SOO", country="ABW", frequency="A", start_period=2000, end_period=2015)
+imfp.imf_get("QNEA", country="USA", frequency="Q", start_period="2010-Q1")
+imfp.imf_get("CPI", country="USA", frequency="M", start_period="2010-01")
+```
+
+A bare year is widened to cover the whole year at the frequency you asked for: with `frequency="Q"`, `start_period=2010` means `2010-Q1` and `end_period=2015` means `2015-Q4`. When you request several frequencies at once, or none, the end bound widens far enough to keep every sub-annual period in that year.
+
+::: {.callout-warning}
+## Not every agency supports time filtering
+
+Time filtering happens server-side, and at present only datasets published by `IMF.STA` support it. For datasets published by other departments, `imf_get` warns you and returns the full time range:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    start_period=2000, end_period=2015,
 )
 ```
 
-This example creates two objects we'll use in the following sections:
-
-- `params`: A dictionary of parameters and their valid codes
-- `df`: The retrieved data frame containing our requested data
-
-## Decoding Returned Data
-
-When you retrieve data using `imf_dataset`, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from `imf_parameters`, so that codes like "A" (Annual) or "W00" (World) become self-explanatory labels.
-
-For example, suppose we want to decode the `frequency`, `country`, and `type_of_transformation` (unit) columns in our dataset. We'll merge the parameter descriptions into our data frame:
+You can check which agency publishes a dataset with `imf_get_dataflows`, and filter the returned data yourself:
 
 ``` {python}
-# Decode frequency codes (e.g., "A" → "Annual")
-decoded_df = df.merge(
-    # Select code-description pairs
-    params['frequency'][['input_code', 'description']],
-    # Match codes in the data frame
-    left_on='frequency',
-    # ...to codes in the parameter data
-    right_on='input_code',
-    # Keep all data rows
-    how='left'
-).drop(columns=['frequency', 'input_code']
-).rename(columns={"description": "frequency"})
+subset = df[df["TIME_PERIOD"].between("2000", "2015")]
+subset["TIME_PERIOD"].agg(["min", "max"])
+```
+:::
 
-# Decode geographic area codes (e.g., "W00" → "World")
-decoded_df = decoded_df.merge(
-    params['country'][['input_code', 'description']],
-    left_on='country',
-    right_on='input_code',
-    how='left'
-).drop(columns=['country', 'input_code']
-).rename(columns={"description":"country"})
+## Empty Results
 
-# Decode unit codes (e.g., "IX" → "Index")
-decoded_df = decoded_df.merge(
-    params['type_of_transformation'][['input_code', 'description']],
-    left_on='type_of_transformation',
-    right_on='input_code',
-    how='left'
-).drop(columns=['type_of_transformation', 'input_code']
-).rename(columns={"description":"type_of_transformation"})
+A query that matches nothing returns an empty DataFrame and warns, rather than raising. This keeps a query that legitimately has no data from breaking an automated pipeline:
 
-decoded_df.head()
+``` {python}
+#| eval: false
+df = imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", data_transformation="USD")
+if df.empty:
+    print("No observations; try relaxing the filters.")
 ```
 
-After decoding, the data frame is much more human-interpretable. This transformation makes the data more accessible for analysis and presentation, while maintaining all the original information.
+The usual causes are a code that is valid for the dimension but has no data for the rest of your filters, or a combination of filters that is individually valid but jointly empty. Relax one dimension at a time to find out which.
+
+## Validating Codes
+
+`imf_get` checks that the *dimensions* you name belong to the dataset:
+
+``` {python}
+try:
+    imfp.imf_get("PCPS", not_a_dimension="X")
+except ValueError as e:
+    print(e)
+```
+
+It does not check the *codes*, because doing so would mean downloading every codelist before every request — often slower than the request itself. The API is the authority on which codes are valid; use `imf_get_codelists` when you want to check ahead of time.
+
+## Inspecting the Request
+
+`print_url=True` prints the URL being requested, which is the most useful thing to include when reporting a problem with a particular query:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    print_url=True,
+)
+```
+
+For the unparsed SDMX-JSON response, use `return_raw=True`:
+
+``` {python}
+raw = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    return_raw=True,
+)
+list(raw.keys())
+```
+
+## Retries
+
+`max_tries` controls how many times a failed request is retried with exponential backoff. The default is 3:
+
+``` {python}
+#| eval: false
+df = imfp.imf_get("PCPS", indicator="PCOAL", max_tries=5)
+```
+
+See [Rate Limits](rate_limits.qmd) for more on working within the API's limits.
