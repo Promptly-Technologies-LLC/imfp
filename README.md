@@ -2,7 +2,7 @@
 
 [![Tests](https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml/badge.svg)](https://github.com/Promptly-Technologies-LLC/imfp/actions/workflows/test.yml)
 [![PyPI Version](https://img.shields.io/pypi/v/imfp.svg)](https://pypi.python.org/pypi/imfp)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-261230.svg)](https://github.com/astral-sh/ruff)
 
 `imfp`, by Christopher C. Smith, is a Python package for downloading data from the [International Monetary Fund's](http://data.imf.org/) RESTful JSON API.
 
@@ -16,27 +16,56 @@ pip install -q --upgrade imfp
 
 ## Quick Start
 
+`imfp` follows the [econdataverse](https://econdataverse.org/) conventions, mirroring the R package [imfapi](https://github.com/Teal-Insights/r-imfapi). Fetching data takes four steps, one per function:
+
 ```python
 import imfp
 
-# Get list of available databases
-databases = imfp.imf_databases()
+# 1. Find a dataset
+dataflows = imfp.imf_get_dataflows()
 
-# Get parameters for a specific database (e.g., PCPS - Primary Commodity Price System)
-params = imfp.imf_parameters("PCPS")
+# 2. See how it can be filtered
+dimensions = imfp.imf_get_datastructure("PCPS")
 
-# Fetch data with specific parameters
-df = imfp.imf_dataset(
-    database_id="PCPS", frequency=["A"], start_year=2000, end_year=2015
+# 3. Find valid codes for those dimensions
+codes = imfp.imf_get_codelists(["INDICATOR", "FREQUENCY"], "PCPS")
+
+# 4. Fetch the data
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
 )
 ```
+
+Dimensions can also be passed as keyword arguments:
+
+```python
+df = imfp.imf_get("PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A")
+```
+
+## Upgrading from 1.x
+
+Version 2.0.0 replaces the old four-function API. The old names still work but emit a `DeprecationWarning`, and will be removed in 3.0.0.
+
+| imfp 1.x | imfp 2.0 |
+|---|---|
+| `imf_databases()` | `imf_get_dataflows()` |
+| `imf_parameters(db)` | `imf_get_codelists(dims, db)` |
+| `imf_parameter_defs(db)` | `imf_get_datastructure(db)` |
+| `imf_dataset(db, ...)` | `imf_get(db, ...)` |
+
+See the [migration guide](https://promptlytechnologies.com/imfp/user-guide/migration.html) for argument-by-argument details.
 
 ## Key Features
 
 - Comprehensive access to IMF's extensive economic databases
-- Parameter discovery
+- Dataset, dimension, and code discovery
+- Tidy `pandas` DataFrame output, with numeric observation values
 - Rate limit and bandwidth management
-- Returns data in pandas DataFrames
 
 ## Contributing
 

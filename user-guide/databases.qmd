@@ -1,68 +1,85 @@
 ---
-title: "Working with Databases"
+title: "Discovering Datasets"
 ---
 
-## Understanding IMF Databases
+## Dataflows
 
-The IMF serves many different databases through its API, and the API needs to know which of these many databases you're requesting data from. Before you can fetch any data, you'll need to:
+The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a **dataflow**, and every request has to name one. So before you can fetch any data, you need to:
 
-1. Get a list of available databases
-2. Find the database ID for the data you want
+1. Get the list of available dataflows
+2. Find the ID of the one you want
 
-Then you can use that database ID to fetch the data.
+That ID is the first argument to every other function in `imfp`.
 
-## Fetching the Database List
+## Listing Dataflows
 
-### Fetching an Index of Databases with the `imf_databases` Function
-
-To obtain the list of available databases and their corresponding IDs, use `imf_databases`:
+`imf_get_dataflows` returns the full catalogue as a tidy DataFrame:
 
 ``` {python}
 import imfp
 
-#Fetch the list of databases available through the IMF API
-databases = imfp.imf_databases()
-databases.head()
+dataflows = imfp.imf_get_dataflows()
+dataflows.shape
 ```
 
+Each row describes one dataset:
 
-This function returns the IMF’s listing of 71 databases available through the API.
-
-## Exploring the Database List
-
-To view and explore the database list, it’s possible to explore subsets of the data frame by row number with `databases.loc`:
+| Column | Meaning |
+|---|---|
+| `id` | The dataflow ID, e.g. `PCPS`. This is what you pass to the other functions. |
+| `name` | Human-readable title. |
+| `description` | Longer prose description, where the IMF provides one. |
+| `version` | Version of the dataflow definition. |
+| `agency` | The IMF department that publishes it, e.g. `IMF.STA`. |
+| `structure` | URN of the datastructure definition that backs it. |
+| `last_updated` | When the dataset was last refreshed. |
 
 ``` {python}
-# View a subset consisting of rows 5 through 9
-databases.loc[5:9]
+dataflows[["id", "name", "agency", "last_updated"]].head()
 ```
 
+## Finding the Dataset You Want
 
-Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using `str.contains` and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:
+Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the `name` column for a keyword:
 
 ``` {python}
-databases[databases['description'].str.contains("Commodity")]
+dataflows[dataflows["name"].str.contains("Commodity", case=False, na=False)][
+    ["id", "name"]
+]
 ```
 
-See also [Working with Large Data Frames](usage.qmd#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window. 
+The `description` column often contains terms the title does not, so it is worth searching too:
 
-## Best Practices
+``` {python}
+matches = dataflows[
+    dataflows["description"].str.contains("balance of payments", case=False, na=False)
+]
+matches[["id", "name"]].head()
+```
 
-1. **Cache the Database List**: The database list rarely changes. Consider saving it locally if you'll be making multiple queries. See [Caching Strategy](rate_limits.qmd#caching-strategy) for sample code.
+## Checking How Current a Dataset Is
 
-2. **Search Strategically**: Use specific search terms to find relevant databases. For example:
+`last_updated` tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:
 
-   - "Price" for price indices
-   - "Trade" for trade statistics
-   - "Financial" for financial data
+``` {python}
+import pandas as pd
 
-3. **Use a Browser Viewer**: See [Working with Large Data Frames](usage.qmd#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window.
+recent = dataflows.dropna(subset=["last_updated"]).copy()
+recent["last_updated"] = pd.to_datetime(recent["last_updated"], format="mixed")
+recent.sort_values("last_updated", ascending=False)[["id", "name", "last_updated"]].head()
+```
 
-4. **Note Database IDs**: Once you find a database you'll use frequently, note its database ID for future reference.
+## Reading the Dataflow ID
 
-## Next Steps
+The `id` column is the value you pass everywhere else:
 
-Once you've identified the database you want to use, you'll need to:
+``` {python}
+pcps = dataflows[dataflows["id"] == "PCPS"]
+pcps[["id", "name", "agency", "version"]]
+```
 
-1. Get the list of parameters for that database (see [Parameters](parameters.qmd))
-2. Use those parameters to fetch your data (see [Datasets](datasets.qmd))
+Note the `agency`. Different IMF departments publish through the same API but do not all support the same features — in particular, only `IMF.STA` currently honors server-side time filtering. `imf_get` warns you when you ask for a time window that the publishing agency will ignore. See [Fetching Data](datasets.qmd#time-filtering).
+
+## Next Step
+
+With a dataflow ID in hand, the next step is finding out how that dataset can be filtered. See [Dimensions and Codes](parameters.qmd).

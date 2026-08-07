@@ -1,5 +1,15 @@
+"""Legacy ``imf_*`` interface, retained for backward compatibility.
+
+Every function in this module is deprecated in favor of the econdataverse-style
+API in :mod:`imfp.api`. See ``_DEPRECATION_MAP`` for the replacement of each.
+
+The request-building and response-parsing mechanics these functions rely on
+live in :mod:`imfp.utils`, shared with the new API so both paths return
+identical data. ``_parse_imf_sdmx_json`` and ``_transform_period_for_frequency``
+are re-exported here because they were previously defined in this module.
+"""
+
 import logging
-import re
 from typing import Any, Literal, TypeVar, overload
 from urllib.parse import urlencode
 from warnings import warn
@@ -7,152 +17,52 @@ from warnings import warn
 import type_enforced
 from pandas import DataFrame
 
+from .api import imf_get_dataflows
 from .utils import (
     IMF_API_BASE_URL,
+    _build_data_request,
+    _component_codelist,
     _download_parse,
+    _dsd_component_rows,
     _extract_first,
     _find_dataflow,
-    _get_datastructure_components,
     _imf_dimensions,
 )
+
+# _parse_imf_sdmx_json and _transform_period_for_frequency moved to utils so the
+# new API can share them. They are re-exported here, in the explicit
+# "import X as X" form, because they used to be defined in this module and the
+# pre-2.0 tests still import them from it.
+from .utils import _parse_imf_sdmx_json as _parse_imf_sdmx_json
+from .utils import _transform_period_for_frequency as _transform_period_for_frequency
 
 logger = logging.getLogger(__name__)
 
 _FREQ_ALIASES = ("freq", "frequency")
 _REF_AREA_ALIASES = ("ref_area", "refarea", "ref-area", "country", "geo")
-_PERIOD_FREQ_SUFFIX = re.compile(r"^\d{4}-(M|Q|A|W)\d+$")
-_PERIOD_MONTH = re.compile(r"^\d{4}-\d{2}$")
-_PERIOD_YEAR = re.compile(r"^\d{4}$")
 
 # Dimension filter kwargs accept one code or a list of codes.
 DimensionFilter = str | list[str]
 _T = TypeVar("_T")
 
+# Legacy function -> the econdataverse-style function that replaces it.
+_DEPRECATION_MAP = {
+    "imf_databases": "imf_get_dataflows",
+    "imf_parameters": "imf_get_codelists",
+    "imf_parameter_defs": "imf_get_datastructure",
+    "imf_dataset": "imf_get",
+}
 
-def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
-    """
-    Parse SDMX JSON message from new API into a DataFrame.
 
-    Matches the R implementation's parse_imf_sdmx_json function.
-
-    Args:
-        message: The JSON response from the API
-
-    Returns:
-        DataFrame with one row per observation
-    """
-    # Defensive checks
-    if not message or not message.get("data"):
-        return DataFrame()
-
-    data_sets = message.get("data", {}).get("dataSets")
-    structures = message.get("data", {}).get("structures")
-
-    if not data_sets or len(data_sets) < 1 or not structures or len(structures) < 1:
-        return DataFrame()
-
-    ds = data_sets[0]
-    st = structures[0]
-
-    # Dimensions metadata
-    series_dims = st.get("dimensions", {}).get("series", [])
-    obs_dims = st.get("dimensions", {}).get("observation", [])
-    obs_dim = obs_dims[0] if obs_dims and len(obs_dims) >= 1 else None
-
-    # Helper to map index -> code/id
-    def index_to_code(dim_def: dict[str, Any] | None, idx: Any) -> Any:
-        if not dim_def or not dim_def.get("values") or len(dim_def["values"]) < 1:
-            return None
-        try:
-            i = int(idx)
-            i = i + 1  # Convert from 0-based to 1-based
-            if i < 1 or i > len(dim_def["values"]):
-                return None
-            v = dim_def["values"][i - 1]  # Python is 0-based
-            return v.get("id") or v.get("value")
-        except (ValueError, IndexError, TypeError):
-            return None
-
-    def obs_index_to_period(idx: Any) -> Any:
-        if not obs_dim or not obs_dim.get("values") or len(obs_dim["values"]) < 1:
-            return None
-        try:
-            i = int(idx)
-            i = i + 1  # Convert from 0-based to 1-based
-            if i < 1 or i > len(obs_dim["values"]):
-                return None
-            v = obs_dim["values"][i - 1]  # Python is 0-based
-            return v.get("value") or v.get("id")
-        except (ValueError, IndexError, TypeError):
-            return None
-
-    # No series present -> empty DataFrame
-    if not ds.get("series") or len(ds["series"]) == 0:
-        return DataFrame()
-
-    # Prepare column names for series dimensions
-    series_dim_ids = []
-    if series_dims and len(series_dims) > 0:
-        series_dim_ids = [_extract_first(dim.get("id")) for dim in series_dims]
-
-    # Build rows
-    rows = []
-    series_keys = list(ds["series"].keys())
-
-    for sk in series_keys:
-        s_entry = ds["series"][sk]
-        # Decode series key indices to codes
-        sk_parts = sk.split(":")
-        # Ensure length matches; pad if necessary
-        if len(sk_parts) < len(series_dim_ids):
-            sk_parts.extend([None] * (len(series_dim_ids) - len(sk_parts)))
-
-        series_codes = []
-        if len(series_dim_ids) > 0:
-            for dim_def, idx in zip(series_dims, sk_parts):
-                code = index_to_code(dim_def, idx) if idx is not None else None
-                series_codes.append(code)
-
-        # Process observations
-        obs_keys = list(s_entry.get("observations", {}).keys())
-        if len(obs_keys) == 0:
-            continue
-
-        for ok in obs_keys:
-            obs = s_entry["observations"][ok]
-            # Observation value is the first element; handle None gracefully
-            obs_val_raw = obs[0] if len(obs) >= 1 else None
-            obs_val_num = None
-
-            if obs_val_raw is not None:
-                try:
-                    obs_val_num = float(obs_val_raw)
-                except (ValueError, TypeError):
-                    # Map common non-numeric flags to None
-                    if isinstance(obs_val_raw, str) and obs_val_raw.upper() in (
-                        "NA",
-                        "NP",
-                        "ND",
-                        "N/A",
-                    ):
-                        obs_val_num = None
-
-            time_period = obs_index_to_period(ok)
-
-            # Build row
-            row = {}
-            for dim_id, code in zip(series_dim_ids, series_codes):
-                row[dim_id] = code
-            row["TIME_PERIOD"] = time_period
-            row["OBS_VALUE"] = obs_val_num
-            rows.append(row)
-
-    if len(rows) == 0:
-        return DataFrame()
-
-    # Convert to DataFrame
-    df = DataFrame(rows)
-    return df
+def _warn_deprecated(name: str) -> None:
+    """Emit the standard deprecation notice for a legacy ``imf_*`` function."""
+    warn(
+        f"imfp.{name}() is deprecated and will be removed in imfp 3.0.0. "
+        f"Use imfp.{_DEPRECATION_MAP[name]}() instead. See "
+        "https://promptlytechnologies.com/imfp/ for the migration guide.",
+        DeprecationWarning,
+        stacklevel=3,
+    )
 
 
 def _normalize_year_arg(value: Any, arg_name: str) -> str | None:
@@ -303,116 +213,14 @@ def _normalized_dimension_filters(
     return norm_dims
 
 
-def _series_key_rows(components: dict[str, Any]) -> list[dict[str, Any]]:
-    """Return non-time dimensions sorted by position for series-key construction."""
-    dims = components.get("dimensionList", {}).get("dimensions", [])
-    time_dims = components.get("dimensionList", {}).get("timeDimensions", [])
-    all_dim_rows: list[dict[str, Any]] = []
-    for dim in list(dims) + list(time_dims or []):
-        if not dim:
-            continue
-        dim_id = _extract_first(dim.get("id"))
-        position = dim.get("position")
-        dim_type = _extract_first(dim.get("type"))
-        if dim_id and position is not None:
-            all_dim_rows.append(
-                {
-                    "id": dim_id.upper(),
-                    "position": int(position),
-                    "type": dim_type,
-                }
-            )
-    key_rows = [row for row in all_dim_rows if row["type"] != "TimeDimension"]
-    key_rows.sort(key=lambda x: x["position"])
-    return key_rows
-
-
-def _build_series_key(
-    key_rows: list[dict[str, Any]], norm_dims: dict[str, list[str]]
-) -> str:
-    available_dims = {row["id"] for row in key_rows}
-    unknown = set(norm_dims) - available_dims
-    if unknown:
-        raise ValueError(
-            f"Unknown dimension(s): {', '.join(sorted(unknown))}. "
-            f"Available dimensions: {', '.join(sorted(available_dims))}"
-        )
-    segments = []
-    for row in key_rows:
-        vals = norm_dims.get(row["id"], [])
-        # Omitted dimensions (including omitted frequency) become '*' wildcards.
-        segments.append("*" if not vals else "+".join(vals))
-    return ".".join(segments)
-
-
-def _transform_period_for_frequency(
-    period: str | None,
-    frequency: list[str] | None,
-    bound: Literal["start", "end"] = "start",
-) -> str | None:
-    """Transform a user time period into the SDMX filter form for a frequency.
-
-    When ``frequency`` is a single code, year bounds use that frequency's first
-    (start) or last (end) period of the year. When frequency is omitted or
-    multi-valued, start uses the earliest cross-frequency suffix (``-A1``) and
-    end uses a high sentinel (``-W99``) so quarterly/monthly periods in the
-    requested year are not excluded by lexicographic comparison.
-    """
-    if not period:
-        return period
-    if _PERIOD_FREQ_SUFFIX.match(period):
-        return period
-    if _PERIOD_MONTH.match(period):
-        year, month = period.split("-")
-        return f"{year}-M{month}"
-    if _PERIOD_YEAR.match(period):
-        start_suffixes = {"A": "-A1", "Q": "-Q1", "M": "-M01", "W": "-W01"}
-        end_suffixes = {"A": "-A1", "Q": "-Q4", "M": "-M12", "W": "-W53"}
-        if frequency and len(frequency) == 1:
-            freq = frequency[0].upper()
-            suffix_map = end_suffixes if bound == "end" else start_suffixes
-            suffix = suffix_map.get(freq, "-A1" if bound == "start" else "-W99")
-        else:
-            suffix = "-A1" if bound == "start" else "-W99"
-        return f"{period}{suffix}"
-    return period
-
-
-def _build_time_query_params(
-    start_period: str | None,
-    end_period: str | None,
-    user_frequency: list[str] | None,
-    provider_agency: str,
-) -> dict[str, str]:
-    query_params = {
-        "dimensionAtObservation": "TIME_PERIOD",
-        "attributes": "dsd",
-        "measures": "all",
-    }
-    time_filters = []
-    if start_period:
-        time_filters.append(
-            f"ge:{_transform_period_for_frequency(start_period, user_frequency, bound='start')}"
-        )
-    if end_period:
-        time_filters.append(
-            f"le:{_transform_period_for_frequency(end_period, user_frequency, bound='end')}"
-        )
-    if time_filters:
-        if provider_agency == "IMF.STA":
-            query_params["c[TIME_PERIOD]"] = "+".join(time_filters)
-        else:
-            warn(
-                f"Agency {provider_agency} does not support time filters; "
-                "time window will be ignored."
-            )
-    return query_params
-
-
 @type_enforced.Enforcer
 def imf_databases(times: int = 3) -> DataFrame:
     """
     List IMF database IDs and descriptions
+
+    .. deprecated:: 2.0.0
+       Use :func:`imfp.imf_get_dataflows` instead. This function will be
+       removed in imfp 3.0.0.
 
     Returns a DataFrame with database_id and text description for each
     database available through the IMF API endpoint.
@@ -432,48 +240,32 @@ def imf_databases(times: int = 3) -> DataFrame:
     # Return first 6 IMF database IDs and descriptions
     databases = imf_databases()
     """
-    # Use new API endpoint: structure/dataflow/all/*/+ where '+' means latest stable version
-    raw_dl = _download_parse("structure/dataflow/all/*/+", times=times)
+    _warn_deprecated("imf_databases")
 
-    # New API structure: body["data"]["dataflows"] is a list of dataflow objects
-    raw_dataflows = raw_dl.get("data", {}).get("dataflows")
-    if raw_dataflows is None:
-        raise ValueError("No dataflows found in API response.")
+    dataflows = imf_get_dataflows(max_tries=times)
 
-    # Extract database_id and description from each dataflow
-    # The new API structure has: id, name, description, version, agencyID, structure, annotations
-    # In the R implementation, these are lists and we take the first element [[1]]
-    database_id = []
-    description = []
+    # The legacy contract calls the dataflow's name its "description", and
+    # promises no missing values, so fall back through name -> description -> "".
+    description = dataflows["name"].fillna(dataflows["description"]).fillna("")
 
-    for dataflow in raw_dataflows:
-        # Extract id (database_id)
-        dataflow_id = _extract_first(dataflow.get("id"))
-        if dataflow_id is None:
-            continue  # Skip if no ID
-
-        # Extract name (used as description for backward compatibility)
-        # The old API used Name["#text"] which was the name, not description
-        name = _extract_first(dataflow.get("name"))
-        if name is None:
-            # Fallback to description if name is not available
-            name = _extract_first(dataflow.get("description"))
-            if name is None:
-                name = ""  # Empty string if neither name nor description available
-
-        database_id.append(dataflow_id)
-        description.append(name)
-
-    database_list = DataFrame({"database_id": database_id, "description": description})
-    return database_list
+    return DataFrame(
+        {
+            "database_id": dataflows["id"],
+            "description": description,
+        }
+    ).reset_index(drop=True)
 
 
 @type_enforced.Enforcer
 def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     """
     List input parameters and available parameter values for use in
-
     making API requests from a given IMF database.
+
+    .. deprecated:: 2.0.0
+       Use :func:`imfp.imf_get_codelists` instead, which returns a single tidy
+       DataFrame rather than a dict of DataFrames. This function will be
+       removed in imfp 3.0.0.
 
     Parameters
     ----------
@@ -499,74 +291,43 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     # Commodity Price System database
     params = imf_parameters(database_id='PCPS')
     """
+    _warn_deprecated("imf_parameters")
+
     try:
-        codelist = _imf_dimensions(database_id, times)
+        rows = _dsd_component_rows(database_id, times=times)
     except ValueError as e:
-        if "There is an issue" in str(e) or "not found" in str(e).lower():
-            raise ValueError(
-                f"{e}\n\nDid you supply a valid database_id? Use imf_databases to find."
-            )
-        else:
-            raise ValueError(e)
-
-    def fetch_parameter_data(k: int, times: int) -> DataFrame:
-        codelist_id = str(codelist.loc[k, "code"])
-        agency_raw = codelist.loc[k, "agency"]
-        codelist_agency = None if agency_raw is None else str(agency_raw)
-
-        # Fetch codelist using new API
-        # Try agency-specific path first to get the correct version,
-        # then fallback to 'all' if the agency path fails
-        cl_paths = []
-        if codelist_agency:
-            cl_paths.append(f"structure/codelist/{codelist_agency}/{codelist_id}/+")
-        cl_paths.append(f"structure/codelist/all/{codelist_id}/+")
-
-        cl_body = None
-        for cl_path in cl_paths:
-            try:
-                cl_body = _download_parse(cl_path, times=times)
-                break
-            except ValueError:
-                continue
-
-        if cl_body is None:
-            raise ValueError(f"Codelist {codelist_id} not found.")
-
-        clists = cl_body.get("data", {}).get("codelists", [])
-        if not clists or len(clists) < 1:
-            raise ValueError(f"Empty codelists payload for {codelist_id}.")
-
-        codes_list = clists[0].get("codes", [])
-        if not codes_list:
-            raise ValueError(f"No codes found in codelist {codelist_id}.")
-
-        # Extract codes and descriptions
-        input_codes = []
-        code_descriptions = []
-
-        for code_obj in codes_list:
-            code_id = _extract_first(code_obj.get("id"))
-            code_name = _extract_first(code_obj.get("name"))
-            code_desc = _extract_first(code_obj.get("description"))
-
-            if code_id:
-                input_codes.append(code_id)
-                # Use name if available, otherwise description, otherwise code_id
-                desc = code_name if code_name else (code_desc if code_desc else code_id)
-                code_descriptions.append(desc)
-
-        return DataFrame(
-            {
-                "input_code": input_codes,
-                "description": code_descriptions,
-            }
+        raise ValueError(
+            f"{e}\n\nDid you supply a valid database_id? Use imf_databases to find."
         )
 
-    parameter_list: dict[str, DataFrame] = {
-        str(codelist.loc[k, "parameter"]): fetch_parameter_data(k, times)
-        for k in range(codelist.shape[0])
-    }
+    memo: dict[str, Any] = {}
+    parameter_list = {}
+    for row in rows:
+        ref, codes = _component_codelist(row["component"], times=times, memo=memo)
+        # inputs_only semantics: unenumerated dimensions are not filterable.
+        if not codes:
+            continue
+
+        input_codes = []
+        descriptions = []
+        for code in codes:
+            code_id = _extract_first(code.get("id"))
+            if not code_id:
+                continue
+            name = _extract_first(code.get("name"))
+            description = _extract_first(code.get("description"))
+            input_codes.append(code_id)
+            descriptions.append(name or description or code_id)
+
+        parameter_list[row["dimension_id"].lower()] = DataFrame(
+            {"input_code": input_codes, "description": descriptions}
+        )
+
+    if not parameter_list:
+        raise ValueError(
+            f"No filterable parameters found for {database_id}. "
+            "Did you supply a valid database_id? Use imf_databases to find."
+        )
 
     return parameter_list
 
@@ -578,6 +339,10 @@ def imf_parameter_defs(
     """
     Get text descriptions of input parameters used in making API
     requests from a given IMF database
+
+    .. deprecated:: 2.0.0
+       Use :func:`imfp.imf_get_datastructure` instead. This function will be
+       removed in imfp 3.0.0.
 
     Parameters
     ----------
@@ -604,6 +369,8 @@ def imf_parameter_defs(
     # the Primary Commodity Price System database
     param_defs = imf_parameter_defs(database_id='PCPS')
     """
+    _warn_deprecated("imf_parameter_defs")
+
     try:
         parameterlist = _imf_dimensions(database_id, times, inputs_only)[
             ["parameter", "description"]
@@ -689,6 +456,10 @@ def imf_dataset(
     """
     Download a data series from the IMF.
 
+    .. deprecated:: 2.0.0
+       Use :func:`imfp.imf_get` instead. This function will be removed in
+       imfp 3.0.0.
+
     Args:
         database_id (str): Database ID for the database from which you would
                            like to request data. Can be found using
@@ -723,6 +494,8 @@ def imf_dataset(
         database header, and whose second item is the pandas DataFrame. If
         return_raw == True, returns the raw JSON fetched from the API endpoint.
     """
+    _warn_deprecated("imf_dataset")
+
     start_period = _normalize_year_arg(start_year, "start_year")
     end_period = _normalize_year_arg(end_year, "end_year")
     dimension_filters = _validate_dimension_filters(kwargs)
@@ -763,21 +536,15 @@ def imf_dataset(
 
     # One dataflow lookup serves both DSD resolution and provider agency.
     flow_row = _find_dataflow(database_id, times=times)
-    components = _get_datastructure_components(
-        database_id, times=times, flow_row=flow_row
-    )
-    key_rows = _series_key_rows(components)
-    key = _build_series_key(key_rows, norm_dims)
-
-    available_dims = {row["id"] for row in key_rows}
-    freq_dim_id = next((d for d in ("FREQUENCY", "FREQ") if d in available_dims), None)
-    user_frequency = norm_dims.get(freq_dim_id) if freq_dim_id else None
-    provider_agency = _extract_first(flow_row.get("agencyID")) or "all"
-    query_params = _build_time_query_params(
-        start_period, end_period, user_frequency, provider_agency
+    data_path, query_params = _build_data_request(
+        database_id,
+        norm_dims,
+        start_period=start_period,
+        end_period=end_period,
+        times=times,
+        flow_row=flow_row,
     )
 
-    data_path = f"data/dataflow/{provider_agency}/{database_id}/+/{key}"
     if print_url:
         full_url = f"{IMF_API_BASE_URL.rstrip('/')}/{data_path}"
         if query_params:

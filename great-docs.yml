@@ -68,6 +68,7 @@ user_guide:
     contents:
       - usage.qmd
       - rate_limits.qmd
+      - migration.qmd
   - section: "Examples"
     contents:
       - demo.qmd
@@ -81,15 +82,29 @@ user_guide:
 # - Add 'desc:' to sections for descriptions
 
 reference:
-  - title: Functions
-    desc: Public functions for discovering IMF databases and downloading data
+  - title: Fetching Data
+    desc: >
+      The econdataverse-style workflow: discover a dataset, inspect how it can
+      be filtered, look up valid codes, then request observations.
+    contents:
+      - imf_get_dataflows
+      - imf_get_datastructure
+      - imf_get_codelists
+      - imf_get
+  - title: Configuration
+    desc: Settings that affect how requests are made
+    contents:
+      - set_imf_app_name
+      - set_imf_wait_time
+  - title: Deprecated
+    desc: >
+      The pre-2.0 interface. These still work but emit a DeprecationWarning and
+      will be removed in imfp 3.0.0. See the migration guide.
     contents:
       - imf_databases
       - imf_parameters
       - imf_parameter_defs
       - imf_dataset
-      - set_imf_app_name
-      - set_imf_wait_time
 
 # Site URL
 # --------
