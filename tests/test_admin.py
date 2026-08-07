@@ -16,11 +16,11 @@ def test_set_imf_app_name():
         set_imf_app_name("imfp")
 
     with pytest.raises(TypeError):
-        set_imf_app_name(None)
+        set_imf_app_name(None)  # ty: ignore[invalid-argument-type]
     with pytest.raises(TypeError):
-        set_imf_app_name(float("nan"))
+        set_imf_app_name(float("nan"))  # ty: ignore[invalid-argument-type]
     with pytest.raises(TypeError):
-        set_imf_app_name(["z", "z"])
+        set_imf_app_name(["z", "z"])  # ty: ignore[invalid-argument-type]
 
     with pytest.raises(ValueError):
         set_imf_app_name("z" * 256)

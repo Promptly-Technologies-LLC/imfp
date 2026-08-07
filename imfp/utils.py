@@ -21,6 +21,58 @@ P = ParamSpec("P")
 R = TypeVar("R")
 
 
+# --- Argument validation -----------------------------------------------------
+#
+# Public functions validate their own arguments rather than relying on a runtime
+# enforcement decorator. Most callers reach this library from notebooks and never
+# run a type checker, so a bad argument needs to fail at the call site with a
+# message naming the argument. Wrong type raises TypeError; a value of the right
+# type that is out of range raises ValueError.
+
+
+def _require_str(value: Any, name: str) -> str:
+    """Return ``value`` if it is a string, else raise TypeError naming ``name``."""
+    if not isinstance(value, str):
+        raise TypeError(
+            f"{name} must be a string; got {type(value).__name__} ({value!r})."
+        )
+    return value
+
+
+def _require_bool(value: Any, name: str) -> bool:
+    """Return ``value`` if it is a bool, else raise TypeError naming ``name``."""
+    if not isinstance(value, bool):
+        raise TypeError(
+            f"{name} must be True or False; got {type(value).__name__} ({value!r})."
+        )
+    return value
+
+
+def _require_int(value: Any, name: str, minimum: int | None = None) -> int:
+    """
+    Return ``value`` if it is an int (and at least ``minimum``, when given).
+
+    ``bool`` is rejected even though it subclasses ``int``: passing True where a
+    retry count belongs is a mistake, not a request for one attempt.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise TypeError(
+            f"{name} must be an integer; got {type(value).__name__} ({value!r})."
+        )
+    if minimum is not None and value < minimum:
+        raise ValueError(f"{name} must be at least {minimum}; got {value}.")
+    return value
+
+
+def _require_number(value: Any, name: str) -> int | float:
+    """Return ``value`` if it is a real number, else raise TypeError."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise TypeError(
+            f"{name} must be a number; got {type(value).__name__} ({value!r})."
+        )
+    return value
+
+
 def _min_wait_time_limited(
     default_wait_time: float = 1.5,
 ) -> Callable[[Callable[P, R]], Callable[P, R]]:

@@ -16,10 +16,9 @@ one variable per column.
 """
 
 import logging
-from typing import Any
+from typing import Any, Literal, overload
 from warnings import warn
 
-import type_enforced
 from pandas import DataFrame
 
 from .utils import (
@@ -32,19 +31,19 @@ from .utils import (
     _extract_first,
     _get_dataflow_rows,
     _parse_imf_sdmx_json,
+    _require_bool,
+    _require_int,
+    _require_str,
 )
 
 logger = logging.getLogger(__name__)
 
-# Dimension filter kwargs accept one code or a list of codes. They are
-# annotated as Any because type_enforced cannot combine an annotated **kwargs
-# with optional-defaulted parameters; _normalize_dimensions validates them at
-# runtime and reports better errors than the enforcer would.
+# Dimension filter kwargs accept one code or a list of codes.
 DimensionFilter = str | list[str]
 
 
 def _normalize_dimensions(
-    dimensions: dict | None, kwargs: dict[str, Any]
+    dimensions: dict[str, Any] | None, kwargs: dict[str, Any]
 ) -> dict[str, list[str]]:
     """
     (Internal) Merge and normalize dimension filters into ``{DIM: [codes]}``.
@@ -60,9 +59,15 @@ def _normalize_dimensions(
         dict: Upper-cased dimension IDs mapped to lists of string codes.
 
     Raises:
-        ValueError: If the same dimension is supplied twice, or a code is not
-            a string.
+        TypeError: If `dimensions` is not a dict, or a code is not a string.
+        ValueError: If the same dimension is supplied twice.
     """
+    if dimensions is not None and not isinstance(dimensions, dict):
+        raise TypeError(
+            "dimensions must be a dict mapping dimension IDs to codes; "
+            f"got {type(dimensions).__name__} ({dimensions!r})."
+        )
+
     merged: dict[str, list[str]] = {}
 
     for source in (dimensions or {}, kwargs or {}):
@@ -79,7 +84,7 @@ def _normalize_dimensions(
             if isinstance(codes, str):
                 codes = [codes]
             elif isinstance(codes, DataFrame):
-                raise ValueError(
+                raise TypeError(
                     f"Dimension '{key}' was given a DataFrame. The econdataverse "
                     "API takes plain code strings; use "
                     "imf_get_codelists(...)['code'].tolist() to get them."
@@ -92,7 +97,7 @@ def _normalize_dimensions(
 
             bad = [c for c in codes if not isinstance(c, str)]
             if bad:
-                raise ValueError(
+                raise TypeError(
                     f"Dimension '{key}' must be given string code(s); got {bad!r}."
                 )
             normalized: list[str] = [str(code) for code in codes]
@@ -114,14 +119,16 @@ def _normalize_period(period: Any, argument_name: str) -> str | None:
         str: The period as a string, or None.
 
     Raises:
-        ValueError: If the period is not a scalar year or period string.
+        TypeError: If the period is not a scalar year or period string.
+        ValueError: If the period is an empty string.
     """
     if period is None:
         return None
     if isinstance(period, bool) or not isinstance(period, (int, str)):
-        raise ValueError(
+        raise TypeError(
             f"{argument_name} must be a year or period string "
-            f'(e.g. 2015, "2015", "2015-Q1", "2015-01"); got {period!r}.'
+            f'(e.g. 2015, "2015", "2015-Q1", "2015-01"); got '
+            f"{type(period).__name__} ({period!r})."
         )
     period = str(period).strip()
     if not period:
@@ -129,7 +136,6 @@ def _normalize_period(period: Any, argument_name: str) -> str | None:
     return period
 
 
-@type_enforced.Enforcer
 def imf_get_dataflows(max_tries: int = 3) -> DataFrame:
     """
     List every dataset published through the IMF Data API.
@@ -147,13 +153,16 @@ def imf_get_dataflows(max_tries: int = 3) -> DataFrame:
         ``last_updated``.
 
     Raises:
-        ValueError: If the API returns no dataflows.
+        TypeError: If max_tries is not an integer.
+        ValueError: If max_tries is less than 1, or the API returns no dataflows.
 
     Examples:
         # Find the ID of the Primary Commodity Price System dataset
         dataflows = imf_get_dataflows()
         dataflows[dataflows["id"] == "PCPS"]
     """
+    _require_int(max_tries, "max_tries", minimum=1)
+
     rows = []
     for flow in _get_dataflow_rows(times=max_tries):
         flow_id = _extract_first(flow.get("id"))
@@ -185,7 +194,6 @@ def imf_get_dataflows(max_tries: int = 3) -> DataFrame:
     )
 
 
-@type_enforced.Enforcer
 def imf_get_datastructure(
     dataflow_id: str,
     max_tries: int = 3,
@@ -216,12 +224,19 @@ def imf_get_datastructure(
         ``type``, and ``position``.
 
     Raises:
-        ValueError: If the dataflow does not exist or defines no dimensions.
+        TypeError: If an argument has the wrong type.
+        ValueError: If max_tries is less than 1, or the dataflow does not exist
+            or defines no dimensions.
 
     Examples:
         # See what the Primary Commodity Price System can be filtered on
         imf_get_datastructure("PCPS")
     """
+    _require_str(dataflow_id, "dataflow_id")
+    _require_int(max_tries, "max_tries", minimum=1)
+    _require_bool(include_time, "include_time")
+    _require_bool(include_measures, "include_measures")
+
     rows = _dsd_component_rows(
         dataflow_id,
         times=max_tries,
@@ -245,7 +260,6 @@ def imf_get_datastructure(
     return result
 
 
-@type_enforced.Enforcer
 def imf_get_codelists(
     dimension_ids: str | list[str],
     dataflow_id: str,
@@ -271,8 +285,9 @@ def imf_get_codelists(
         enumerated (they accept free-form values) contribute no rows.
 
     Raises:
-        ValueError: If the dataflow does not exist, or if a requested dimension
-            is not part of it.
+        TypeError: If an argument has the wrong type.
+        ValueError: If no dimension is named, if max_tries is less than 1, or if
+            the dataflow does not exist or lacks a requested dimension.
 
     Examples:
         # Find the commodity indicator codes for PCPS
@@ -281,12 +296,25 @@ def imf_get_codelists(
         # Fetch two dimensions at once
         imf_get_codelists(["COMMODITY", "FREQ"], "PCPS")
     """
+    _require_str(dataflow_id, "dataflow_id")
+    _require_int(max_tries, "max_tries", minimum=1)
+
     if isinstance(dimension_ids, str):
         dimension_ids = [dimension_ids]
+    elif not isinstance(dimension_ids, (list, tuple)):
+        raise TypeError(
+            "dimension_ids must be a dimension ID or a list of them; "
+            f"got {type(dimension_ids).__name__} ({dimension_ids!r})."
+        )
+
+    bad = [d for d in dimension_ids if not isinstance(d, str)]
+    if bad:
+        raise TypeError(f"dimension_ids must all be strings; got {bad!r}.")
+
     if not dimension_ids:
         raise ValueError("dimension_ids must name at least one dimension.")
 
-    requested = [str(d).upper() for d in dimension_ids]
+    requested = [d.upper() for d in dimension_ids]
 
     rows = _dsd_component_rows(
         dataflow_id,
@@ -347,17 +375,42 @@ def imf_get_codelists(
     )
 
 
-@type_enforced.Enforcer
+@overload
 def imf_get(
     dataflow_id: str,
-    dimensions: dict | None = None,
+    dimensions: dict[str, Any] | None = None,
+    start_period: int | str | None = None,
+    end_period: int | str | None = None,
+    max_tries: int = 3,
+    print_url: bool = False,
+    return_raw: Literal[False] = False,
+    **kwargs: Any,
+) -> DataFrame: ...
+
+
+@overload
+def imf_get(
+    dataflow_id: str,
+    dimensions: dict[str, Any] | None = None,
+    start_period: int | str | None = None,
+    end_period: int | str | None = None,
+    max_tries: int = 3,
+    print_url: bool = False,
+    return_raw: Literal[True] = True,
+    **kwargs: Any,
+) -> dict[str, Any]: ...
+
+
+def imf_get(
+    dataflow_id: str,
+    dimensions: dict[str, Any] | None = None,
     start_period: int | str | None = None,
     end_period: int | str | None = None,
     max_tries: int = 3,
     print_url: bool = False,
     return_raw: bool = False,
     **kwargs: Any,
-) -> DataFrame | dict:
+) -> DataFrame | dict[str, Any]:
     """
     Fetch observations from an IMF dataset.
 
@@ -393,8 +446,11 @@ def imf_get(
         JSON dict instead.
 
     Raises:
-        ValueError: If the dataflow does not exist, if a named dimension is not
-            part of it, or if the period arguments are malformed.
+        TypeError: If an argument has the wrong type, including a dimension
+            given something other than a code string or list of them.
+        ValueError: If max_tries is less than 1, if the same dimension is
+            supplied twice, or if the dataflow does not exist or lacks a named
+            dimension.
 
     Examples:
         # Annual coal prices, 2000-2015
@@ -408,6 +464,11 @@ def imf_get(
         # The same query using keyword arguments
         imf_get("PCPS", commodity="PCOAL", freq="A", start_period=2000)
     """
+    _require_str(dataflow_id, "dataflow_id")
+    _require_int(max_tries, "max_tries", minimum=1)
+    _require_bool(print_url, "print_url")
+    _require_bool(return_raw, "return_raw")
+
     dimension_filters = _normalize_dimensions(dimensions, kwargs)
     start = _normalize_period(start_period, "start_period")
     end = _normalize_period(end_period, "end_period")

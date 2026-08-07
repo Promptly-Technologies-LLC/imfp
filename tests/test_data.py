@@ -95,7 +95,7 @@ def test_imf_parameter_defs(set_options, use_saved_responses):
     )
 
     with pytest.raises(Exception):
-        imf_parameter_defs(times=1)
+        imf_parameter_defs(times=1)  # ty: ignore[missing-argument]
     with pytest.raises(Exception):
         imf_parameters("not_a_real_database", times=1)
 
@@ -112,7 +112,7 @@ def test_imf_parameters(set_options, use_saved_responses):
     # Under SDMX 3.0, frequency sets may expand. Require at least Annual and Quarterly present.
     assert {"A", "Q"}.issubset(available)
     with pytest.raises(Exception):
-        imf_parameters(times=1)
+        imf_parameters(times=1)  # ty: ignore[missing-argument]
     with pytest.raises(Exception):
         imf_parameters(database_id="not_a_real_database", times=1)
 

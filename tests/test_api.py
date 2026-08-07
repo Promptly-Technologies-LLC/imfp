@@ -305,21 +305,21 @@ def test_imf_get_rejects_dataframe_codes(set_options, use_saved_responses):
     """imf_parameters passed DataFrames around; imf_get takes plain codes."""
     codes = imf_get_codelists("COUNTRY", "GFS_SOO")
 
-    with pytest.raises(ValueError) as excinfo:
+    with pytest.raises(TypeError) as excinfo:
         imf_get("GFS_SOO", country=codes)
 
     assert "imf_get_codelists" in str(excinfo.value)
 
 
 def test_imf_get_rejects_non_string_codes(set_options, use_saved_responses):
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         imf_get("GFS_SOO", country=[123])
 
 
 def test_imf_get_rejects_malformed_periods(set_options, use_saved_responses):
     # A list is caught by the signature's type enforcement.
     with pytest.raises(TypeError):
-        imf_get("GFS_SOO", country="ABW", start_period=[1999, 2004])
+        imf_get("GFS_SOO", country="ABW", start_period=[1999, 2004])  # ty: ignore[no-matching-overload]
 
     with pytest.raises(ValueError):
         imf_get("GFS_SOO", country="ABW", end_period="   ")
@@ -388,3 +388,95 @@ def test_legacy_imf_dataset_warns(set_options, use_saved_responses):
         )
 
     assert any("imf_get" in str(w.message) for w in record)
+
+
+# ---------------------------------------------------------------------------
+# Argument validation
+#
+# The package validates its own arguments rather than using a runtime
+# enforcement decorator, so the checks below are testing our code, not a
+# third-party library's.
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda: imf_get_dataflows(max_tries="3"),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_datastructure(123),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_datastructure("GFS_SOO", max_tries=None),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_datastructure("GFS_SOO", include_time="yes"),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_datastructure("GFS_SOO", include_measures=1),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_codelists("COUNTRY", 123),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_codelists(123, "GFS_SOO"),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get_codelists(["COUNTRY", 7], "GFS_SOO"),  # ty: ignore[invalid-argument-type]
+        lambda: imf_get(123),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", max_tries=1.5),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", print_url="yes"),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", return_raw="yes"),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", dimensions=["COUNTRY"]),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", country="ABW", start_period=[1999, 2004]),  # ty: ignore[no-matching-overload]
+    ],
+)
+def test_bad_argument_types_raise_type_error(set_options, call):
+    with pytest.raises(TypeError):
+        call()
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        lambda: imf_get_dataflows(max_tries=0),
+        lambda: imf_get_datastructure("GFS_SOO", max_tries=0),
+        lambda: imf_get("GFS_SOO", max_tries=0),
+        lambda: imf_get("GFS_SOO", country="ABW", end_period="   "),
+    ],
+)
+def test_out_of_range_arguments_raise_value_error(set_options, call):
+    with pytest.raises(ValueError):
+        call()
+
+
+def test_validation_errors_name_the_argument(set_options):
+    """A bad argument should say which one, so the fix is obvious."""
+    with pytest.raises(TypeError) as excinfo:
+        imf_get_datastructure("GFS_SOO", max_tries="3")  # ty: ignore[invalid-argument-type]
+    assert "max_tries" in str(excinfo.value)
+
+    with pytest.raises(TypeError) as excinfo:
+        imf_get(123)  # ty: ignore[no-matching-overload]
+    assert "dataflow_id" in str(excinfo.value)
+
+
+def test_validation_happens_before_any_request(set_options):
+    """Bad arguments must fail without the fixture-less network being touched."""
+    # No use_saved_responses fixture here: if validation let these through to a
+    # request, the call would fail with a connection error rather than TypeError.
+    with pytest.raises(TypeError):
+        imf_get_datastructure(123)  # ty: ignore[invalid-argument-type]
+    with pytest.raises(TypeError):
+        imf_get_codelists("COUNTRY", 123)  # ty: ignore[invalid-argument-type]
+
+
+def test_legacy_functions_validate_their_arguments(set_options):
+    """The deprecated functions kept their argument checks after the decorator went."""
+    with pytest.raises(TypeError):
+        imf_databases(times="3")  # ty: ignore[invalid-argument-type]
+    with pytest.raises(TypeError):
+        imf_parameters(123)  # ty: ignore[invalid-argument-type]
+    with pytest.raises(TypeError):
+        imf_parameter_defs("BOP", inputs_only="yes")  # ty: ignore[invalid-argument-type]
+    with pytest.raises(ValueError):
+        imf_parameters("BOP", times=0)
+
+
+def test_legacy_imf_dataset_validates_its_arguments(set_options):
+    """imf_dataset never had the decorator; it leaned on imf_parameters for checks."""
+    with pytest.raises(TypeError):
+        imf_dataset(database_id=2)  # ty: ignore[no-matching-overload]
+    with pytest.raises(TypeError):
+        imf_dataset(database_id=["a", "b"])  # ty: ignore[no-matching-overload]
+    with pytest.raises(TypeError):
+        imf_dataset(database_id="PCPS", parameters=["not", "a", "dict"])  # ty: ignore[no-matching-overload]
+    with pytest.raises(TypeError):
+        imf_dataset(database_id="PCPS", include_metadata="yes")  # ty: ignore[no-matching-overload]

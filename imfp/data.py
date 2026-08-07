@@ -14,7 +14,6 @@ from typing import Any, Literal, TypeVar, overload
 from urllib.parse import urlencode
 from warnings import warn
 
-import type_enforced
 from pandas import DataFrame
 
 from .api import imf_get_dataflows
@@ -27,6 +26,9 @@ from .utils import (
     _extract_first,
     _find_dataflow,
     _imf_dimensions,
+    _require_bool,
+    _require_int,
+    _require_str,
 )
 
 # _parse_imf_sdmx_json and _transform_period_for_frequency moved to utils so the
@@ -213,7 +215,6 @@ def _normalized_dimension_filters(
     return norm_dims
 
 
-@type_enforced.Enforcer
 def imf_databases(times: int = 3) -> DataFrame:
     """
     List IMF database IDs and descriptions
@@ -240,6 +241,8 @@ def imf_databases(times: int = 3) -> DataFrame:
     # Return first 6 IMF database IDs and descriptions
     databases = imf_databases()
     """
+    _require_int(times, "times", minimum=1)
+
     _warn_deprecated("imf_databases")
 
     dataflows = imf_get_dataflows(max_tries=times)
@@ -256,7 +259,6 @@ def imf_databases(times: int = 3) -> DataFrame:
     ).reset_index(drop=True)
 
 
-@type_enforced.Enforcer
 def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     """
     List input parameters and available parameter values for use in
@@ -291,6 +293,9 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     # Commodity Price System database
     params = imf_parameters(database_id='PCPS')
     """
+    _require_str(database_id, "database_id")
+    _require_int(times, "times", minimum=1)
+
     _warn_deprecated("imf_parameters")
 
     try:
@@ -332,7 +337,6 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     return parameter_list
 
 
-@type_enforced.Enforcer
 def imf_parameter_defs(
     database_id: str, times: int = 3, inputs_only: bool = True
 ) -> DataFrame:
@@ -369,6 +373,10 @@ def imf_parameter_defs(
     # the Primary Commodity Price System database
     param_defs = imf_parameter_defs(database_id='PCPS')
     """
+    _require_str(database_id, "database_id")
+    _require_int(times, "times", minimum=1)
+    _require_bool(inputs_only, "inputs_only")
+
     _warn_deprecated("imf_parameter_defs")
 
     try:
@@ -494,6 +502,17 @@ def imf_dataset(
         database header, and whose second item is the pandas DataFrame. If
         return_raw == True, returns the raw JSON fetched from the API endpoint.
     """
+    _require_str(database_id, "database_id")
+    _require_int(times, "times", minimum=1)
+    _require_bool(return_raw, "return_raw")
+    _require_bool(print_url, "print_url")
+    _require_bool(include_metadata, "include_metadata")
+    if parameters is not None and not isinstance(parameters, dict):
+        raise TypeError(
+            "parameters must be a dict of DataFrames from imf_parameters(); "
+            f"got {type(parameters).__name__}."
+        )
+
     _warn_deprecated("imf_dataset")
 
     start_period = _normalize_year_arg(start_year, "start_year")
