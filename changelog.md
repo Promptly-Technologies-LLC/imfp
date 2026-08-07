@@ -1,6 +1,35 @@
 # CHANGELOG
 
 
+## v2.0.0 (2026-08-07)
+
+### Bug Fixes
+
+- **docs**: Update demo notebook to the imf_get_dataflows schema
+  ([`eaa4cd1`](https://github.com/Promptly-Technologies-LLC/imfp/commit/eaa4cd1bfadc2a8febdf452abb27f9916addca5c))
+
+### Features
+
+- Adopt econdataverse patterns for the 2.0.0 release
+  ([`cbd3f02`](https://github.com/Promptly-Technologies-LLC/imfp/commit/cbd3f021cae3f84d3100112dfb1f933b77493d90))
+
+### Refactoring
+
+- Drop type_enforced for hand-written argument validation
+  ([`778e598`](https://github.com/Promptly-Technologies-LLC/imfp/commit/778e5988310b23c82c28de5d0d0c565d55468e1e))
+
+### Breaking Changes
+
+- Imf_databases, imf_parameters, imf_parameter_defs, and imf_dataset are deprecated in favor of
+  imf_get_dataflows, imf_get_codelists, imf_get_datastructure, and imf_get. They continue to work in
+  2.x and will be removed in 3.0.0.
+
+- Type-enforced is no longer a dependency. Callers who passed wrong-typed arguments still get a
+  TypeError, but the message text differs. Two error types changed in the new API for correctness:
+  passing a DataFrame or a non-string code to a dimension, and passing a non-scalar
+  start_period/end_period, now raise TypeError rather than ValueError.
+
+
 ## v1.3.4 (2026-08-03)
 
 ### Bug Fixes
