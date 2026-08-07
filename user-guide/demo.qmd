@@ -179,10 +179,10 @@ Path("data").mkdir(exist_ok=True)
 # Load or fetch databases
 databases = load_or_fetch_databases()
 
-# Filter out databases that contain a year in the description
+# Filter out databases whose name contains a year
 databases[
-  ~databases['description'].str.contains(r"[\d]{4}", regex=True)
-]
+  ~databases['name'].str.contains(r"[\d]{4}", regex=True)
+][['id', 'name']]
 
 # view_dataframe_in_browser(databases)
 ```
@@ -202,7 +202,7 @@ Note: The Gender Inequality Index (GII) is a UN dataset that is no longer availa
 :::
 
 ```{python}
-databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
+databases[databases['id'].isin(['QNEA','ANEA','WEO'])][['id', 'name']]
 ```
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -215,7 +215,9 @@ params = {}
 for dataset in datasets_list:
     params[dataset] = load_or_fetch_parameters(dataset)
 
-    valid_keys = list(params[dataset].keys())
+    # imf_get_codelists returns one tidy frame, so the dimensions are the
+    # distinct values of its dimension_id column.
+    valid_keys = sorted(params[dataset]["dimension_id"].unique())
     print(f"Parameters for {dataset}: ", valid_keys)
 ```
 
