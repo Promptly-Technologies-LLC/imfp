@@ -11,9 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - uses: rickstaa/action-black@v1
-        with:
-          black_args: "."
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Run ruff format
+        run: uvx ruff format .
 
       - name: Commit and push changes to repository
         uses: stefanzweifel/git-auto-commit-action@v5

@@ -1,9 +1,10 @@
-import pytest
 import hashlib
 import json
-from pathlib import Path
-import re
 import os
+import re
+from pathlib import Path
+
+import pytest
 
 
 @pytest.fixture
@@ -38,7 +39,7 @@ def use_saved_responses():
                     "@pytest.mark.usefixtures('capture_all_requests').\n"
                     "- Then re-run with 'use_saved_responses' to use the cached data."
                 )
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 data = json.load(f)
             status = int(data.get("status_code", 200))
             body = data.get("text") or data.get("content") or ""
@@ -69,7 +70,8 @@ def capture_all_requests(monkeypatch):
     Patches both the locally imported _imf_get and the internal imfp.utils._imf_get.
     """
     import logging
-    from time import sleep, perf_counter
+    from time import perf_counter, sleep
+
     from requests import get
 
     logger = logging.getLogger(__name__)

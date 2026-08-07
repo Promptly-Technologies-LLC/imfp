@@ -1,12 +1,14 @@
 import logging
-import pytest
 import os
+
 import pandas as pd
+import pytest
+
 from imfp import (
     imf_databases,
-    imf_parameters,
-    imf_parameter_defs,
     imf_dataset,
+    imf_parameter_defs,
+    imf_parameters,
     set_imf_wait_time,
 )
 from imfp.utils import _imf_save_response, _imf_use_cache
@@ -45,7 +47,7 @@ def set_options(monkeypatch):
     set_imf_wait_time(wait_time)
 
     # Perform the test
-    yield float(os.environ.get("IMF_WAIT_TIME"))
+    yield float(os.environ["IMF_WAIT_TIME"])
 
     # Restore the original values of the options during teardown
     monkeypatch.setattr("imfp.utils._imf_save_response", original_save_response)
@@ -62,13 +64,13 @@ def test_imf_databases(set_options, use_saved_responses):
     result = imf_databases()
     assert isinstance(result, pd.DataFrame), "Result should be a pandas DataFrame"
     expected_column_names = ["database_id", "description"]
-    assert (
-        list(result.columns) == expected_column_names
-    ), "Result should have the expected column names"
+    assert list(result.columns) == expected_column_names, (
+        "Result should have the expected column names"
+    )
     assert result.isna().sum().sum() == 0, "Result should not contain any NAs"
-    assert len(result["database_id"]) == len(
-        result["description"]
-    ), "Both columns should have the same length"
+    assert len(result["database_id"]) == len(result["description"]), (
+        "Both columns should have the same length"
+    )
 
 
 def test_imf_parameter_defs(set_options, use_saved_responses):
@@ -79,18 +81,18 @@ def test_imf_parameter_defs(set_options, use_saved_responses):
     assert result.shape[0] >= 3, "Result should have at least 3 rows"
     assert result.shape[1] == 2, "Result should have 2 columns"
     expected_column_names = ["parameter", "description"]
-    assert (
-        list(result.columns) == expected_column_names
-    ), "Result should have the expected column names"
+    assert list(result.columns) == expected_column_names, (
+        "Result should have the expected column names"
+    )
 
     result = imf_parameter_defs("BOP", inputs_only=False)
     assert isinstance(result, pd.DataFrame), "Result should be a pandas DataFrame"
     assert result.shape[0] >= 5, "Result should have at least 5 rows"
     assert result.shape[1] == 2, "Result should have 2 columns"
     expected_column_names = ["parameter", "description"]
-    assert (
-        list(result.columns) == expected_column_names
-    ), "Result should have the expected column names"
+    assert list(result.columns) == expected_column_names, (
+        "Result should have the expected column names"
+    )
 
     with pytest.raises(Exception):
         imf_parameter_defs(times=1)
@@ -103,9 +105,9 @@ def test_imf_parameters(set_options, use_saved_responses):
 
     params = imf_parameters("BOP")
     fk = _freq_key(params)
-    assert (
-        fk is not None
-    ), "Expected a frequency-like parameter in imf_parameters output"
+    assert fk is not None, (
+        "Expected a frequency-like parameter in imf_parameters output"
+    )
     available = set(params[fk]["input_code"])
     # Under SDMX 3.0, frequency sets may expand. Require at least Annual and Quarterly present.
     assert {"A", "Q"}.issubset(available)
@@ -120,9 +122,9 @@ def test_imf_dataset_error_handling(set_options, use_saved_responses):
 
     params = imf_parameters("FD")
     fk = _freq_key(params)
-    assert (
-        fk is not None
-    ), "Expected a frequency-like parameter in imf_parameters output"
+    assert fk is not None, (
+        "Expected a frequency-like parameter in imf_parameters output"
+    )
     # Keep frequency minimal, wildcard everything else to avoid over-restriction
     params[fk] = params[fk].head(1)
     for k in list(params.keys()):
@@ -140,13 +142,13 @@ def test_imf_dataset_error_handling(set_options, use_saved_responses):
             database_id="APDREO", ref_area="AU", indicator=["BCA_BP6_USD", "XYZ"]
         )
     with pytest.raises(Exception):
-        imf_dataset(times=1)
+        imf_dataset(times=1)  # ty: ignore[no-matching-overload]
     with pytest.raises(Exception):
-        imf_dataset(database_id=2, times=1)
+        imf_dataset(database_id=2, times=1)  # ty: ignore[no-matching-overload]
     with pytest.raises(Exception):
-        imf_dataset(database_id=[], times=1)
+        imf_dataset(database_id=[], times=1)  # ty: ignore[no-matching-overload]
     with pytest.raises(Exception):
-        imf_dataset(database_id=["a", "b"], times=1)
+        imf_dataset(database_id=["a", "b"], times=1)  # ty: ignore[no-matching-overload]
     with pytest.raises(Exception):
         imf_dataset(database_id="not_a_real_database", times=1)
     with pytest.raises(Exception):
@@ -154,7 +156,7 @@ def test_imf_dataset_error_handling(set_options, use_saved_responses):
     with pytest.raises(Exception):
         imf_dataset(database_id="PCPS", end_year="a", times=1)
     with pytest.raises(Exception):
-        imf_dataset(database_id="PCPS", end_year=[1999, 2004], times=1)
+        imf_dataset(database_id="PCPS", end_year=[1999, 2004], times=1)  # ty: ignore[no-matching-overload]
     with pytest.raises(Exception):
         imf_dataset(
             database_id="WHDREO",
@@ -293,7 +295,7 @@ def test_imf_dataset_include_metadata(set_options, use_saved_responses):
     assert isinstance(output, tuple)
     assert len(output) == 2
     assert isinstance(output[0], dict)
-    assert isinstance(output[1], pd.core.frame.DataFrame)
+    assert isinstance(output[1], pd.DataFrame)
     assert all([not pd.isna(value) for value in output[0].values()])
 
 
@@ -322,9 +324,9 @@ def test_imf_parameters_returns_iso3_codes_for_gfs_soo(
     country_codes = list(country_df["input_code"])
 
     # Should have a reasonable number of countries (IMF has data for many countries)
-    assert (
-        len(country_codes) > 100
-    ), f"Expected more than 100 countries, got {len(country_codes)}"
+    assert len(country_codes) > 100, (
+        f"Expected more than 100 countries, got {len(country_codes)}"
+    )
 
     # Check for known ISO3 codes that should be present
     expected_iso3_codes = [
@@ -340,21 +342,21 @@ def test_imf_parameters_returns_iso3_codes_for_gfs_soo(
         "ARM",
     ]
     for code in expected_iso3_codes:
-        assert (
-            code in country_codes
-        ), f"Expected ISO3 code '{code}' not found in country codes"
+        assert code in country_codes, (
+            f"Expected ISO3 code '{code}' not found in country codes"
+        )
 
     # Check that we're NOT getting numeric codes (which would be wrong)
     numeric_codes = [code for code in country_codes if code.isdigit()]
-    assert (
-        len(numeric_codes) == 0
-    ), f"Found unexpected numeric codes: {numeric_codes[:10]}"
+    assert len(numeric_codes) == 0, (
+        f"Found unexpected numeric codes: {numeric_codes[:10]}"
+    )
 
     # Verify that most codes are 3-letter codes (ISO3 standard)
     # Note: IMF includes some non-standard codes (e.g., regional aggregates), so we use 70% threshold
     three_letter_codes = [
         code for code in country_codes if len(code) == 3 and code.isalpha()
     ]
-    assert (
-        len(three_letter_codes) > len(country_codes) * 0.7
-    ), f"Expected most codes to be 3-letter ISO codes, but only {len(three_letter_codes)}/{len(country_codes)} are"
+    assert len(three_letter_codes) > len(country_codes) * 0.7, (
+        f"Expected most codes to be 3-letter ISO codes, but only {len(three_letter_codes)}/{len(country_codes)} are"
+    )

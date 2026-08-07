@@ -114,10 +114,11 @@ venv.bak/
 # rendered documentation
 _site/
 
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# ruff
+.ruff_cache/
+
+# ty
+.ty_cache/
 
 # Pyre type checker
 .pyre/

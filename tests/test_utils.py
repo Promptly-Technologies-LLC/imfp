@@ -1,13 +1,15 @@
 import logging
-import pytest
-import time
-import pandas as pd
 import os
+import time
+
+import pandas as pd
+import pytest
+
 from imfp import (
-    _imf_get,
     _download_parse,
-    _imf_metadata,
     _imf_dimensions,
+    _imf_get,
+    _imf_metadata,
     set_imf_wait_time,
 )
 from imfp.utils import _imf_save_response, _imf_use_cache
@@ -36,7 +38,7 @@ def set_options(monkeypatch):
     set_imf_wait_time(wait_time)
 
     # Perform the test
-    yield float(os.environ.get("IMF_WAIT_TIME"))
+    yield float(os.environ["IMF_WAIT_TIME"])
 
     # Restore the original values of the options during teardown
     monkeypatch.setattr("imfp.utils._imf_save_response", original_save_response)

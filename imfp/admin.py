@@ -1,6 +1,6 @@
 from os import environ
 from warnings import warn
-from typing import Union
+
 import type_enforced
 
 
@@ -52,7 +52,7 @@ def set_imf_app_name(name: str = "imfp") -> None:
 
 
 @type_enforced.Enforcer
-def set_imf_wait_time(wait_time: Union[int, float] = 1.5) -> None:
+def set_imf_wait_time(wait_time: int | float = 1.5) -> None:
     """
     Set the IMF wait time as an environment variable.
 

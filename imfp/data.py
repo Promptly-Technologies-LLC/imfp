@@ -1,18 +1,19 @@
 import logging
 import re
-from typing import Any, TypeVar, overload, Literal
-from warnings import warn
+from typing import Any, Literal, TypeVar, overload
 from urllib.parse import urlencode
-from pandas import DataFrame
+from warnings import warn
+
 import type_enforced
+from pandas import DataFrame
 
 from .utils import (
+    IMF_API_BASE_URL,
     _download_parse,
-    _imf_dimensions,
     _extract_first,
     _find_dataflow,
     _get_datastructure_components,
-    IMF_API_BASE_URL,
+    _imf_dimensions,
 )
 
 logger = logging.getLogger(__name__)
@@ -503,8 +504,7 @@ def imf_parameters(database_id: str, times: int = 2) -> dict[str, DataFrame]:
     except ValueError as e:
         if "There is an issue" in str(e) or "not found" in str(e).lower():
             raise ValueError(
-                f"{e}\n\nDid you supply a valid database_id? "
-                "Use imf_databases to find."
+                f"{e}\n\nDid you supply a valid database_id? Use imf_databases to find."
             )
         else:
             raise ValueError(e)
@@ -611,8 +611,7 @@ def imf_parameter_defs(
     except ValueError as e:
         if "There is an issue" in str(e):
             raise ValueError(
-                f"{e}\n\nDid you supply a valid database_id? "
-                "Use imf_databases to find."
+                f"{e}\n\nDid you supply a valid database_id? Use imf_databases to find."
             )
         else:
             raise ValueError(e)
@@ -631,8 +630,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs: DimensionFilter,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -646,8 +644,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs: DimensionFilter,
-) -> tuple[dict[str, Any], DataFrame]:
-    ...
+) -> tuple[dict[str, Any], DataFrame]: ...
 
 
 @overload
@@ -661,8 +658,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[False] = False,
     **kwargs: DimensionFilter,
-) -> dict[str, Any]:
-    ...
+) -> dict[str, Any]: ...
 
 
 @overload
@@ -676,8 +672,7 @@ def imf_dataset(
     times: int = 3,
     include_metadata: Literal[True] = True,
     **kwargs: DimensionFilter,
-) -> tuple[dict[str, Any], dict[str, Any]]:
-    ...
+) -> tuple[dict[str, Any], dict[str, Any]]: ...
 
 
 def imf_dataset(

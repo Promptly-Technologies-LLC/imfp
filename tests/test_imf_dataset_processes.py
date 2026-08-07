@@ -143,7 +143,7 @@ def _capture_requests():
                 f"No cached HTTP fixture for URL: {request.url}\n"
                 f"Expected file: {file_path}"
             )
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             data = json.load(f)
         status = int(data.get("status_code", 200))
         body = data.get("text") or data.get("content") or ""
