@@ -149,7 +149,7 @@ Raises:
 Examples:
     imf_app_name("my_custom_app_name")
 
-set_imf_wait_time(wait_time: Union[int, float] = 1.5) -> None
+set_imf_wait_time(wait_time: int | float = 1.5) -> None
 
 Set the IMF wait time as an environment variable.
 

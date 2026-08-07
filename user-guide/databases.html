@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-02">v1.3.3</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -323,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fetching-an-index-of-databases-with-the-imf_databases-function" class="level2">
 <h2 class="anchored" data-anchor-id="fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a> Function</h2>
 <p>To obtain the list of available databases and their corresponding IDs, use <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a>:</p>
-<div id="96bc2dfa" class="cell" data-execution_count="1">
+<div id="15bd9267" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Fetch the list of databases available through the IMF API</span></span>
@@ -343,28 +343,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>0</th>
-      <td>PI_WCA_2026_APR_VINTAGE</td>
-      <td>Production Indexes, World and Country Group Ag...</td>
+      <td>ITG_2026_FEB_VINTAGE</td>
+      <td>International Trade in Goods (ITG) 2026 February</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>FSIBSIS</td>
-      <td>Financial Soundness Indicators (FSI), Balance ...</td>
+      <td>PI_2026_APR_VINTAGE</td>
+      <td>Production Indexes (PI) 2026 April</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>ITG</td>
-      <td>International Trade in Goods (ITG)</td>
+      <td>ER_2026_MAY_VINTAGE</td>
+      <td>Exchange Rates (ER) 2026 May</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>ITG_2026_JAN_VINTAGE</td>
-      <td>International Trade in Goods (ITG) 2026 January</td>
+      <td>MFS_MA_2026_FEB_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Monet...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>BOP_2026_MAY_VINTAGE</td>
-      <td>Balance of Payments (BOP) 2026 May</td>
+      <td>ITG_2026_APR_VINTAGE</td>
+      <td>International Trade in Goods (ITG) 2026 April</td>
     </tr>
   </tbody>
 </table>
@@ -377,7 +377,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="exploring-the-database-list" class="level1">
 <h1>Exploring the Database List</h1>
 <p>To view and explore the database list, it’s possible to explore subsets of the data frame by row number with <code>databases.loc</code>:</p>
-<div id="8fb72057" class="cell" data-execution_count="2">
+<div id="de76a6ec" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -394,28 +394,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>5</th>
-      <td>MFS_MA_2026_JAN_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Monet...</td>
+      <td>CPI_2026_FEB_VINTAGE</td>
+      <td>Consumer Price Index (CPI) 2026 February</td>
     </tr>
     <tr>
       <th>6</th>
-      <td>MFS_FC_2026_FEB_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Finan...</td>
+      <td>HPD</td>
+      <td>Historical Public Debt (HPD)</td>
     </tr>
     <tr>
       <th>7</th>
-      <td>PI_2026_JAN_VINTAGE</td>
-      <td>Production Indexes (PI) 2026 January</td>
+      <td>COFER_2025_OCT_VINTAGE</td>
+      <td>Currency Composition of Official Foreign Excha...</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>FSICDM</td>
-      <td>Financial Soundness Indicators (FSI), Concentr...</td>
+      <td>IIP_2026_MAY_VINTAGE</td>
+      <td>International Investment Position (IIP) 2026 May</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>EER_2026_MAY_VINTAGE</td>
-      <td>Effective Exchange Rates (ER) 2026 May</td>
+      <td>IL_2026_APR_VINTAGE</td>
+      <td>International Liquidity (IL) 2026 April</td>
     </tr>
   </tbody>
 </table>
@@ -423,7 +423,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using <code>str.contains</code> and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:</p>
-<div id="7affb414" class="cell" data-execution_count="3">
+<div id="dbffeb9f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -438,12 +438,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>114</th>
+      <th>29</th>
       <td>CTOT</td>
       <td>Commodity Terms of Trade (CTOT)</td>
     </tr>
     <tr>
-      <th>216</th>
+      <th>59</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
     </tr>

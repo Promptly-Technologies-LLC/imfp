@@ -34,23 +34,23 @@ df.info()
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:257: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
+    /home/runner/work/imfp/imfp/imfp/data.py:258: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
       warn(
 
 
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 1758 entries, 0 to 1757
+    RangeIndex: 1761 entries, 0 to 1760
     Data columns (total 6 columns):
      #   Column               Non-Null Count  Dtype  
     ---  ------               --------------  -----  
-     0   country              1758 non-null   object 
-     1   indicator            1758 non-null   object 
-     2   data_transformation  1758 non-null   object 
-     3   frequency            1758 non-null   object 
-     4   time_period          1758 non-null   object 
-     5   obs_value            1758 non-null   float64
+     0   country              1761 non-null   object 
+     1   indicator            1761 non-null   object 
+     2   data_transformation  1761 non-null   object 
+     3   frequency            1761 non-null   object 
+     4   time_period          1761 non-null   object 
+     5   obs_value            1761 non-null   float64
     dtypes: float64(1), object(5)
-    memory usage: 82.5+ KB
+    memory usage: 82.7+ KB
 
 
 Alternatively, you can use the `head()` method to view the first 5 rows of the data frame.
@@ -184,14 +184,14 @@ df.describe()
 
 |       | obs_value | datetime                      | year    | quarter | month   |
 |-------|-----------|-------------------------------|---------|---------|---------|
-| count | 1758.00   | 1758                          | 1758.00 | 414.00  | 1242.00 |
-| mean  | 42.12     | 2008-10-29 00:36:56.165529088 | 2008.74 | 2.49    | 6.46    |
+| count | 1761.00   | 1761                          | 1761.00 | 414.00  | 1245.00 |
+| mean  | 42.16     | 2008-11-08 17:05:29.608177152 | 2008.77 | 2.49    | 6.46    |
 | min   | -69.21    | 1992-01-01 00:00:00           | 1992.00 | 1.00    | 1.00    |
 | 25%   | -3.92     | 2000-01-01 00:00:09           | 2000.00 | 1.00    | 3.00    |
-| 50%   | 9.24      | 2009-01-01 00:00:02.500000    | 2009.00 | 2.00    | 6.00    |
-| 75%   | 66.03     | 2017-04-01 00:00:00           | 2017.00 | 3.00    | 9.00    |
+| 50%   | 9.28      | 2009-01-01 00:00:03           | 2009.00 | 2.00    | 6.00    |
+| 75%   | 66.26     | 2017-07-01 00:00:00           | 2017.00 | 3.00    | 9.00    |
 | max   | 577.58    | 2026-04-01 00:00:00           | 2026.00 | 4.00    | 12.00   |
-| std   | 77.29     | NaN                           | 9.96    | 1.12    | 3.45    |
+| std   | 77.31     | NaN                           | 9.97    | 1.12    | 3.45    |
 
 
 ## Viewing Data
@@ -265,7 +265,7 @@ exchange_rate = imfp.imf_dataset(
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:404: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
+    /home/runner/work/imfp/imfp/imfp/data.py:405: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
       warn(
 
 
