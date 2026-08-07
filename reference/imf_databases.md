@@ -11,6 +11,10 @@ imf_databases(times=3)
 ```
 
 
+> **Warning: Deprecated since version 2.0.0**
+>
+> Use [imfp.imf_get_dataflows()](imf_get_dataflows.md#imfp.imf_get_dataflows) instead. This function will be removed in imfp 3.0.0.
+
 Returns a DataFrame with database_id and text description for each database available through the IMF API endpoint.
 
 

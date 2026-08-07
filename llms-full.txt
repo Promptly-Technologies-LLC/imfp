@@ -3,14 +3,210 @@ This is the API documentation for the imfp library.
 ----------------------------------------------------------------------
 
 
-## Functions
+## Fetching Data
 
-Public functions for discovering IMF databases and downloading data
+The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.
+
+
+
+imf_get_dataflows(max_tries: int = 3) -> pandas.core.frame.DataFrame
+
+List every dataset published through the IMF Data API.
+
+This is step 1 of the workflow: use it to find the ``dataflow_id`` of the
+dataset you want, then pass that ID to the other functions.
+
+Args:
+    max_tries (int, optional): Maximum number of requests to attempt.
+        Defaults to 3.
+
+Returns:
+    pandas.DataFrame: One row per dataflow, with columns ``id``, ``name``,
+    ``description``, ``version``, ``agency``, ``structure``, and
+    ``last_updated``.
+
+Raises:
+    TypeError: If max_tries is not an integer.
+    ValueError: If max_tries is less than 1, or the API returns no dataflows.
+
+Examples:
+    # Find the ID of the Primary Commodity Price System dataset
+    dataflows = imf_get_dataflows()
+    dataflows[dataflows["id"] == "PCPS"]
+
+imf_get_datastructure(dataflow_id: str, max_tries: int = 3, include_time: bool = False, include_measures: bool = False) -> pandas.core.frame.DataFrame
+
+List the dimensions a dataset can be filtered on.
+
+This is step 2 of the workflow. The returned ``position`` is the dimension's
+slot in the dataset's series key, which is why the order matters: a request
+that filters on some dimensions and wildcards others still has to line them
+up positionally. :func:`imf_get` handles that for you.
+
+Args:
+    dataflow_id (str): A dataflow ID from imf_get_dataflows().
+    max_tries (int, optional): Maximum number of requests to attempt.
+        Defaults to 3.
+    include_time (bool, optional): Whether to also list the time dimension.
+        Time is filtered through start_period/end_period rather than through
+        the series key, so it is excluded by default.
+    include_measures (bool, optional): Whether to also list measures (the
+        observation values). Measures are outputs, not filters, so they are
+        excluded by default.
+
+Returns:
+    pandas.DataFrame: One row per component, with columns ``dimension_id``,
+    ``type``, and ``position``.
+
+Raises:
+    TypeError: If an argument has the wrong type.
+    ValueError: If max_tries is less than 1, or the dataflow does not exist
+        or defines no dimensions.
+
+Examples:
+    # See what the Primary Commodity Price System can be filtered on
+    imf_get_datastructure("PCPS")
+
+imf_get_codelists(dimension_ids: str | list[str], dataflow_id: str, max_tries: int = 3) -> pandas.core.frame.DataFrame
+
+Look up the valid codes for one or more of a dataset's dimensions.
+
+This is step 3 of the workflow: the ``code`` column holds the values to pass
+to :func:`imf_get`.
+
+Args:
+    dimension_ids (str or list): One or more dimension IDs from
+        imf_get_datastructure(). Matching is case-insensitive.
+    dataflow_id (str): A dataflow ID from imf_get_dataflows().
+    max_tries (int, optional): Maximum number of requests to attempt.
+        Defaults to 3.
+
+Returns:
+    pandas.DataFrame: One row per code, with columns ``dimension_id``,
+    ``code``, ``name``, ``description``, ``codelist_id``,
+    ``codelist_agency``, and ``codelist_version``. Dimensions that are not
+    enumerated (they accept free-form values) contribute no rows.
+
+Raises:
+    TypeError: If an argument has the wrong type.
+    ValueError: If no dimension is named, if max_tries is less than 1, or if
+        the dataflow does not exist or lacks a requested dimension.
+
+Examples:
+    # Find the commodity indicator codes for PCPS
+    imf_get_codelists("COMMODITY", "PCPS")
+
+    # Fetch two dimensions at once
+    imf_get_codelists(["COMMODITY", "FREQ"], "PCPS")
+
+imf_get(dataflow_id: str, dimensions: dict[str, typing.Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: bool = False, **kwargs: Any) -> pandas.core.frame.DataFrame | dict[str, typing.Any]
+
+Fetch observations from an IMF dataset.
+
+This is step 4 of the workflow. Dimensions you do not filter on are
+wildcarded, so omitting ``dimensions`` entirely requests the whole dataset —
+which for most datasets is slow and very large.
+
+Codes are not validated before the request is sent; the API is the authority
+on what is valid. Use :func:`imf_get_codelists` to find valid codes.
+
+Args:
+    dataflow_id (str): A dataflow ID from imf_get_dataflows().
+    dimensions (dict, optional): Maps dimension IDs to the code or list of
+        codes to include. Dimension IDs are matched case-insensitively.
+    start_period (int or str, optional): Earliest period to return, as a
+        year ("2015"), quarter ("2015-Q1"), or month ("2015-01").
+    end_period (int or str, optional): Latest period to return, in the same
+        formats as start_period.
+    max_tries (int, optional): Maximum number of requests to attempt.
+        Defaults to 3.
+    print_url (bool, optional): Whether to print the request URL, which is
+        useful when reporting a problem with a specific query.
+    return_raw (bool, optional): Whether to return the parsed JSON response
+        as a dict instead of a DataFrame.
+    **kwargs: Dimension filters given as keyword arguments, e.g.
+        ``freq="A"``. Equivalent to passing them in ``dimensions``.
+
+Returns:
+    pandas.DataFrame: One row per observation, with a column per series
+    dimension (named as in the datastructure), plus ``TIME_PERIOD`` and
+    ``OBS_VALUE``. Returns an empty DataFrame, and warns, when the query
+    matches no observations. If return_raw is True, returns the raw parsed
+    JSON dict instead.
+
+Raises:
+    TypeError: If an argument has the wrong type, including a dimension
+        given something other than a code string or list of them.
+    ValueError: If max_tries is less than 1, if the same dimension is
+        supplied twice, or if the dataflow does not exist or lacks a named
+        dimension.
+
+Examples:
+    # Annual coal prices, 2000-2015
+    imf_get(
+        "PCPS",
+        dimensions={"COMMODITY": "PCOAL", "FREQ": "A"},
+        start_period=2000,
+        end_period=2015,
+    )
+
+    # The same query using keyword arguments
+    imf_get("PCPS", commodity="PCOAL", freq="A", start_period=2000)
+
+
+## Configuration
+
+Settings that affect how requests are made
+
+
+set_imf_app_name(name: str = 'imfp') -> None
+
+Set the IMF Application Name.
+
+Set a unique application name to be used in requests to the IMF API as an
+environment variable.
+
+Args:
+    name (str, optional): A string representing the application name.
+    Default is "imfp".
+
+Returns:
+    None
+
+Raises:
+    TypeError: If the provided name is not a string.
+    ValueError: If the provided name is too long or contains forbidden
+    characters.
+
+Examples:
+    imf_app_name("my_custom_app_name")
+
+set_imf_wait_time(wait_time: int | float = 1.5) -> None
+
+Set the IMF wait time as an environment variable.
+
+Args:
+    wait_time (int or float, optional): The wait time in seconds to be set as
+    an environment variable. Defaults to 1.5.
+
+Raises:
+    TypeError: If the provided wait_time is not a numeric value (int or float).
+    ValueError: If the provided wait_time is negative.
+
+
+## Deprecated
+
+The pre-2.0 interface. These still work but emit a DeprecationWarning and will be removed in imfp 3.0.0. See the migration guide.
+
 
 
 imf_databases(times: int = 3) -> pandas.core.frame.DataFrame
 
 List IMF database IDs and descriptions
+
+.. deprecated:: 2.0.0
+   Use :func:`imfp.imf_get_dataflows` instead. This function will be
+   removed in imfp 3.0.0.
 
 Returns a DataFrame with database_id and text description for each
 database available through the IMF API endpoint.
@@ -33,8 +229,12 @@ databases = imf_databases()
 imf_parameters(database_id: str, times: int = 2) -> dict[str, pandas.core.frame.DataFrame]
 
 List input parameters and available parameter values for use in
-
 making API requests from a given IMF database.
+
+.. deprecated:: 2.0.0
+   Use :func:`imfp.imf_get_codelists` instead, which returns a single tidy
+   DataFrame rather than a dict of DataFrames. This function will be
+   removed in imfp 3.0.0.
 
 Parameters
 ----------
@@ -65,6 +265,10 @@ imf_parameter_defs(database_id: str, times: int = 3, inputs_only: bool = True) -
 Get text descriptions of input parameters used in making API
 requests from a given IMF database
 
+.. deprecated:: 2.0.0
+   Use :func:`imfp.imf_get_datastructure` instead. This function will be
+   removed in imfp 3.0.0.
+
 Parameters
 ----------
 database_id : str
@@ -93,6 +297,10 @@ param_defs = imf_parameter_defs(database_id='PCPS')
 imf_dataset(database_id: str, parameters: dict[str, pandas.core.frame.DataFrame] | None = None, start_year: int | str | None = None, end_year: int | str | None = None, return_raw: bool = False, print_url: bool = False, times: int = 3, include_metadata: bool = False, **kwargs: str | list[str]) -> pandas.core.frame.DataFrame | dict[str, typing.Any] | tuple[dict[str, typing.Any], pandas.core.frame.DataFrame | dict[str, typing.Any]]
 
 Download a data series from the IMF.
+
+.. deprecated:: 2.0.0
+   Use :func:`imfp.imf_get` instead. This function will be removed in
+   imfp 3.0.0.
 
 Args:
     database_id (str): Database ID for the database from which you would
@@ -127,38 +335,6 @@ Returns:
     include_metadata == True, returns a tuple whose first item is the
     database header, and whose second item is the pandas DataFrame. If
     return_raw == True, returns the raw JSON fetched from the API endpoint.
-
-set_imf_app_name(name: str = 'imfp') -> None
-
-Set the IMF Application Name.
-
-Set a unique application name to be used in requests to the IMF API as an
-environment variable.
-
-Args:
-    name (str, optional): A string representing the application name.
-    Default is "imfp".
-
-Returns:
-    None
-
-Raises:
-    ValueError: If the provided name is not a valid string or contains
-    forbidden characters.
-
-Examples:
-    imf_app_name("my_custom_app_name")
-
-set_imf_wait_time(wait_time: int | float = 1.5) -> None
-
-Set the IMF wait time as an environment variable.
-
-Args:
-    wait_time (Union[int, float], optional): The wait time in seconds to be set as an environment variable. Defaults to 1.5.
-
-Raises:
-    TypeError: If the provided wait_time is not a numeric value (int or float).
-    ValueError: If the provided wait_time is not greater than 0.
 
 
 ----------------------------------------------------------------------
@@ -228,304 +404,408 @@ To edit and preview the documentation, install the [Quarto CLI tool](https://qua
 
 ## Core Concepts
 
-## Understanding IMF Databases
+## Dataflows
 
-The IMF serves many different databases through its API, and the API needs to know which of these many databases you're requesting data from. Before you can fetch any data, you'll need to:
+The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a **dataflow**, and every request has to name one. So before you can fetch any data, you need to:
 
-1. Get a list of available databases
-2. Find the database ID for the data you want
+1. Get the list of available dataflows
+2. Find the ID of the one you want
 
-Then you can use that database ID to fetch the data.
+That ID is the first argument to every other function in `imfp`.
 
-## Fetching the Database List
+## Listing Dataflows
 
-### Fetching an Index of Databases with the `imf_databases` Function
-
-To obtain the list of available databases and their corresponding IDs, use `imf_databases`:
+`imf_get_dataflows` returns the full catalogue as a tidy DataFrame:
 
 ``` {python}
 import imfp
 
-#Fetch the list of databases available through the IMF API
-databases = imfp.imf_databases()
-databases.head()
+dataflows = imfp.imf_get_dataflows()
+dataflows.shape
 ```
 
+Each row describes one dataset:
 
-This function returns the IMF’s listing of 71 databases available through the API.
-
-## Exploring the Database List
-
-To view and explore the database list, it’s possible to explore subsets of the data frame by row number with `databases.loc`:
+| Column | Meaning |
+|---|---|
+| `id` | The dataflow ID, e.g. `PCPS`. This is what you pass to the other functions. |
+| `name` | Human-readable title. |
+| `description` | Longer prose description, where the IMF provides one. |
+| `version` | Version of the dataflow definition. |
+| `agency` | The IMF department that publishes it, e.g. `IMF.STA`. |
+| `structure` | URN of the datastructure definition that backs it. |
+| `last_updated` | When the dataset was last refreshed. |
 
 ``` {python}
-# View a subset consisting of rows 5 through 9
-databases.loc[5:9]
+dataflows[["id", "name", "agency", "last_updated"]].head()
 ```
 
+## Finding the Dataset You Want
 
-Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using `str.contains` and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:
+Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the `name` column for a keyword:
 
 ``` {python}
-databases[databases['description'].str.contains("Commodity")]
+dataflows[dataflows["name"].str.contains("Commodity", case=False, na=False)][
+    ["id", "name"]
+]
 ```
 
-See also [Working with Large Data Frames](usage.qmd#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window. 
-
-## Best Practices
-
-1. **Cache the Database List**: The database list rarely changes. Consider saving it locally if you'll be making multiple queries. See [Caching Strategy](rate_limits.qmd#caching-strategy) for sample code.
-
-2. **Search Strategically**: Use specific search terms to find relevant databases. For example:
-
-   - "Price" for price indices
-   - "Trade" for trade statistics
-   - "Financial" for financial data
-
-3. **Use a Browser Viewer**: See [Working with Large Data Frames](usage.qmd#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window.
-
-4. **Note Database IDs**: Once you find a database you'll use frequently, note its database ID for future reference.
-
-## Next Steps
-
-Once you've identified the database you want to use, you'll need to:
-
-1. Get the list of parameters for that database (see [Parameters](parameters.qmd))
-2. Use those parameters to fetch your data (see [Datasets](datasets.qmd))
-
-
-## Filtering IMF Dataset Requests with Parameters
-
-Once you have a `database_id`, it’s possible to make a call to `imf_dataset` to fetch the entire database:
+The `description` column often contains terms the title does not, so it is worth searching too:
 
 ``` {python}
-#| eval: false
-import imfp
+matches = dataflows[
+    dataflows["description"].str.contains("balance of payments", case=False, na=False)
+]
+matches[["id", "name"]].head()
+```
+
+## Checking How Current a Dataset Is
+
+`last_updated` tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:
+
+``` {python}
 import pandas as pd
 
-# Set float format to 2 decimal places for pandas display output
-pd.set_option('display.float_format', lambda x: '%.2f' % x)
-
-# Producer Price Index database
-database_id = "PPI"
-imfp.imf_dataset(database_id)
+recent = dataflows.dropna(subset=["last_updated"]).copy()
+recent["last_updated"] = pd.to_datetime(recent["last_updated"], format="mixed")
+recent.sort_values("last_updated", ascending=False)[["id", "name", "last_updated"]].head()
 ```
 
-However, while this will succeed for a few small databases, it will fail for all of the larger ones. And even in the rare case when it succeeds, fetching an entire database can take a long time. You’re much better off supplying additional filter parameters to reduce the size of your request.
+## Reading the Dataflow ID
 
-Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. You also have to have the list of valid input codes for each parameter. The `imf_parameters` function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.
+The `id` column is the value you pass everywhere else:
 
-## Understanding Filter Parameters
+``` {python}
+pcps = dataflows[dataflows["id"] == "PCPS"]
+pcps[["id", "name", "agency", "version"]]
+```
 
-Each database available through the IMF API has its own set of parameters that can be used to filter and specify the data you want to retrieve.
+Note the `agency`. Different IMF departments publish through the same API but do not all support the same features — in particular, only `IMF.STA` currently honors server-side time filtering. `imf_get` warns you when you ask for a time window that the publishing agency will ignore. See [Fetching Data](datasets.qmd#time-filtering).
 
-Each parameter will be a column in the data. Each row in the data will contain a value for that parameter. The parameter will always be a categorical variable, meaning that it can take only a limited set of values. We refer to these values as "input codes," because you can input them in your API request to filter the data.
+## Next Step
 
-What this means, though, is that before making an API request to retrieve data, you need to know what the available filtering parameters are for the database, and what codes you can use for filtering the data by each parameter.
+With a dataflow ID in hand, the next step is finding out how that dataset can be filtered. See [Dimensions and Codes](parameters.qmd).
 
-There are two main functions for working with parameters:
 
-- `imf_parameters()`: Get the full list of parameters and valid input codes for a database
-- `imf_parameter_defs()`: Get text descriptions of what each parameter represents
+## Why Filtering Matters
 
-## Discovering Available Parameters
+Once you have a dataflow ID, you can in principle request the whole dataset:
 
-To get started, you'll need to know what parameters are available for your chosen database. Use `imf_parameters()` to get this information:
+``` {python}
+#| eval: false
+import imfp
+
+# Requests all of the Producer Price Index dataset
+imfp.imf_get("PPI")
+```
+
+This succeeds for a few small datasets and fails for all the large ones, and even when it succeeds it is slow. In practice you almost always want to filter.
+
+Filtering an IMF dataset takes two pieces of information, and `imfp` has one function for each:
+
+- **Which dimensions does this dataset have?** — `imf_get_datastructure`
+- **What values does each dimension accept?** — `imf_get_codelists`
+
+## Dimensions
+
+Every dataset is described by a *datastructure definition* (DSD), which lists the **dimensions** the data is broken out by. Each dimension becomes a column in the returned data, and each is categorical: it accepts only a fixed set of values.
+
+Datasets do not share a common set of dimensions. Some use `COUNTRY`, others `REF_AREA`; some spell frequency `FREQUENCY` and others `FREQ`. This is why you have to ask.
 
 ``` {python}
 import imfp
 
-# Fetch list of valid parameters for the Producer Price Index database
-params = imfp.imf_parameters("PPI")
-
-# View the available parameter names
-params.keys()
+dimensions = imfp.imf_get_datastructure("PCPS")
+dimensions
 ```
 
-The function returns a dictionary of data frames.
+The columns are:
 
-Each key in the dictionary corresponds to a parameter used in making requests from the database. The value for each key is a data frame with the following columns:
+| Column | Meaning |
+|---|---|
+| `dimension_id` | The dimension's ID — what you filter on in `imf_get`. |
+| `type` | `Dimension`, `TimeDimension`, or `Measure`. |
+| `position` | The dimension's slot in the dataset's series key. |
 
-- `input_code`: The valid codes you can use for that parameter
-- `description`: A short text description of what each code represents
+### Position
 
-For example, to see the valid codes for the `frequency` parameter:
+`position` is the dimension's slot in the request the API actually receives. IMF requests are *positional*: filters are sent as a dot-separated key in which each slot corresponds to one dimension, in this order, and an unfiltered slot is a wildcard. `imf_get` assembles that key for you, so you never have to think about position — but it explains why the order of dimensions is fixed and worth glancing at.
+
+### Time and Measures
+
+By default `imf_get_datastructure` lists only the dimensions you can filter on. Time is excluded because you filter it through `start_period`/`end_period` rather than through the key, and measures are excluded because they are outputs rather than filters. Ask for them explicitly if you want to see them:
 
 ``` {python}
-# View the data frame of valid input codes for the frequency parameter
-params['frequency']
+imfp.imf_get_datastructure("PCPS", include_time=True, include_measures=True)
 ```
 
-## Parameter Definitions
+Note that the measure has no `position`: it does not occupy a slot in the series key.
 
-If the parameter name is not self-explanatory, you can use the `imf_parameter_defs()` function to get a text description of what each parameter represents.
+## Codes
+
+Knowing that `PCPS` has an `INDICATOR` dimension does not tell you that coal is `PCOAL`. For that, use `imf_get_codelists`, which returns the valid codes for one or more dimensions:
 
 ``` {python}
-# Get descriptions of what each parameter means
-params_defs = imfp.imf_parameter_defs("PPI")
-
-params_defs
+frequencies = imfp.imf_get_codelists("FREQUENCY", "PCPS")
+frequencies[["code", "name"]].head()
 ```
 
-## Supplying Parameters
+The columns are:
 
-### Basic Approach (Recommended for Most Users)
+| Column | Meaning |
+|---|---|
+| `dimension_id` | Which dimension the code belongs to. |
+| `code` | The value to pass to `imf_get`. |
+| `name` | Short human-readable label. |
+| `description` | Longer definition, where the IMF provides one. |
+| `codelist_id` | ID of the codelist this came from, e.g. `CL_FREQ`. |
+| `codelist_agency` | Agency that maintains the codelist. |
+| `codelist_version` | Version of the codelist. |
 
-To make a request to fetch data from the IMF API, just call `imf_dataset` with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.
+Dimension IDs are matched case-insensitively, so `"frequency"` and `"FREQUENCY"` both work.
 
-For instance, on exploring the `frequency` parameter of the Producer Price Index database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call `imf_dataset` with `frequency = ["A"]`.
+### Fetching Several Dimensions at Once
 
-Here's a complete example that fetches annual producer prices from 2000 to 2015:
+Pass a list to get everything in one tidy frame — one row per code, with `dimension_id` telling you which dimension each row belongs to:
+
+``` {python}
+codes = imfp.imf_get_codelists(
+    ["INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY"], "PCPS"
+)
+codes.groupby("dimension_id").size()
+```
+
+Since it is a single DataFrame, searching it is an ordinary filter:
+
+``` {python}
+codes[
+    (codes["dimension_id"] == "INDICATOR")
+    & codes["name"].str.contains("Coal", case=False, na=False)
+][["code", "name"]]
+```
+
+``` {python}
+codes[codes["dimension_id"] == "DATA_TRANSFORMATION"][["code", "name"]]
+```
+
+To pull every dimension's codes in one call, feed it the datastructure:
 
 ``` {python}
 #| eval: false
-# Example: Get annual prices
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=["A"],  # Annual frequency
-    indicator=["PPI"],  # Producer Price Index
-    start_year=2000,
-    end_year=2015
-)
+all_codes = imfp.imf_get_codelists(list(dimensions["dimension_id"]), "PCPS")
 ```
 
-### Advanced Approaches
+Note that country codelists tend to be large, so this can take a moment.
 
-For more complex queries, there are two programmatic ways to supply parameters to `imf_dataset`. These approaches are particularly useful when you need to filter parameters based on their descriptions or when working with multiple parameter values.
+## Using Codes in a Request
 
-#### 1. List Arguments with Parameter Filtering
-
-This approach uses string matching to find the correct parameter codes before passing them to `imf_dataset`:
+The `code` column holds exactly the values `imf_get` expects:
 
 ``` {python}
-# Fetch the input code column of the frequency parameter...
-selected_frequency = list(
-    params['frequency']['input_code'][
-        # ...where the description contains "Annual"
-        params['frequency']['description'].str.contains("Annual")
-    ]
-)
+coal = codes[
+    (codes["dimension_id"] == "INDICATOR")
+    & (codes["code"] == "PCOAL")
+]["code"].tolist()
 
-# Fetch the input code column of the unit_measure parameter...
-selected_type_of_transformation = list(
-    params['type_of_transformation']['input_code'][
-        # ...where the description contains "Index"
-        params['type_of_transformation']['description'].str.contains("Index")
-    ]
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": coal,
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
 )
-
-# Request data from the API using the filtered parameter code lists
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=selected_frequency,
-    type_of_transformation=selected_type_of_transformation,
-    start_year=2000,
-    end_year=2015
-)
-
 df.head()
 ```
 
-#### 2. Parameters Dictionary Approach
+## Labelling Results
 
-This approach modifies the parameters dictionary directly and passes the entire filtered dictionary to `imf_dataset` as a single `parameters` keyword argument. This is more concise but requires understanding how the parameters dictionary works:
+Because the codes and the data are both tidy DataFrames keyed on the code, attaching human-readable labels is a merge:
 
 ``` {python}
-# Copy the params dictionary
-modified_params = params.copy()
+labelled = df.merge(
+    codes[codes["dimension_id"] == "INDICATOR"][["code", "name"]],
+    left_on="INDICATOR",
+    right_on="code",
+    how="left",
+).drop(columns=["code"]).rename(columns={"name": "indicator_name"})
 
-# Overwrite the data frame for each parameter in the dictionary with filtered rows
-modified_params['frequency'] = params['frequency'][
-    # ...where the input code description for frequency contains "Annual"
-    params['frequency']['description'].str.contains("Annual")
-]
-modified_params['type_of_transformation'] = params['type_of_transformation'][
-    # ...where the input code description for type_of_transformation contains "Index"
-    params['type_of_transformation']['description'].str.contains("Index")
-]
-
-# Pass the modified dictionary to imf_dataset
-df = imfp.imf_dataset(
-    database_id="PPI",
-    parameters=modified_params,
-    start_year=2000,
-    end_year=2015
-)
-
-df.head()
+labelled[["INDICATOR", "indicator_name", "TIME_PERIOD", "OBS_VALUE"]].head()
 ```
 
-Note that when using the parameters dictionary approach, you cannot combine it with individual parameter arguments. If you supply a `parameters` argument, any other keyword arguments for individual parameters will be ignored.
+## Handling Unknown Dimensions
+
+Asking for a dimension a dataset does not have is an error, and the message tells you what is available:
+
+``` {python}
+try:
+    imfp.imf_get_codelists("FREQ", "PCPS")
+except ValueError as e:
+    print(e)
+```
+
+## Next Step
+
+With dimension IDs and codes in hand, you are ready to request data. See [Fetching Data](datasets.qmd).
 
 
 ## Making a Request
 
-To retrieve data from an IMF database, you'll need the database ID and any relevant [filter parameters](parameters.qmd). Here's a basic example using the Producer Price Index (PPI) database from 2000 to 2015:
+`imf_get` takes a dataflow ID and the dimension filters you found with [`imf_get_codelists`](parameters.qmd):
 
 ``` {python}
 import imfp
 
-# Get parameters and their valid codes
-params = imfp.imf_parameters("PPI")
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
+)
+df.head()
+```
 
-# Fetch annual coal price index data
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=["A"],  # Annual frequency
-    indicator=["WPI"],  # Wholesale Price Index
-    type_of_transformation=["IX"],
-    start_year=2000,
-    end_year=2015
+Dimensions you do not mention are wildcarded, so the request above returns coal for every country in the dataset.
+
+## Two Ways to Pass Dimensions
+
+Filters can go in the `dimensions` dict, or in as keyword arguments, whichever reads better. Keyword names are matched case-insensitively:
+
+``` {python}
+df = imfp.imf_get("PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A")
+df.head(3)
+```
+
+A single code can be given as a bare string; several go in a list:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS",
+    indicator=["PCOAL", "PNGAS"],
+    data_transformation="INDEX",
+    frequency="A",
+)
+sorted(df["INDICATOR"].unique())
+```
+
+Passing the same dimension both ways is an error rather than a silent precedence rule:
+
+``` {python}
+try:
+    imfp.imf_get("PCPS", dimensions={"INDICATOR": "PCOAL"}, indicator="PNGAS")
+except ValueError as e:
+    print(e)
+```
+
+## The Returned Data
+
+`imf_get` returns tidy data — one observation per row, one variable per column:
+
+``` {python}
+df.dtypes
+```
+
+There is one column per dimension, named with its SDMX dimension ID, plus two more:
+
+- `TIME_PERIOD` — the period of the observation, as a string
+- `OBS_VALUE` — the observed value, as a float
+
+`OBS_VALUE` arrives already converted to `float64`, with non-numeric missing-value flags turned into `NaN`.
+
+`TIME_PERIOD` stays a string because its format depends on the frequency of the series: `"2000"` for annual data, `"2000-Q1"` for quarterly, `"2000-M01"` for monthly. See [Suggestions for Usage](usage.qmd#time-period-conversion) for conversion recipes.
+
+## Time Filtering
+
+`start_period` and `end_period` bound the time window. They accept a year, a quarter, or a month:
+
+``` {python}
+#| eval: false
+imfp.imf_get("GFS_SOO", country="ABW", frequency="A", start_period=2000, end_period=2015)
+imfp.imf_get("QNEA", country="USA", frequency="Q", start_period="2010-Q1")
+imfp.imf_get("CPI", country="USA", frequency="M", start_period="2010-01")
+```
+
+A bare year is widened to cover the whole year at the frequency you asked for: with `frequency="Q"`, `start_period=2010` means `2010-Q1` and `end_period=2015` means `2015-Q4`. When you request several frequencies at once, or none, the end bound widens far enough to keep every sub-annual period in that year.
+
+::: {.callout-warning}
+## Not every agency supports time filtering
+
+Time filtering happens server-side, and at present only datasets published by `IMF.STA` support it. For datasets published by other departments, `imf_get` warns you and returns the full time range:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    start_period=2000, end_period=2015,
 )
 ```
 
-This example creates two objects we'll use in the following sections:
-
-- `params`: A dictionary of parameters and their valid codes
-- `df`: The retrieved data frame containing our requested data
-
-## Decoding Returned Data
-
-When you retrieve data using `imf_dataset`, the returned data frame contains columns that correspond to the parameters you specified in your request. However, these columns use input codes (short identifiers) rather than human-readable descriptions. To make your data more interpretable, you can replace these codes with their corresponding text descriptions using the parameter information from `imf_parameters`, so that codes like "A" (Annual) or "W00" (World) become self-explanatory labels.
-
-For example, suppose we want to decode the `frequency`, `country`, and `type_of_transformation` (unit) columns in our dataset. We'll merge the parameter descriptions into our data frame:
+You can check which agency publishes a dataset with `imf_get_dataflows`, and filter the returned data yourself:
 
 ``` {python}
-# Decode frequency codes (e.g., "A" → "Annual")
-decoded_df = df.merge(
-    # Select code-description pairs
-    params['frequency'][['input_code', 'description']],
-    # Match codes in the data frame
-    left_on='frequency',
-    # ...to codes in the parameter data
-    right_on='input_code',
-    # Keep all data rows
-    how='left'
-).drop(columns=['frequency', 'input_code']
-).rename(columns={"description": "frequency"})
+subset = df[df["TIME_PERIOD"].between("2000", "2015")]
+subset["TIME_PERIOD"].agg(["min", "max"])
+```
+:::
 
-# Decode geographic area codes (e.g., "W00" → "World")
-decoded_df = decoded_df.merge(
-    params['country'][['input_code', 'description']],
-    left_on='country',
-    right_on='input_code',
-    how='left'
-).drop(columns=['country', 'input_code']
-).rename(columns={"description":"country"})
+## Empty Results
 
-# Decode unit codes (e.g., "IX" → "Index")
-decoded_df = decoded_df.merge(
-    params['type_of_transformation'][['input_code', 'description']],
-    left_on='type_of_transformation',
-    right_on='input_code',
-    how='left'
-).drop(columns=['type_of_transformation', 'input_code']
-).rename(columns={"description":"type_of_transformation"})
+A query that matches nothing returns an empty DataFrame and warns, rather than raising. This keeps a query that legitimately has no data from breaking an automated pipeline:
 
-decoded_df.head()
+``` {python}
+#| eval: false
+df = imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", data_transformation="USD")
+if df.empty:
+    print("No observations; try relaxing the filters.")
 ```
 
-After decoding, the data frame is much more human-interpretable. This transformation makes the data more accessible for analysis and presentation, while maintaining all the original information.
+The usual causes are a code that is valid for the dimension but has no data for the rest of your filters, or a combination of filters that is individually valid but jointly empty. Relax one dimension at a time to find out which.
+
+## Validating Codes
+
+`imf_get` checks that the *dimensions* you name belong to the dataset:
+
+``` {python}
+try:
+    imfp.imf_get("PCPS", not_a_dimension="X")
+except ValueError as e:
+    print(e)
+```
+
+It does not check the *codes*, because doing so would mean downloading every codelist before every request — often slower than the request itself. The API is the authority on which codes are valid; use `imf_get_codelists` when you want to check ahead of time.
+
+## Inspecting the Request
+
+`print_url=True` prints the URL being requested, which is the most useful thing to include when reporting a problem with a particular query:
+
+``` {python}
+df = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    print_url=True,
+)
+```
+
+For the unparsed SDMX-JSON response, use `return_raw=True`:
+
+``` {python}
+raw = imfp.imf_get(
+    "PCPS", indicator="PCOAL", data_transformation="INDEX", frequency="A",
+    return_raw=True,
+)
+list(raw.keys())
+```
+
+## Retries
+
+`max_tries` controls how many times a failed request is retried with exponential backoff. The default is 3:
+
+``` {python}
+#| eval: false
+df = imfp.imf_get("PCPS", indicator="PCOAL", max_tries=5)
+```
+
+See [Rate Limits](rate_limits.qmd) for more on working within the API's limits.
 
 
 
@@ -533,7 +813,7 @@ After decoding, the data frame is much more human-interpretable. This transforma
 
 ## Determining Data Availability
 
-The only way to be certain whether data is available for a given set of parameters is to make a request to the API and see if it succeeds. If you get an empty data frame, try a less restrictive version of your request.
+The only way to be certain whether data is available for a given set of dimension filters is to make a request to the API and see what comes back. `imf_get` returns an empty data frame and warns when a query matches nothing; if that happens, relax one dimension at a time to find the one that is over-restrictive.
 
 ## Working with Large Data Frames
 
@@ -550,10 +830,10 @@ import pandas as pd
 # Set float format to 2 decimal places for pandas display output
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
-df: pd.DataFrame = imfp.imf_dataset(
-    database_id="PCPS",
+df: pd.DataFrame = imfp.imf_get(
+    "PCPS",
     indicator=["PCOAL"],
-    data_transformation=["IX"]
+    data_transformation=["INDEX"],
 )
 
 # Quick summary of DataFrame
@@ -569,28 +849,16 @@ df.head()
 
 ### Cleaning Data
 
-#### Numeric Conversion
-
-All data is returned from the IMF API as a text (object) data type, so you will want to cast numeric columns to numeric.
-
-``` {python}
-# Numeric columns
-numeric_cols = ["obs_value"]
-
-# Cast numeric columns
-df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric)
-```
-
 #### Categorical Conversion
 
-You can also convert string columns to categorical types for better memory usage.
+`imf_get` already returns `OBS_VALUE` as a float, so no numeric conversion is needed. Dimension columns come back as strings, and converting them to pandas categoricals can save a great deal of memory on large frames:
 
 ``` {python}
-# Convert categorical columns like ref_area and indicator to category type
+# Convert dimension columns to category type
 categorical_cols = [
-  "frequency",
-  "country",
-  "indicator"
+  "FREQUENCY",
+  "COUNTRY",
+  "INDICATOR"
 ]
 
 df[categorical_cols] = df[categorical_cols].astype("category")
@@ -598,7 +866,7 @@ df[categorical_cols] = df[categorical_cols].astype("category")
 
 #### NA Removal
 
-After conversion, you may want to drop any rows with missing values.
+Observations the IMF reports as missing come back as `NaN`, so you may want to drop them:
 
 ``` {python}
 # Drop rows with missing values
@@ -607,27 +875,25 @@ df = df.dropna()
 
 #### Time Period Conversion
 
-The `time_period` column can be more difficult to work with, because it may be differently formatted depending on the frequency of the data.
+The `TIME_PERIOD` column is the awkward one, because its format depends on the frequency of the series.
 
-Annual data will be formatted as a four-digit year, such as "2000", which can be trivially converted to numeric.
-
-However, quarterly data will be formatted as "2000-Q1", monthly data will be formatted like "2000-M01", etc.
+Annual data is formatted as a four-digit year, such as "2000", which converts trivially to numeric. Quarterly data, though, is formatted as "2000-Q1", monthly data as "2000-M01", and so on.
 
 You can use the `pandas` library's `to_datetime()` method with the `format="mixed"` argument to convert this column to a datetime object in a format-agnostic way:
 
 ``` {python}
-# Convert time_period to datetime
-df["datetime"] = pd.to_datetime(df["time_period"], format="mixed")
-df[["frequency", "datetime"]].head()
+# Convert TIME_PERIOD to datetime
+df["datetime"] = pd.to_datetime(df["TIME_PERIOD"], format="mixed")
+df[["FREQUENCY", "datetime"]].head()
 ```
 
-Alternatively, you can split the `time_period` column into separate columns for year, quarter, and month, and then convert each to a numeric value:
+Alternatively, you can split the `TIME_PERIOD` column into separate columns for year, quarter, and month, and then convert each to a numeric value:
 
 ``` {python}
-# Split time_period into separate columns
-df["year"] = df["time_period"].str.extract(r"(\d{4})")[0]
-df["quarter"] = df["time_period"].str.extract(r"[Q](\d{1})")[0]
-df["month"] = df["time_period"].str.extract(r"[M](\d{2})")[0]
+# Split TIME_PERIOD into separate columns
+df["year"] = df["TIME_PERIOD"].str.extract(r"(\d{4})")[0]
+df["quarter"] = df["TIME_PERIOD"].str.extract(r"[Q](\d{1})")[0]
+df["month"] = df["TIME_PERIOD"].str.extract(r"[M](\d{2})")[0]
 
 # Convert year, quarter, and month to numeric
 df["year"] = pd.to_numeric(df["year"])
@@ -635,7 +901,7 @@ df["quarter"] = pd.to_numeric(df["quarter"])
 df["month"] = pd.to_numeric(df["month"])
 
 # Return head for non-na months
-df[["time_period", "year", "quarter", "month"]].dropna(subset=["month"]).head()
+df[["TIME_PERIOD", "year", "quarter", "month"]].dropna(subset=["month"]).head()
 ```
 
 ### Summarizing Data
@@ -688,29 +954,29 @@ First, let's retrieve the key adjustment variables:
 
 ``` {python}
 # Fetch GDP Deflator (Index, Quarterly)
-deflator = imfp.imf_dataset(
-    database_id="QNEA",
+deflator = imfp.imf_get(
+    "QNEA",
     indicator="B1GQ",
     price_type="PD",  # Price deflator
     type_of_transformation="IX",  # Index
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 
 # Fetch Population Estimates (Annual)
-population = imfp.imf_dataset(
-    database_id="WEO",
+population = imfp.imf_get(
+    "WEO",
     indicator="LP",
     frequency="A",
-    start_year=2010
+    start_period=2010,
 )
 
 # Fetch Exchange Rate (Quarterly)
-exchange_rate = imfp.imf_dataset(
-    database_id="ER", 
+exchange_rate = imfp.imf_get(
+    "ER",
     indicator="XDC_USD",  # Domestic currency per USD
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
@@ -718,13 +984,13 @@ We'll also retrieve a nominal GDP series to be adjusted:
 
 ``` {python}
 # Fetch Nominal GDP (Domestic currency, annual)
-nominal_gdp = imfp.imf_dataset(
-    database_id="ANEA",
+nominal_gdp = imfp.imf_get(
+    "ANEA",
     indicator="B1GQ",
     price_type="V",  # Current prices
     type_of_transformation="XDC",  # Domestic currency
     frequency="A",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
@@ -746,7 +1012,7 @@ The IMF has updated their API structure. The former IFS (International Financial
 - **CPI**: Consumer Price Index data
 - **MFS_CBS**: Monetary and Financial Statistics, Central Bank data
 
-Use `imf_databases()` to see all available databases and `imf_parameters(database_id)` to explore their indicators.
+Use `imf_get_dataflows()` to see all available datasets and `imf_get_datastructure(dataflow_id)` / `imf_get_codelists(dimensions, dataflow_id)` to explore their dimensions and indicators.
 :::
 
 ### Alternative: Using CPI for Price Adjustments
@@ -755,13 +1021,13 @@ If you prefer to use the Consumer Price Index instead of the GDP deflator:
 
 ``` {python}
 # Fetch CPI (All Items, Index)
-cpi = imfp.imf_dataset(
-    database_id="CPI",
+cpi = imfp.imf_get(
+    "CPI",
     index_type="CPI",
     coicop_1999="_T",  # All Items
     type_of_transformation="IX",  # Index
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
@@ -773,12 +1039,12 @@ When working with data of different frequencies, you'll often need to harmonize 
 
 ```{python}
 # Keep only Q4 observations for annual comparisons
-deflator = deflator[deflator['time_period'].str.contains("Q4")]
-exchange_rate = exchange_rate[exchange_rate['time_period'].str.contains("Q4")]
+deflator = deflator[deflator["TIME_PERIOD"].str.contains("Q4")]
+exchange_rate = exchange_rate[exchange_rate["TIME_PERIOD"].str.contains("Q4")]
 
 # Extract just the year from the time period for Q4 data
-deflator['time_period'] = deflator['time_period'].str[:4]
-exchange_rate['time_period'] = exchange_rate['time_period'].str[:4]
+deflator["TIME_PERIOD"] = deflator["TIME_PERIOD"].str[:4]
+exchange_rate["TIME_PERIOD"] = exchange_rate["TIME_PERIOD"].str[:4]
 ```
 
 ``` {python}
@@ -786,7 +1052,7 @@ exchange_rate['time_period'] = exchange_rate['time_period'].str[:4]
 #| echo: false
 # Hidden fixup to filter out exchange rate data before 2010
 # Remove this line when the start_year parameter is fixed for this query
-exchange_rate = exchange_rate[exchange_rate['time_period'].astype(int) > 2010]
+exchange_rate = exchange_rate[exchange_rate["TIME_PERIOD"].astype(int) > 2010]
 ```
 
 2. Calculating annual averages: This approach is more appropriate for flow variables (measurements over a period) and when you want to smooth out seasonal variations:
@@ -795,10 +1061,10 @@ exchange_rate = exchange_rate[exchange_rate['time_period'].astype(int) > 2010]
 #| eval: false
 # Alternative: Calculate annual averages
 deflator = deflator.groupby(
-    ['country', deflator['time_period']], 
+    ["COUNTRY", deflator["TIME_PERIOD"]],
     as_index=False
 ).agg({
-    'obs_value': 'mean'
+    "OBS_VALUE": "mean"
 })
 ```
 
@@ -806,23 +1072,23 @@ Choose the appropriate method based on your specific analysis needs and the econ
 
 ### Merging Datasets
 
-We can combine the datasets using `pd.DataFrame.merge()` with `country` and `time_period` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys:
 
 ``` {python}
 merged = (
     nominal_gdp.merge(
         deflator,
-        on=['country', 'time_period'],
-        suffixes=('_gdp', '_deflator')
+        on=["COUNTRY", "TIME_PERIOD"],
+        suffixes=("_gdp", "_deflator")
     )
     .merge(
         population,
-        on=['country', 'time_period']
+        on=["COUNTRY", "TIME_PERIOD"]
     )
     .merge(
         exchange_rate,
-        on=['country', 'time_period'],
-        suffixes=('_population', '_exchange_rate')
+        on=["COUNTRY", "TIME_PERIOD"],
+        suffixes=("_population", "_exchange_rate")
     )
 )
 ```
@@ -833,15 +1099,15 @@ With the merged dataset, we can now calculate real GDP and per capita values:
 
 ``` {python}
 # Convert nominal to real GDP
-merged['real_gdp'] = (
-    (merged['obs_value_gdp'] / merged['obs_value_deflator']) * 100
+merged["real_gdp"] = (
+    (merged["OBS_VALUE_gdp"] / merged["OBS_VALUE_deflator"]) * 100
 )
 
-# Calculate per capita values (using population obs_value)
-merged['real_gdp_per_capita'] = merged['real_gdp'] / merged['obs_value_population']
+# Calculate per capita values (using population OBS_VALUE)
+merged["real_gdp_per_capita"] = merged["real_gdp"] / merged["OBS_VALUE_population"]
 
 # Display the first 5 rows of the transformed data
-merged[['country', 'time_period', 'real_gdp', 'real_gdp_per_capita']].head()
+merged[["COUNTRY", "TIME_PERIOD", "real_gdp", "real_gdp_per_capita"]].head()
 ```
 
 ### Exchange Rate Adjustment
@@ -849,19 +1115,19 @@ merged[['country', 'time_period', 'real_gdp', 'real_gdp_per_capita']].head()
 Note that this result is still in the domestic currency of the country. If you need to convert to a common currency, you can use the exchange rate data from the ER (Exchange Rates) database.
 
 ``` {python}
-# Because 'obs_value_exchange_rate' is local-currency-per-USD,
+# Because "OBS_VALUE_exchange_rate" is local-currency-per-USD,
 # dividing local-currency real GDP by it yields GDP in USD.
 merged["real_gdp_usd"] = (
-    merged["real_gdp"] / merged["obs_value_exchange_rate"]
+    merged["real_gdp"] / merged["OBS_VALUE_exchange_rate"]
 )
 
 # (Optional) real GDP per capita in USD
 merged["real_gdp_usd_per_capita"] = (
-    merged["real_gdp_usd"] / merged["obs_value_population"]
+    merged["real_gdp_usd"] / merged["OBS_VALUE_population"]
 )
 
 # Inspect results
-merged[["time_period","country","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
+merged[["TIME_PERIOD","COUNTRY","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
 ```
 
 
@@ -910,7 +1176,7 @@ You can modify retry behavior:
 ``` {python}
 #| eval: false
 # Retry 4 times rather than the default 3
-df = imfp.imf_dataset("PPI", "WPI", times=4)
+df = imfp.imf_get("PPI", indicator="WPI", max_tries=4)
 ```
 
 ### Caching Strategy
@@ -924,24 +1190,189 @@ Note that to run this code, you will need to install the `pyarrow` library, whic
 import os
 import pandas as pd
 
-# Fetch imf databases from file if available, else from API
-cache_path = f"data/imf_databases.parquet"
+# Fetch imf dataflows from file if available, else from API
+cache_path = "data/imf_dataflows.parquet"
 if os.path.exists(cache_path):
-    databases = pd.read_parquet(cache_path)
+    dataflows = pd.read_parquet(cache_path)
 else:
-    databases = imfp.imf_databases()
+    dataflows = imfp.imf_get_dataflows()
     os.makedirs("data", exist_ok=True)
-    databases.to_parquet(cache_path)
+    dataflows.to_parquet(cache_path)
 ```
 
 You can also functionalize this logic to permit reuse several times in the same script or notebook. See Jenny Xu's excellent [demo notebook](demo.qmd#utility-functions) for example caching functions.
 
 ## Performance Tips
 
-1. **Filter Early**: Use parameters to limit data at the API level
+1. **Filter Early**: Use dimension filters to limit data at the API level
 2. **Parallelize Carefully**: Avoid running parallel API requests, even from multiple clients
 3. **Use Efficient Formats**: Store cached data in parquet or feather files
 4. **Validate Data**: Check for errors and empty responses
+
+
+## What Changed
+
+Version 2.0.0 reorganizes `imfp` around the [econdataverse](https://econdataverse.org/) conventions, matching the R package [imfapi](https://github.com/Teal-Insights/r-imfapi) so that the same workflow reads the same way in both languages. Concretely:
+
+- Functions are named for what they retrieve (`imf_get_*`), and every one returns a tidy DataFrame.
+- Vocabulary follows SDMX, the standard the IMF API actually speaks: *dataflows* rather than databases, *dimensions* rather than parameters, *codes* rather than input codes.
+- `imf_get_codelists` returns a single tidy DataFrame instead of a dict of DataFrames.
+
+The four pre-2.0 functions still work, but each now emits a `DeprecationWarning` and will be removed in 3.0.0.
+
+## Function Mapping
+
+| imfp 1.x | imfp 2.0 | Notes |
+|---|---|---|
+| `imf_databases()` | `imf_get_dataflows()` | Now also returns version, agency, structure, and last-updated columns. |
+| `imf_parameters(db)` | `imf_get_codelists(dims, db)` | Returns one tidy DataFrame instead of a dict of DataFrames. Takes the dimensions you want. |
+| `imf_parameter_defs(db)` | `imf_get_datastructure(db)` | Returns dimension IDs with their type and position. |
+| `imf_dataset(db, ...)` | `imf_get(db, ...)` | Takes plain code strings; returns SDMX-cased columns. |
+
+## Argument Mapping
+
+| imfp 1.x | imfp 2.0 |
+|---|---|
+| `database_id=` | first positional argument, `dataflow_id` |
+| `parameters=` (dict of DataFrames) | `dimensions=` (dict of code lists) |
+| `start_year=` / `end_year=` | `start_period=` / `end_period=` |
+| `times=` | `max_tries=` |
+| `print_url=` | `print_url=` (unchanged) |
+| `return_raw=` | `return_raw=` (unchanged) |
+| `include_metadata=` | removed — use `imf_get_dataflows()` for dataset metadata |
+
+## Side-by-Side
+
+### Listing datasets
+
+``` {python}
+#| eval: false
+# imfp 1.x
+databases = imfp.imf_databases()          # database_id, description
+
+# imfp 2.0
+dataflows = imfp.imf_get_dataflows()      # id, name, description, version, ...
+```
+
+The old `description` column held the dataset's *name*. In 2.0 the name and the description are separate columns.
+
+### Discovering how to filter
+
+``` {python}
+#| eval: false
+# imfp 1.x — a dict of DataFrames, one per parameter
+params = imfp.imf_parameters("PCPS")
+params.keys()
+params["frequency"]                       # input_code, description
+
+# imfp 2.0 — dimensions first, then codes, both tidy
+dims = imfp.imf_get_datastructure("PCPS") # dimension_id, type, position
+codes = imfp.imf_get_codelists("FREQUENCY", "PCPS")
+codes[["code", "name"]]
+```
+
+Note the dimension is now `FREQUENCY`, not `frequency`. Dimension IDs are matched case-insensitively, so either spelling works as an argument, but the values in the returned data keep the SDMX casing.
+
+### Fetching data
+
+``` {python}
+#| eval: false
+# imfp 1.x
+df = imfp.imf_dataset(
+    database_id="PCPS",
+    indicator=["PCOAL"],
+    data_transformation=["INDEX"],
+    frequency=["A"],
+    start_year=2000,
+    end_year=2015,
+)
+
+# imfp 2.0
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
+    start_period=2000,
+    end_period=2015,
+)
+```
+
+Keyword-argument style still works, so the shortest migration for many calls is to rename `database_id`, `start_year`, and `end_year`:
+
+``` {python}
+#| eval: false
+df = imfp.imf_get(
+    "PCPS", indicator=["PCOAL"], data_transformation=["INDEX"], frequency=["A"],
+    start_period=2000, end_period=2015,
+)
+```
+
+### Filtering by a DataFrame of parameters
+
+In 1.x you filtered a DataFrame from `imf_parameters` and passed the whole dict back in. In 2.0 you pass plain strings, so take the `code` column:
+
+``` {python}
+#| eval: false
+# imfp 1.x
+params = imfp.imf_parameters("PCPS")
+params["indicator"] = params["indicator"][
+    params["indicator"]["description"].str.contains("Coal")
+]
+df = imfp.imf_dataset("PCPS", parameters=params)
+
+# imfp 2.0
+codes = imfp.imf_get_codelists("INDICATOR", "PCPS")
+coal = codes[codes["name"].str.contains("Coal", na=False)]["code"].tolist()
+df = imfp.imf_get("PCPS", indicator=coal)
+```
+
+Passing a DataFrame where codes are expected raises a `ValueError` that says exactly this, rather than failing obscurely later.
+
+## Column Name Changes
+
+`imf_dataset` lower-cased its columns. `imf_get` keeps the SDMX dimension IDs as the API reports them, which is what `imfapi` does in R:
+
+``` {python}
+#| eval: false
+# imfp 1.x columns
+["country", "indicator", "data_transformation", "frequency", "time_period", "obs_value"]
+
+# imfp 2.0 columns
+["COUNTRY", "INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY", "TIME_PERIOD", "OBS_VALUE"]
+```
+
+If you have downstream code that depends on the old casing, rename after fetching:
+
+``` {python}
+#| eval: false
+df.columns = df.columns.str.lower()
+```
+
+## Behavior Changes
+
+**Empty results no longer raise.** `imf_dataset` raised a `ValueError` when a query matched nothing. `imf_get` returns an empty DataFrame and emits a `UserWarning`, so a legitimately empty query does not break a pipeline. Check `df.empty` where you previously caught the exception.
+
+**`OBS_VALUE` is numeric.** `imf_dataset` returned everything as strings, so guides recommended `pd.to_numeric`. `imf_get` returns `OBS_VALUE` as `float64` already. `TIME_PERIOD` stays a string, since its format varies with frequency.
+
+**Codes are not pre-validated.** `imf_dataset` downloaded every codelist to check your inputs and warned about invalid ones. `imf_get` skips that, which makes requests substantially faster; the API rejects genuinely invalid codes. Use `imf_get_codelists` when you want to check first.
+
+**No parameter-name coercion.** `imf_dataset` quietly rewrote `freq` to `frequency`, `country` to `ref_area`, and so on, warning as it went. `imf_get` does not guess: name the dimension the dataset actually uses. If you are unsure, `imf_get_datastructure` will tell you, and an incorrect name produces an error listing the valid ones.
+
+## Silencing the Deprecation Warnings
+
+If you are not ready to migrate, the old functions keep working through the 2.x series. To silence the warnings in the meantime:
+
+``` {python}
+#| eval: false
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="imfp")
+```
+
+They will stop working in 3.0.0, so treat this as a stopgap rather than a fix.
 
 
 
@@ -1013,7 +1444,7 @@ def load_or_fetch_databases():
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print("Fetching databases from IMF API...")
-    databases = imfp.imf_databases()
+    databases = imfp.imf_get_dataflows()
 
     # Save to CSV for future use
     databases.to_csv(csv_path, index=False)
@@ -1035,7 +1466,10 @@ def load_or_fetch_parameters(database_name):
 
     # If pickle doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching parameters for {database_name} from IMF API...")
-    parameters = imfp.imf_parameters(database_name)
+    dimensions = imfp.imf_get_datastructure(database_name)
+    parameters = imfp.imf_get_codelists(
+        list(dimensions["dimension_id"]), database_name
+    )
 
     # Save to pickle file for future use
     os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
@@ -1059,7 +1493,10 @@ def load_or_fetch_dataset(database_id, indicator):
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching dataset for {database_id}.{indicator} from IMF API...")
-    dataset = imfp.imf_dataset(database_id=database_id, indicator=[indicator])
+    dataset = imfp.imf_get(database_id, indicator=[indicator])
+    # The cached CSVs below this notebook were written with lower-cased column
+    # names, so normalize the API's SDMX casing to match them.
+    dataset.columns = dataset.columns.str.lower()
 
     # Save to CSV file for future use
     os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
@@ -1119,10 +1556,10 @@ Path("data").mkdir(exist_ok=True)
 # Load or fetch databases
 databases = load_or_fetch_databases()
 
-# Filter out databases that contain a year in the description
+# Filter out databases whose name contains a year
 databases[
-  ~databases['description'].str.contains(r"[\d]{4}", regex=True)
-]
+  ~databases['name'].str.contains(r"[\d]{4}", regex=True)
+][['id', 'name']]
 
 # view_dataframe_in_browser(databases)
 ```
@@ -1142,7 +1579,7 @@ Note: The Gender Inequality Index (GII) is a UN dataset that is no longer availa
 :::
 
 ```{python}
-databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
+databases[databases['id'].isin(['QNEA','ANEA','WEO'])][['id', 'name']]
 ```
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -1155,7 +1592,9 @@ params = {}
 for dataset in datasets_list:
     params[dataset] = load_or_fetch_parameters(dataset)
 
-    valid_keys = list(params[dataset].keys())
+    # imf_get_codelists returns one tidy frame, so the dimensions are the
+    # distinct values of its dimension_id column.
+    valid_keys = sorted(params[dataset]["dimension_id"].unique())
     print(f"Parameters for {dataset}: ", valid_keys)
 ```
 
@@ -1176,7 +1615,9 @@ def load_or_fetch_dataset_with_params(database_id, filename_suffix, **kwargs):
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching dataset for {database_id}.{filename_suffix} from IMF API...")
-    dataset = imfp.imf_dataset(database_id=database_id, **kwargs)
+    dataset = imfp.imf_get(database_id, **kwargs)
+    # Match the lower-cased column names used by the cached CSVs.
+    dataset.columns = dataset.columns.str.lower()
 
     # Save to CSV file for future use
     os.makedirs("data", exist_ok=True)

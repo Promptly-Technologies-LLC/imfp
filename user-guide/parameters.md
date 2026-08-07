@@ -1,248 +1,258 @@
-# Working with Parameters
+# Dimensions and Codes
 
 
-# Filtering IMF Dataset Requests with Parameters
+# Why Filtering Matters
 
-Once you have a `database_id`, it's possible to make a call to [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) to fetch the entire database:
-
-
-``` python
-import imfp
-import pandas as pd
-
-# Set float format to 2 decimal places for pandas display output
-pd.set_option('display.float_format', lambda x: '%.2f' % x)
-
-# Producer Price Index database
-database_id = "PPI"
-imfp.imf_dataset(database_id)
-```
-
-
-However, while this will succeed for a few small databases, it will fail for all of the larger ones. And even in the rare case when it succeeds, fetching an entire database can take a long time. You're much better off supplying additional filter parameters to reduce the size of your request.
-
-Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. You also have to have the list of valid input codes for each parameter. The [imf_parameters](../reference/imf_parameters.md#imfp.imf_parameters) function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.
-
-
-# Understanding Filter Parameters
-
-Each database available through the IMF API has its own set of parameters that can be used to filter and specify the data you want to retrieve.
-
-Each parameter will be a column in the data. Each row in the data will contain a value for that parameter. The parameter will always be a categorical variable, meaning that it can take only a limited set of values. We refer to these values as "input codes," because you can input them in your API request to filter the data.
-
-What this means, though, is that before making an API request to retrieve data, you need to know what the available filtering parameters are for the database, and what codes you can use for filtering the data by each parameter.
-
-There are two main functions for working with parameters:
-
-- [imf_parameters()](../reference/imf_parameters.md#imfp.imf_parameters): Get the full list of parameters and valid input codes for a database
-- [imf_parameter_defs()](../reference/imf_parameter_defs.md#imfp.imf_parameter_defs): Get text descriptions of what each parameter represents
-
-
-# Discovering Available Parameters
-
-To get started, you'll need to know what parameters are available for your chosen database. Use [imf_parameters()](../reference/imf_parameters.md#imfp.imf_parameters) to get this information:
+Once you have a dataflow ID, you can in principle request the whole dataset:
 
 
 ``` python
 import imfp
 
-# Fetch list of valid parameters for the Producer Price Index database
-params = imfp.imf_parameters("PPI")
-
-# View the available parameter names
-params.keys()
+# Requests all of the Producer Price Index dataset
+imfp.imf_get("PPI")
 ```
 
 
-    dict_keys(['country', 'indicator', 'type_of_transformation', 'frequency'])
+This succeeds for a few small datasets and fails for all the large ones, and even when it succeeds it is slow. In practice you almost always want to filter.
+
+Filtering an IMF dataset takes two pieces of information, and `imfp` has one function for each:
+
+- **Which dimensions does this dataset have?** -- [imf_get_datastructure](../reference/imf_get_datastructure.md#imfp.imf_get_datastructure)
+- **What values does each dimension accept?** -- [imf_get_codelists](../reference/imf_get_codelists.md#imfp.imf_get_codelists)
 
 
-The function returns a dictionary of data frames.
+# Dimensions
 
-Each key in the dictionary corresponds to a parameter used in making requests from the database. The value for each key is a data frame with the following columns:
+Every dataset is described by a *datastructure definition* (DSD), which lists the **dimensions** the data is broken out by. Each dimension becomes a column in the returned data, and each is categorical: it accepts only a fixed set of values.
 
-- `input_code`: The valid codes you can use for that parameter
-- `description`: A short text description of what each code represents
-
-For example, to see the valid codes for the `frequency` parameter:
+Datasets do not share a common set of dimensions. Some use `COUNTRY`, others `REF_AREA`; some spell frequency `FREQUENCY` and others `FREQ`. This is why you have to ask.
 
 
 ``` python
-# View the data frame of valid input codes for the frequency parameter
-params['frequency']
+import imfp
+
+dimensions = imfp.imf_get_datastructure("PCPS")
+dimensions
 ```
 
 
-|     | input_code | description           |
-|-----|------------|-----------------------|
-| 0   | A          | Annual                |
-| 1   | D          | Daily                 |
-| 2   | M          | Monthly               |
-| 3   | Q          | Quarterly             |
-| 4   | S          | Half-yearly, semester |
-| 5   | W          | Weekly                |
-| 6   | A2         | Biennial              |
-| 7   | A3         | Triennial             |
-| 8   | A4         | Quadrennial           |
-| 9   | A5         | Quinquennial          |
-| 10  | A10        | Decennial             |
-| 11  | A20        | Bidecennial           |
-| 12  | A30        | Tridecennial          |
-| 13  | A_3        | Three times a year    |
-| 14  | M2         | Bimonthly             |
-| 15  | M_2        | Semimonthly           |
-| 16  | M_3        | Three times a month   |
-| 17  | W2         | Biweekly              |
-| 18  | W3         | Triweekly             |
-| 19  | W4         | Four-weekly           |
-| 20  | W_2        | Semiweekly            |
-| 21  | W_3        | Three times a week    |
-| 22  | D_2        | Twice a day           |
-| 23  | H          | Hourly                |
-| 24  | H2         | Bihourly              |
-| 25  | H3         | Trihourly             |
-| 26  | B          | Daily - business week |
-| 27  | N          | Minutely              |
-| 28  | I          | Irregular             |
-| 29  | OA         | Occasional annual     |
-| 30  | OM         | Occasional monthly    |
-| 31  | \_O        | Other                 |
-| 32  | \_U        | Unspecified           |
-| 33  | \_Z        | Not applicable        |
+|     | dimension_id        | type      | position |
+|-----|---------------------|-----------|----------|
+| 0   | COUNTRY             | Dimension | 0        |
+| 1   | INDICATOR           | Dimension | 1        |
+| 2   | DATA_TRANSFORMATION | Dimension | 2        |
+| 3   | FREQUENCY           | Dimension | 3        |
 
 
-# Parameter Definitions
+The columns are:
 
-If the parameter name is not self-explanatory, you can use the [imf_parameter_defs()](../reference/imf_parameter_defs.md#imfp.imf_parameter_defs) function to get a text description of what each parameter represents.
+| Column | Meaning |
+|----|----|
+| `dimension_id` | The dimension's ID -- what you filter on in [imf_get](../reference/imf_get.md#imfp.imf_get). |
+| `type` | `Dimension`, `TimeDimension`, or `Measure`. |
+| `position` | The dimension's slot in the dataset's series key. |
+
+
+## Position
+
+`position` is the dimension's slot in the request the API actually receives. IMF requests are *positional*: filters are sent as a dot-separated key in which each slot corresponds to one dimension, in this order, and an unfiltered slot is a wildcard. [imf_get](../reference/imf_get.md#imfp.imf_get) assembles that key for you, so you never have to think about position -- but it explains why the order of dimensions is fixed and worth glancing at.
+
+
+## Time and Measures
+
+By default [imf_get_datastructure](../reference/imf_get_datastructure.md#imfp.imf_get_datastructure) lists only the dimensions you can filter on. Time is excluded because you filter it through `start_period`/`end_period` rather than through the key, and measures are excluded because they are outputs rather than filters. Ask for them explicitly if you want to see them:
 
 
 ``` python
-# Get descriptions of what each parameter means
-params_defs = imfp.imf_parameter_defs("PPI")
-
-params_defs
+imfp.imf_get_datastructure("PCPS", include_time=True, include_measures=True)
 ```
 
 
-|  | parameter | description |
-|----|----|----|
-| 0 | country | Country |
-| 1 | indicator | Producer Price Index (PPI) Indicator codelist |
-| 2 | type_of_transformation | Producer Price Indexes (PPI) Type of Transform... |
-| 3 | frequency | Frequency |
+|     | dimension_id        | type          | position |
+|-----|---------------------|---------------|----------|
+| 0   | COUNTRY             | Dimension     | 0        |
+| 1   | INDICATOR           | Dimension     | 1        |
+| 2   | DATA_TRANSFORMATION | Dimension     | 2        |
+| 3   | FREQUENCY           | Dimension     | 3        |
+| 4   | TIME_PERIOD         | TimeDimension | 4        |
+| 5   | OBS_VALUE           | Measure       | \<NA\>   |
 
 
-# Supplying Parameters
+Note that the measure has no `position`: it does not occupy a slot in the series key.
 
 
-## Basic Approach (Recommended for Most Users)
+# Codes
 
-To make a request to fetch data from the IMF API, just call [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.
-
-For instance, on exploring the `frequency` parameter of the Producer Price Index database above, we found that the frequency can take one of three values: "A" for annual, "Q" for quarterly, and "M" for monthly. Thus, to request annual data, we can call [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) with `frequency = ["A"]`.
-
-Here's a complete example that fetches annual producer prices from 2000 to 2015:
+Knowing that `PCPS` has an `INDICATOR` dimension does not tell you that coal is `PCOAL`. For that, use [imf_get_codelists](../reference/imf_get_codelists.md#imfp.imf_get_codelists), which returns the valid codes for one or more dimensions:
 
 
 ``` python
-# Example: Get annual prices
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=["A"],  # Annual frequency
-    indicator=["PPI"],  # Producer Price Index
-    start_year=2000,
-    end_year=2015
-)
+frequencies = imfp.imf_get_codelists("FREQUENCY", "PCPS")
+frequencies[["code", "name"]].head()
 ```
 
 
-## Advanced Approaches
+|     | code | name                  |
+|-----|------|-----------------------|
+| 0   | A    | Annual                |
+| 1   | D    | Daily                 |
+| 2   | M    | Monthly               |
+| 3   | Q    | Quarterly             |
+| 4   | S    | Half-yearly, semester |
 
-For more complex queries, there are two programmatic ways to supply parameters to [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset). These approaches are particularly useful when you need to filter parameters based on their descriptions or when working with multiple parameter values.
+
+The columns are:
+
+| Column | Meaning |
+|----|----|
+| `dimension_id` | Which dimension the code belongs to. |
+| `code` | The value to pass to [imf_get](../reference/imf_get.md#imfp.imf_get). |
+| `name` | Short human-readable label. |
+| `description` | Longer definition, where the IMF provides one. |
+| `codelist_id` | ID of the codelist this came from, e.g. `CL_FREQ`. |
+| `codelist_agency` | Agency that maintains the codelist. |
+| `codelist_version` | Version of the codelist. |
+
+Dimension IDs are matched case-insensitively, so `"frequency"` and `"FREQUENCY"` both work.
 
 
-### 1. List Arguments with Parameter Filtering
+## Fetching Several Dimensions at Once
 
-This approach uses string matching to find the correct parameter codes before passing them to [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset):
+Pass a list to get everything in one tidy frame -- one row per code, with `dimension_id` telling you which dimension each row belongs to:
 
 
 ``` python
-# Fetch the input code column of the frequency parameter...
-selected_frequency = list(
-    params['frequency']['input_code'][
-        # ...where the description contains "Annual"
-        params['frequency']['description'].str.contains("Annual")
-    ]
+codes = imfp.imf_get_codelists(
+    ["INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY"], "PCPS"
 )
+codes.groupby("dimension_id").size()
+```
 
-# Fetch the input code column of the unit_measure parameter...
-selected_type_of_transformation = list(
-    params['type_of_transformation']['input_code'][
-        # ...where the description contains "Index"
-        params['type_of_transformation']['description'].str.contains("Index")
-    ]
+
+    dimension_id
+    DATA_TRANSFORMATION      4
+    FREQUENCY               34
+    INDICATOR              136
+    dtype: int64
+
+
+Since it is a single DataFrame, searching it is an ordinary filter:
+
+
+``` python
+codes[
+    (codes["dimension_id"] == "INDICATOR")
+    & codes["name"].str.contains("Coal", case=False, na=False)
+][["code", "name"]]
+```
+
+
+|     | code    | name                                              |
+|-----|---------|---------------------------------------------------|
+| 14  | PCOAL   | Coal index, Commodity price index, Index, 2016... |
+| 15  | PCOALAU | Coal, Australia, US dollars per metric tonne, ... |
+| 16  | PCOALSA | Coal, South Africa, US dollars per metric tonn... |
+
+
+``` python
+codes[codes["dimension_id"] == "DATA_TRANSFORMATION"][["code", "name"]]
+```
+
+
+|     | code       | name                                  |
+|-----|------------|---------------------------------------|
+| 136 | INDEX      | Index                                 |
+| 137 | INDEX_PCH  | Index, percent change                 |
+| 138 | INDEX_PCHY | Index, percent change from a year ago |
+| 139 | USD        | US dollars                            |
+
+
+To pull every dimension's codes in one call, feed it the datastructure:
+
+
+``` python
+all_codes = imfp.imf_get_codelists(list(dimensions["dimension_id"]), "PCPS")
+```
+
+
+Note that country codelists tend to be large, so this can take a moment.
+
+
+# Using Codes in a Request
+
+The `code` column holds exactly the values [imf_get](../reference/imf_get.md#imfp.imf_get) expects:
+
+
+``` python
+coal = codes[
+    (codes["dimension_id"] == "INDICATOR")
+    & (codes["code"] == "PCOAL")
+]["code"].tolist()
+
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": coal,
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
 )
-
-# Request data from the API using the filtered parameter code lists
-df = imfp.imf_dataset(
-    database_id="PPI",
-    frequency=selected_frequency,
-    type_of_transformation=selected_type_of_transformation,
-    start_year=2000,
-    end_year=2015
-)
-
 df.head()
 ```
 
 
-|     | country | indicator | type_of_transformation | frequency | time_period | obs_value  |
-|-----|---------|-----------|------------------------|-----------|-------------|------------|
-| 0   | AGO     | WPI       | IX                     | A         | 2008        | 80.099924  |
-| 1   | AGO     | WPI       | IX                     | A         | 2009        | 88.676029  |
-| 2   | AGO     | WPI       | IX                     | A         | 2010        | 100.000000 |
-| 3   | AGO     | WPI       | IX                     | A         | 2011        | 111.889914 |
-| 4   | AGO     | WPI       | IX                     | A         | 2012        | 117.840781 |
+|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
+|-----|---------|-----------|---------------------|-----------|-------------|-----------|
+| 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.892138 |
+| 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.279151 |
+| 2   | G001    | PCOAL     | INDEX               | A         | 1994        | 45.213931 |
+| 3   | G001    | PCOAL     | INDEX               | A         | 1995        | 55.433711 |
+| 4   | G001    | PCOAL     | INDEX               | A         | 1996        | 53.179458 |
 
 
-### 2. Parameters Dictionary Approach
+# Labelling Results
 
-This approach modifies the parameters dictionary directly and passes the entire filtered dictionary to [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) as a single `parameters` keyword argument. This is more concise but requires understanding how the parameters dictionary works:
+Because the codes and the data are both tidy DataFrames keyed on the code, attaching human-readable labels is a merge:
 
 
 ``` python
-# Copy the params dictionary
-modified_params = params.copy()
+labelled = df.merge(
+    codes[codes["dimension_id"] == "INDICATOR"][["code", "name"]],
+    left_on="INDICATOR",
+    right_on="code",
+    how="left",
+).drop(columns=["code"]).rename(columns={"name": "indicator_name"})
 
-# Overwrite the data frame for each parameter in the dictionary with filtered rows
-modified_params['frequency'] = params['frequency'][
-    # ...where the input code description for frequency contains "Annual"
-    params['frequency']['description'].str.contains("Annual")
-]
-modified_params['type_of_transformation'] = params['type_of_transformation'][
-    # ...where the input code description for type_of_transformation contains "Index"
-    params['type_of_transformation']['description'].str.contains("Index")
-]
-
-# Pass the modified dictionary to imf_dataset
-df = imfp.imf_dataset(
-    database_id="PPI",
-    parameters=modified_params,
-    start_year=2000,
-    end_year=2015
-)
-
-df.head()
+labelled[["INDICATOR", "indicator_name", "TIME_PERIOD", "OBS_VALUE"]].head()
 ```
 
 
-|     | country | indicator | type_of_transformation | frequency | time_period | obs_value  |
-|-----|---------|-----------|------------------------|-----------|-------------|------------|
-| 0   | AGO     | WPI       | IX                     | A         | 2008        | 80.099924  |
-| 1   | AGO     | WPI       | IX                     | A         | 2009        | 88.676029  |
-| 2   | AGO     | WPI       | IX                     | A         | 2010        | 100.000000 |
-| 3   | AGO     | WPI       | IX                     | A         | 2011        | 111.889914 |
-| 4   | AGO     | WPI       | IX                     | A         | 2012        | 117.840781 |
+|  | INDICATOR | indicator_name | TIME_PERIOD | OBS_VALUE |
+|----|----|----|----|----|
+| 0 | PCOAL | Coal index, Commodity price index, Index, 2016... | 1992 | 49.892138 |
+| 1 | PCOAL | Coal index, Commodity price index, Index, 2016... | 1993 | 43.279151 |
+| 2 | PCOAL | Coal index, Commodity price index, Index, 2016... | 1994 | 45.213931 |
+| 3 | PCOAL | Coal index, Commodity price index, Index, 2016... | 1995 | 55.433711 |
+| 4 | PCOAL | Coal index, Commodity price index, Index, 2016... | 1996 | 53.179458 |
 
 
-Note that when using the parameters dictionary approach, you cannot combine it with individual parameter arguments. If you supply a `parameters` argument, any other keyword arguments for individual parameters will be ignored.
+# Handling Unknown Dimensions
+
+Asking for a dimension a dataset does not have is an error, and the message tells you what is available:
+
+
+``` python
+try:
+    imfp.imf_get_codelists("FREQ", "PCPS")
+except ValueError as e:
+    print(e)
+```
+
+
+    Unknown dimension(s) for PCPS: FREQ. Available: COUNTRY, DATA_TRANSFORMATION, FREQUENCY, INDICATOR, OBS_VALUE, TIME_PERIOD. Use imf_get_datastructure('PCPS') to list them.
+
+
+# Next Step
+
+With dimension IDs and codes in hand, you are ready to request data. See [Fetching Data](datasets.md).

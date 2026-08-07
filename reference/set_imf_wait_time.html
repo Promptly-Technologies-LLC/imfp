@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "@context": "https://schema.org",
     "@type": "SoftwareSourceCode",
     "name": "imfp",
-    "description": "Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.",
+    "description": "Python package for downloading economic data from the International Monetary Fund SDMX 3.0 API, following econdataverse conventions.",
     "license": "https://opensource.org/licenses/MIT",
     "url": "https://Promptly-Technologies-LLC.github.io/imfp",
     "documentation": "https://Promptly-Technologies-LLC.github.io/imfp",
@@ -223,9 +223,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Functions</span></a>
+ <span class="menu-text">Fetching Data</span></a>
 </div>
       <ul id="quarto-sidebar-section-1" class="list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_dataflows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_dataflows</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_datastructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_datastructure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_codelists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_codelists</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Configuration</span></a>
+</div>
+      <ul id="quarto-sidebar-section-2" class="list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/set_imf_app_name.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">set_imf_app_name</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/set_imf_wait_time.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">set_imf_wait_time</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Deprecated</span></a>
+</div>
+      <ul id="quarto-sidebar-section-3" class="list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/imf_databases.html" class="sidebar-item-text sidebar-link">
@@ -248,18 +300,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../reference/imf_dataset.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">imf_dataset</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/set_imf_app_name.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">set_imf_app_name</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/set_imf_wait_time.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">set_imf_wait_time</span></a>
   </div>
 </li>
       </ul>
@@ -306,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/admin.py#L54-L69" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/admin.py#L55-L72" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">set_imf_wait_time</span>(<span class="va">wait_time</span><span class="op">=</span><span class="fl">1.5</span>)</span></code></pre></div>
@@ -315,9 +355,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="doc-parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">wait_time</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Union[int, float]</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="fl">1.5</span></span></code></dt>
+<dt><code><span class="doc-parameter-name">wait_time</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int or float</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="fl">1.5</span></span></code></dt>
 <dd>
-The wait time in seconds to be set as an environment variable. Defaults to 1.5.
+The wait time in seconds to be set as
 </dd>
 </dl>
 </div>
@@ -332,7 +372,7 @@ The wait time in seconds to be set as an environment variable. Defaults to 1.5.
 </dd>
 <dt><code> <span class="doc-parameter-annotation">ValueError</span></code></dt>
 <dd>
-If the provided wait_time is not greater than 0.
+If the provided wait_time is negative.
 </dd>
 </dl>
 </div>

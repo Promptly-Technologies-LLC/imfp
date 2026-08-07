@@ -17,6 +17,10 @@ imf_parameter_defs(
 
 requests from a given IMF database
 
+> **Warning: Deprecated since version 2.0.0**
+>
+> Use [imfp.imf_get_datastructure()](imf_get_datastructure.md#imfp.imf_get_datastructure) instead. This function will be removed in imfp 3.0.0.
+
 
 database_id : str A database_id from imf_databases(). times : int, optional, default 3 Maximum number of API requests to attempt. inputs_only : bool, optional, default False Whether to return only parameters used as inputs in API requests, or also output variables.
 

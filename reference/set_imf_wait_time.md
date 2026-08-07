@@ -14,8 +14,8 @@ set_imf_wait_time(wait_time=1.5)
 ## Parameters
 
 
-`wait_time: Union[int, float] = ``1.5`  
-The wait time in seconds to be set as an environment variable. Defaults to 1.5.
+`wait_time: int or float = ``1.5`  
+The wait time in seconds to be set as
 
 
 ## Raises
@@ -25,4 +25,4 @@ The wait time in seconds to be set as an environment variable. Defaults to 1.5.
 If the provided wait_time is not a numeric value (int or float).
 
 `ValueError`  
-If the provided wait_time is not greater than 0.
+If the provided wait_time is negative.

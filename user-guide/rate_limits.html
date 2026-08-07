@@ -71,7 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../user-guide/demo.html" rel="next">
+<link href="../user-guide/migration.html" rel="next">
 <link href="../user-guide/usage.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -212,19 +212,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/databases.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working with Databases</span></a>
+ <span class="menu-text">Discovering Datasets</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working with Parameters</span></a>
+ <span class="menu-text">Dimensions and Codes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Requesting Datasets</span></a>
+ <span class="menu-text">Fetching Data</span></a>
   </div>
 </li>
       </ul>
@@ -245,6 +245,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../user-guide/rate_limits.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Rate Limits</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../user-guide/migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Migrating from imfp 1.x</span></a>
   </div>
 </li>
       </ul>
@@ -314,7 +320,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The IMF API has an application-based rate limit of 50 requests per second. Each application is identified by the “user_agent” variable in the request header. By default, all <code>imfp</code> users share the same application name, which could lead to rate limit issues if many users are making requests simultaneously.</p>
 <p>This could prove problematic if the <code>imfp</code> library became too popular and too many users tried to make simultaneous API requests using the default app name. By setting a custom application name, users can avoid hitting this rate limit and being blocked by the API. To solve this problem, <code>imfp</code> supplies the <a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="gdls-link gdls-code">set_imf_app_name()</a> function to set a custom application name.</p>
 <p><a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="gdls-link gdls-code">set_imf_app_name()</a> sets the application name by changing the <code>IMF_APP_NAME</code> variable in the environment. If this variable doesn’t exist, <a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="gdls-link gdls-code">set_imf_app_name()</a> will create it. To set a custom application name, simply call the <a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="gdls-link gdls-code">set_imf_app_name()</a> function with your desired application name as an argument:</p>
-<div id="f00d340b" class="cell" data-execution_count="1">
+<div id="f46f37cb" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Set custom app name as an environment variable</span></span>
@@ -325,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="managing-request-timing" class="level2">
 <h2 class="anchored" data-anchor-id="managing-request-timing">Managing Request Timing</h2>
 <p>If making multiple requests in a short period of time, you may want to increase the wait time between requests to avoid hitting the API’s rate limits. This is done with the <a href="../reference/set_imf_wait_time.html#imfp.set_imf_wait_time" class="gdls-link gdls-code">set_imf_wait_time()</a> function:</p>
-<div id="09dd1f84" class="cell" data-execution_count="2">
+<div id="17ba6a9b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Increase wait time to 5 seconds</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>imfp.set_imf_wait_time(<span class="dv">5</span>)</span></code></pre></div>
 </div>
@@ -340,27 +346,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Stops after 3 attempts (default)</li>
 </ol>
 <p>You can modify retry behavior:</p>
-<div id="e204756e" class="cell" data-execution_count="3">
+<div id="f9bc50b5" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Retry 4 times rather than the default 3</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(<span class="st">"PPI"</span>, <span class="st">"WPI"</span>, times<span class="op">=</span><span class="dv">4</span>)</span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_get(<span class="st">"PPI"</span>, indicator<span class="op">=</span><span class="st">"WPI"</span>, max_tries<span class="op">=</span><span class="dv">4</span>)</span></code></pre></div>
 </div>
 </section>
 <section id="caching-strategy" class="level2">
 <h2 class="anchored" data-anchor-id="caching-strategy">Caching Strategy</h2>
 <p>To reduce API calls, you can cache frequently accessed data. For instance, in a Jupyter or Quarto notebook that you run multiple times, you can wrap each <code>imfp</code> function call in an <code>if</code> statement that checks if the returned data has already been saved to a file. If it has, it loads the data from the file. If it hasn’t, it fetches the data from the API and saves it to a file.</p>
 <p>Note that to run this code, you will need to install the <code>pyarrow</code> library, which <code>pandas</code> uses as its engine for reading and writing parquet files (but which is not installed with <code>pandas</code> or <code>imfp</code> by default). Use <code>pip install pyarrow</code> to install it.</p>
-<div id="9cd52fb9" class="cell" data-execution_count="4">
+<div id="87d50f52" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch imf databases from file if available, else from API</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>cache_path <span class="op">=</span> <span class="ss">f"data/imf_databases.parquet"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch imf dataflows from file if available, else from API</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>cache_path <span class="op">=</span> <span class="st">"data/imf_dataflows.parquet"</span></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> os.path.exists(cache_path):</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    databases <span class="op">=</span> pd.read_parquet(cache_path)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    dataflows <span class="op">=</span> pd.read_parquet(cache_path)</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    databases <span class="op">=</span> imfp.imf_databases()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    os.makedirs(<span class="st">"data"</span>, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    databases.to_parquet(cache_path)</span></code></pre></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    dataflows.to_parquet(cache_path)</span></code></pre></div>
 </div>
 <p>You can also functionalize this logic to permit reuse several times in the same script or notebook. See Jenny Xu’s excellent <a href="../user-guide/demo.html#utility-functions">demo notebook</a> for example caching functions.</p>
 </section>
@@ -368,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="performance-tips" class="level1">
 <h1>Performance Tips</h1>
 <ol type="1">
-<li><strong>Filter Early</strong>: Use parameters to limit data at the API level</li>
+<li><strong>Filter Early</strong>: Use dimension filters to limit data at the API level</li>
 <li><strong>Parallelize Carefully</strong>: Avoid running parallel API requests, even from multiple clients</li>
 <li><strong>Use Efficient Formats</strong>: Store cached data in parquet or feather files</li>
 <li><strong>Validate Data</strong>: Check for errors and empty responses</li>
@@ -723,8 +729,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../user-guide/demo.html" class="pagination-link" aria-label="Economic Growth and Gender Equality: An Analysis Using IMF Data">
-        <span class="nav-page-text">Economic Growth and Gender Equality: An Analysis Using IMF Data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../user-guide/migration.html" class="pagination-link" aria-label="Migrating from imfp 1.x">
+        <span class="nav-page-text">Migrating from imfp 1.x</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -2,7 +2,7 @@
   "skills": [
     {
       "name": "imfp",
-      "description": "Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint. Use when writing Python code that uses the imfp package.",
+      "description": "Python package for downloading economic data from the International Monetary Fund SDMX 3.0 API, following econdataverse conventions. Use when writing Python code that uses the imfp package.",
       "files": [
         "SKILL.md"
       ]

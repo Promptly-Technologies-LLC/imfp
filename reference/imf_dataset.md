@@ -17,6 +17,11 @@ imf_dataset(database_id: str, parameters: dict[str, DataFrame] | None = None, st
 ```
 
 
+> **Warning: Deprecated since version 2.0.0**
+>
+> Use [imfp.imf_get()](imf_get.md#imfp.imf_get) instead. This function will be removed in imfp 3.0.0.
+
+
 ## Parameters
 
 

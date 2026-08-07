@@ -86,13 +86,13 @@ ul.task-list li input[type="checkbox"] {
 
   <link rel="alternate" type="text/markdown" href="index.md">
   <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/reference/">
-  <meta name="description" content="Public functions for discovering IMF databases and downloading data">
+  <meta name="description" content="The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "SoftwareSourceCode",
   "name": "imfp",
-  "description": "Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.",
+  "description": "Python package for downloading economic data from the International Monetary Fund SDMX 3.0 API, following econdataverse conventions.",
   "license": "https://opensource.org/licenses/MIT",
   "url": "https://Promptly-Technologies-LLC.github.io/imfp",
   "documentation": "https://Promptly-Technologies-LLC.github.io/imfp",
@@ -104,12 +104,12 @@ ul.task-list li input[type="checkbox"] {
 </script>
   <meta property="og:type" content="website">
   <meta property="og:title" content="API Reference – imfp | imfp">
-  <meta property="og:description" content="Public functions for discovering IMF databases and downloading data">
+  <meta property="og:description" content="The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.">
   <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp/reference/">
   <meta property="og:site_name" content="imfp">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="API Reference – imfp | imfp">
-  <meta name="twitter:description" content="Public functions for discovering IMF databases and downloading data">
+  <meta name="twitter:description" content="The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-reference quarto-light">
@@ -176,9 +176,61 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Functions</span></a>
+ <span class="menu-text">Fetching Data</span></a>
 </div>
       <ul id="quarto-sidebar-section-1" class="list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_dataflows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_dataflows</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_datastructure.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_datastructure</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get_codelists.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get_codelists</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/imf_get.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">imf_get</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Configuration</span></a>
+</div>
+      <ul id="quarto-sidebar-section-2" class="list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/set_imf_app_name.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">set_imf_app_name</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reference/set_imf_wait_time.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">set_imf_wait_time</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Deprecated</span></a>
+</div>
+      <ul id="quarto-sidebar-section-3" class="list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../reference/imf_databases.html" class="sidebar-item-text sidebar-link">
@@ -203,18 +255,6 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">imf_dataset</span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/set_imf_app_name.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">set_imf_app_name</span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reference/set_imf_wait_time.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">set_imf_wait_time</span></a>
-  </div>
-</li>
       </ul>
   </li>
     </ul>
@@ -227,7 +267,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#functions" id="toc-functions" class="nav-link active" data-scroll-target="#functions">Functions</a></li>
+  <li><a href="#fetching-data" id="toc-fetching-data" class="nav-link active" data-scroll-target="#fetching-data">Fetching Data</a></li>
+  <li><a href="#configuration" id="toc-configuration" class="nav-link" data-scroll-target="#configuration">Configuration</a></li>
+  <li><a href="#deprecated" id="toc-deprecated" class="nav-link" data-scroll-target="#deprecated">Deprecated</a></li>
   </ul>
 </nav>
     </div>
@@ -253,10 +295,50 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="functions" class="level2 doc-group">
-<h2 class="doc-group">Functions</h2>
+<section id="fetching-data" class="level2 doc-group">
+<h2 class="doc-group">Fetching Data</h2>
 <div class="doc-description">
-<p>Public functions for discovering IMF databases and downloading data</p>
+<p>The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.</p>
+</div>
+<dl>
+<dt><a href="../reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="doc-function doc-label doc-label-function">imf_get_dataflows()</a></dt>
+<dd>
+<p>List every dataset published through the IMF Data API.</p>
+</dd>
+<dt><a href="../reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="doc-function doc-label doc-label-function">imf_get_datastructure()</a></dt>
+<dd>
+<p>List the dimensions a dataset can be filtered on.</p>
+</dd>
+<dt><a href="../reference/imf_get_codelists.html#imfp.imf_get_codelists" class="doc-function doc-label doc-label-function">imf_get_codelists()</a></dt>
+<dd>
+<p>Look up the valid codes for one or more of a dataset’s dimensions.</p>
+</dd>
+<dt><a href="../reference/imf_get.html#imfp.imf_get" class="doc-function doc-label doc-label-function">imf_get()</a></dt>
+<dd>
+<p>Fetch observations from an IMF dataset.</p>
+</dd>
+</dl>
+</section>
+<section id="configuration" class="level2 doc-group">
+<h2 class="doc-group">Configuration</h2>
+<div class="doc-description">
+<p>Settings that affect how requests are made</p>
+</div>
+<dl>
+<dt><a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="doc-function doc-label doc-label-function">set_imf_app_name()</a></dt>
+<dd>
+<p>Set the IMF Application Name.</p>
+</dd>
+<dt><a href="../reference/set_imf_wait_time.html#imfp.set_imf_wait_time" class="doc-function doc-label doc-label-function">set_imf_wait_time()</a></dt>
+<dd>
+<p>Set the IMF wait time as an environment variable.</p>
+</dd>
+</dl>
+</section>
+<section id="deprecated" class="level2 doc-group">
+<h2 class="doc-group">Deprecated</h2>
+<div class="doc-description">
+<p>The pre-2.0 interface. These still work but emit a DeprecationWarning and will be removed in imfp 3.0.0. See the migration guide.</p>
 </div>
 <dl>
 <dt><a href="../reference/imf_databases.html#imfp.imf_databases" class="doc-function doc-label doc-label-function">imf_databases()</a></dt>
@@ -274,14 +356,6 @@ ul.task-list li input[type="checkbox"] {
 <dt><a href="../reference/imf_dataset.html#imfp.imf_dataset" class="doc-function doc-label doc-label-function">imf_dataset()</a></dt>
 <dd>
 <p>Download a data series from the IMF.</p>
-</dd>
-<dt><a href="../reference/set_imf_app_name.html#imfp.set_imf_app_name" class="doc-function doc-label doc-label-function">set_imf_app_name()</a></dt>
-<dd>
-<p>Set the IMF Application Name.</p>
-</dd>
-<dt><a href="../reference/set_imf_wait_time.html#imfp.set_imf_wait_time" class="doc-function doc-label doc-label-function">set_imf_wait_time()</a></dt>
-<dd>
-<p>Set the IMF wait time as an environment variable.</p>
 </dd>
 </dl>
 

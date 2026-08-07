@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working with Parameters – imfp | imfp</title>
+<title>Dimensions and Codes – imfp | imfp</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -126,15 +126,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="parameters.md">
   <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/user-guide/parameters.html">
-  <meta name="description" content="Once you have a database_id, it’s possible to make a call to imf_dataset to fetch the entire database:">
+  <meta name="description" content="Once you have a dataflow ID, you can in principle request the whole dataset:">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Working with Parameters – imfp | imfp">
-  <meta property="og:description" content="Once you have a database_id, it’s possible to make a call to imf_dataset to fetch the entire database:">
+  <meta property="og:title" content="Dimensions and Codes – imfp | imfp">
+  <meta property="og:description" content="Once you have a dataflow ID, you can in principle request the whole dataset:">
   <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp/user-guide/parameters.html">
   <meta property="og:site_name" content="imfp">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Working with Parameters – imfp | imfp">
-  <meta name="twitter:description" content="Once you have a database_id, it’s possible to make a call to imf_dataset to fetch the entire database:">
+  <meta name="twitter:title" content="Dimensions and Codes – imfp | imfp">
+  <meta name="twitter:description" content="Once you have a dataflow ID, you can in principle request the whole dataset:">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs">Working with Parameters</h1>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs">Dimensions and Codes</h1>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -215,19 +215,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/databases.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working with Databases</span></a>
+ <span class="menu-text">Discovering Datasets</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/parameters.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Working with Parameters</span></a>
+ <span class="menu-text">Dimensions and Codes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Requesting Datasets</span></a>
+ <span class="menu-text">Fetching Data</span></a>
   </div>
 </li>
       </ul>
@@ -248,6 +248,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../user-guide/rate_limits.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Rate Limits</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../user-guide/migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Migrating from imfp 1.x</span></a>
   </div>
 </li>
       </ul>
@@ -276,15 +282,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#filtering-imf-dataset-requests-with-parameters" id="toc-filtering-imf-dataset-requests-with-parameters" class="nav-link active" data-scroll-target="#filtering-imf-dataset-requests-with-parameters">Filtering IMF Dataset Requests with Parameters</a></li>
-  <li><a href="#understanding-filter-parameters" id="toc-understanding-filter-parameters" class="nav-link" data-scroll-target="#understanding-filter-parameters">Understanding Filter Parameters</a></li>
-  <li><a href="#discovering-available-parameters" id="toc-discovering-available-parameters" class="nav-link" data-scroll-target="#discovering-available-parameters">Discovering Available Parameters</a></li>
-  <li><a href="#parameter-definitions" id="toc-parameter-definitions" class="nav-link" data-scroll-target="#parameter-definitions">Parameter Definitions</a></li>
-  <li><a href="#supplying-parameters" id="toc-supplying-parameters" class="nav-link" data-scroll-target="#supplying-parameters">Supplying Parameters</a>
+  <li><a href="#why-filtering-matters" id="toc-why-filtering-matters" class="nav-link active" data-scroll-target="#why-filtering-matters">Why Filtering Matters</a></li>
+  <li><a href="#dimensions" id="toc-dimensions" class="nav-link" data-scroll-target="#dimensions">Dimensions</a>
   <ul class="collapse">
-  <li><a href="#basic-approach-recommended-for-most-users" id="toc-basic-approach-recommended-for-most-users" class="nav-link" data-scroll-target="#basic-approach-recommended-for-most-users">Basic Approach (Recommended for Most Users)</a></li>
-  <li><a href="#advanced-approaches" id="toc-advanced-approaches" class="nav-link" data-scroll-target="#advanced-approaches">Advanced Approaches</a></li>
+  <li><a href="#position" id="toc-position" class="nav-link" data-scroll-target="#position">Position</a></li>
+  <li><a href="#time-and-measures" id="toc-time-and-measures" class="nav-link" data-scroll-target="#time-and-measures">Time and Measures</a></li>
   </ul></li>
+  <li><a href="#codes" id="toc-codes" class="nav-link" data-scroll-target="#codes">Codes</a>
+  <ul class="collapse">
+  <li><a href="#fetching-several-dimensions-at-once" id="toc-fetching-several-dimensions-at-once" class="nav-link" data-scroll-target="#fetching-several-dimensions-at-once">Fetching Several Dimensions at Once</a></li>
+  </ul></li>
+  <li><a href="#using-codes-in-a-request" id="toc-using-codes-in-a-request" class="nav-link" data-scroll-target="#using-codes-in-a-request">Using Codes in a Request</a></li>
+  <li><a href="#labelling-results" id="toc-labelling-results" class="nav-link" data-scroll-target="#labelling-results">Labelling Results</a></li>
+  <li><a href="#handling-unknown-dimensions" id="toc-handling-unknown-dimensions" class="nav-link" data-scroll-target="#handling-unknown-dimensions">Handling Unknown Dimensions</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step">Next Step</a></li>
   </ul>
 </nav>
     </div>
@@ -293,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Working with Parameters</h1>
+<h1 class="title d-none d-lg-block">Dimensions and Codes</h1>
 </div>
 
 
@@ -310,59 +321,105 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="filtering-imf-dataset-requests-with-parameters" class="level1">
-<h1>Filtering IMF Dataset Requests with Parameters</h1>
-<p>Once you have a <code>database_id</code>, it’s possible to make a call to <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> to fetch the entire database:</p>
-<div id="11cb95ff" class="cell" data-execution_count="1">
+<section id="why-filtering-matters" class="level1">
+<h1>Why Filtering Matters</h1>
+<p>Once you have a dataflow ID, you can in principle request the whole dataset:</p>
+<div id="2fdaf47d" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set float format to 2 decimal places for pandas display output</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>pd.set_option(<span class="st">'display.float_format'</span>, <span class="kw">lambda</span> x: <span class="st">'</span><span class="sc">%.2f</span><span class="st">'</span> <span class="op">%</span> x)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Producer Price Index database</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>database_id <span class="op">=</span> <span class="st">"PPI"</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>imfp.imf_dataset(database_id)</span></code></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Requests all of the Producer Price Index dataset</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>imfp.imf_get(<span class="st">"PPI"</span>)</span></code></pre></div>
 </div>
-<p>However, while this will succeed for a few small databases, it will fail for all of the larger ones. And even in the rare case when it succeeds, fetching an entire database can take a long time. You’re much better off supplying additional filter parameters to reduce the size of your request.</p>
-<p>Requests to databases available through the IMF API are complicated by the fact that each database uses a different set of parameters when making a request. You also have to have the list of valid input codes for each parameter. The <a href="../reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a> function solves this problem. Use the function to obtain the full list of parameters and valid input codes for a given database.</p>
-</section>
-<section id="understanding-filter-parameters" class="level1">
-<h1>Understanding Filter Parameters</h1>
-<p>Each database available through the IMF API has its own set of parameters that can be used to filter and specify the data you want to retrieve.</p>
-<p>Each parameter will be a column in the data. Each row in the data will contain a value for that parameter. The parameter will always be a categorical variable, meaning that it can take only a limited set of values. We refer to these values as “input codes,” because you can input them in your API request to filter the data.</p>
-<p>What this means, though, is that before making an API request to retrieve data, you need to know what the available filtering parameters are for the database, and what codes you can use for filtering the data by each parameter.</p>
-<p>There are two main functions for working with parameters:</p>
+<p>This succeeds for a few small datasets and fails for all the large ones, and even when it succeeds it is slow. In practice you almost always want to filter.</p>
+<p>Filtering an IMF dataset takes two pieces of information, and <code>imfp</code> has one function for each:</p>
 <ul>
-<li><a href="../reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters()</a>: Get the full list of parameters and valid input codes for a database</li>
-<li><a href="../reference/imf_parameter_defs.html#imfp.imf_parameter_defs" class="gdls-link gdls-code">imf_parameter_defs()</a>: Get text descriptions of what each parameter represents</li>
+<li><strong>Which dimensions does this dataset have?</strong> — <a href="../reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="gdls-link gdls-code">imf_get_datastructure</a></li>
+<li><strong>What values does each dimension accept?</strong> — <a href="../reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a></li>
 </ul>
 </section>
-<section id="discovering-available-parameters" class="level1">
-<h1>Discovering Available Parameters</h1>
-<p>To get started, you’ll need to know what parameters are available for your chosen database. Use <a href="../reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters()</a> to get this information:</p>
-<div id="2fde3535" class="cell" data-execution_count="2">
+<section id="dimensions" class="level1">
+<h1>Dimensions</h1>
+<p>Every dataset is described by a <em>datastructure definition</em> (DSD), which lists the <strong>dimensions</strong> the data is broken out by. Each dimension becomes a column in the returned data, and each is categorical: it accepts only a fixed set of values.</p>
+<p>Datasets do not share a common set of dimensions. Some use <code>COUNTRY</code>, others <code>REF_AREA</code>; some spell frequency <code>FREQUENCY</code> and others <code>FREQ</code>. This is why you have to ask.</p>
+<div id="5b0013ea" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch list of valid parameters for the Producer Price Index database</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PPI"</span>)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View the available parameter names</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>params.keys()</span></code></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dimensions <span class="op">=</span> imfp.imf_get_datastructure(<span class="st">"PCPS"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dimensions</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>dict_keys(['country', 'indicator', 'type_of_transformation', 'frequency'])</code></pre>
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>dimension_id</th>
+      <th>type</th>
+      <th>position</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>COUNTRY</td>
+      <td>Dimension</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>INDICATOR</td>
+      <td>Dimension</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>DATA_TRANSFORMATION</td>
+      <td>Dimension</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>FREQUENCY</td>
+      <td>Dimension</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 </div>
 </div>
-<p>The function returns a dictionary of data frames.</p>
-<p>Each key in the dictionary corresponds to a parameter used in making requests from the database. The value for each key is a data frame with the following columns:</p>
-<ul>
-<li><code>input_code</code>: The valid codes you can use for that parameter</li>
-<li><code>description</code>: A short text description of what each code represents</li>
-</ul>
-<p>For example, to see the valid codes for the <code>frequency</code> parameter:</p>
-<div id="c8de03d0" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View the data frame of valid input codes for the frequency parameter</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>params[<span class="st">'frequency'</span>]</span></code></pre></div>
+</div>
+<p>The columns are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dimension_id</code></td>
+<td>The dimension’s ID — what you filter on in <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a>.</td>
+</tr>
+<tr class="even">
+<td><code>type</code></td>
+<td><code>Dimension</code>, <code>TimeDimension</code>, or <code>Measure</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>position</code></td>
+<td>The dimension’s slot in the dataset’s series key.</td>
+</tr>
+</tbody>
+</table>
+<section id="position" class="level2">
+<h2 class="anchored" data-anchor-id="position">Position</h2>
+<p><code>position</code> is the dimension’s slot in the request the API actually receives. IMF requests are <em>positional</em>: filters are sent as a dot-separated key in which each slot corresponds to one dimension, in this order, and an unfiltered slot is a wildcard. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> assembles that key for you, so you never have to think about position — but it explains why the order of dimensions is fixed and worth glancing at.</p>
+</section>
+<section id="time-and-measures" class="level2">
+<h2 class="anchored" data-anchor-id="time-and-measures">Time and Measures</h2>
+<p>By default <a href="../reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="gdls-link gdls-code">imf_get_datastructure</a> lists only the dimensions you can filter on. Time is excluded because you filter it through <code>start_period</code>/<code>end_period</code> rather than through the key, and measures are excluded because they are outputs rather than filters. Ask for them explicitly if you want to see them:</p>
+<div id="cef9a700" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>imfp.imf_get_datastructure(<span class="st">"PCPS"</span>, include_time<span class="op">=</span><span class="va">True</span>, include_measures<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -370,8 +427,71 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <thead>
     <tr>
       <th></th>
-      <th>input_code</th>
-      <th>description</th>
+      <th>dimension_id</th>
+      <th>type</th>
+      <th>position</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>COUNTRY</td>
+      <td>Dimension</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>INDICATOR</td>
+      <td>Dimension</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>DATA_TRANSFORMATION</td>
+      <td>Dimension</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>FREQUENCY</td>
+      <td>Dimension</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>TIME_PERIOD</td>
+      <td>TimeDimension</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>OBS_VALUE</td>
+      <td>Measure</td>
+      <td>&lt;NA&gt;</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Note that the measure has no <code>position</code>: it does not occupy a slot in the series key.</p>
+</section>
+</section>
+<section id="codes" class="level1">
+<h1>Codes</h1>
+<p>Knowing that <code>PCPS</code> has an <code>INDICATOR</code> dimension does not tell you that coal is <code>PCOAL</code>. For that, use <a href="../reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a>, which returns the valid codes for one or more dimensions:</p>
+<div id="50044192" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>frequencies <span class="op">=</span> imfp.imf_get_codelists(<span class="st">"FREQUENCY"</span>, <span class="st">"PCPS"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>frequencies[[<span class="st">"code"</span>, <span class="st">"name"</span>]].head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>code</th>
+      <th>name</th>
     </tr>
   </thead>
   <tbody>
@@ -400,347 +520,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <td>S</td>
       <td>Half-yearly, semester</td>
     </tr>
-    <tr>
-      <th>5</th>
-      <td>W</td>
-      <td>Weekly</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>A2</td>
-      <td>Biennial</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>A3</td>
-      <td>Triennial</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>A4</td>
-      <td>Quadrennial</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>A5</td>
-      <td>Quinquennial</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>A10</td>
-      <td>Decennial</td>
-    </tr>
-    <tr>
-      <th>11</th>
-      <td>A20</td>
-      <td>Bidecennial</td>
-    </tr>
-    <tr>
-      <th>12</th>
-      <td>A30</td>
-      <td>Tridecennial</td>
-    </tr>
-    <tr>
-      <th>13</th>
-      <td>A_3</td>
-      <td>Three times a year</td>
-    </tr>
-    <tr>
-      <th>14</th>
-      <td>M2</td>
-      <td>Bimonthly</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>M_2</td>
-      <td>Semimonthly</td>
-    </tr>
-    <tr>
-      <th>16</th>
-      <td>M_3</td>
-      <td>Three times a month</td>
-    </tr>
-    <tr>
-      <th>17</th>
-      <td>W2</td>
-      <td>Biweekly</td>
-    </tr>
-    <tr>
-      <th>18</th>
-      <td>W3</td>
-      <td>Triweekly</td>
-    </tr>
-    <tr>
-      <th>19</th>
-      <td>W4</td>
-      <td>Four-weekly</td>
-    </tr>
-    <tr>
-      <th>20</th>
-      <td>W_2</td>
-      <td>Semiweekly</td>
-    </tr>
-    <tr>
-      <th>21</th>
-      <td>W_3</td>
-      <td>Three times a week</td>
-    </tr>
-    <tr>
-      <th>22</th>
-      <td>D_2</td>
-      <td>Twice a day</td>
-    </tr>
-    <tr>
-      <th>23</th>
-      <td>H</td>
-      <td>Hourly</td>
-    </tr>
-    <tr>
-      <th>24</th>
-      <td>H2</td>
-      <td>Bihourly</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>H3</td>
-      <td>Trihourly</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>B</td>
-      <td>Daily – business week</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>N</td>
-      <td>Minutely</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>I</td>
-      <td>Irregular</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>OA</td>
-      <td>Occasional annual</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>OM</td>
-      <td>Occasional monthly</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>_O</td>
-      <td>Other</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>_U</td>
-      <td>Unspecified</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>_Z</td>
-      <td>Not applicable</td>
-    </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-</section>
-<section id="parameter-definitions" class="level1">
-<h1>Parameter Definitions</h1>
-<p>If the parameter name is not self-explanatory, you can use the <a href="../reference/imf_parameter_defs.html#imfp.imf_parameter_defs" class="gdls-link gdls-code">imf_parameter_defs()</a> function to get a text description of what each parameter represents.</p>
-<div id="7468435d" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get descriptions of what each parameter means</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params_defs <span class="op">=</span> imfp.imf_parameter_defs(<span class="st">"PPI"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>params_defs</span></code></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<div>
-
-<table class="dataframe table table-sm table-striped small">
-  <thead>
-    <tr>
-      <th></th>
-      <th>parameter</th>
-      <th>description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>country</td>
-      <td>Country</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>indicator</td>
-      <td>Producer Price Index (PPI) Indicator codelist</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>type_of_transformation</td>
-      <td>Producer Price Indexes (PPI) Type of Transform...</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>frequency</td>
-      <td>Frequency</td>
-    </tr>
-  </tbody>
+<p>The columns are:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>dimension_id</code></td>
+<td>Which dimension the code belongs to.</td>
+</tr>
+<tr class="even">
+<td><code>code</code></td>
+<td>The value to pass to <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a>.</td>
+</tr>
+<tr class="odd">
+<td><code>name</code></td>
+<td>Short human-readable label.</td>
+</tr>
+<tr class="even">
+<td><code>description</code></td>
+<td>Longer definition, where the IMF provides one.</td>
+</tr>
+<tr class="odd">
+<td><code>codelist_id</code></td>
+<td>ID of the codelist this came from, e.g.&nbsp;<code>CL_FREQ</code>.</td>
+</tr>
+<tr class="even">
+<td><code>codelist_agency</code></td>
+<td>Agency that maintains the codelist.</td>
+</tr>
+<tr class="odd">
+<td><code>codelist_version</code></td>
+<td>Version of the codelist.</td>
+</tr>
+</tbody>
 </table>
-</div>
-</div>
-</div>
-</section>
-<section id="supplying-parameters" class="level1">
-<h1>Supplying Parameters</h1>
-<section id="basic-approach-recommended-for-most-users" class="level2">
-<h2 class="anchored" data-anchor-id="basic-approach-recommended-for-most-users">Basic Approach (Recommended for Most Users)</h2>
-<p>To make a request to fetch data from the IMF API, just call <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> with the database ID and keyword arguments for each parameter, where the keyword argument name is the parameter name and the value is the list of codes you want.</p>
-<p>For instance, on exploring the <code>frequency</code> parameter of the Producer Price Index database above, we found that the frequency can take one of three values: “A” for annual, “Q” for quarterly, and “M” for monthly. Thus, to request annual data, we can call <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> with <code>frequency = ["A"]</code>.</p>
-<p>Here’s a complete example that fetches annual producer prices from 2000 to 2015:</p>
-<div id="9c6dbf82" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example: Get annual prices</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span>[<span class="st">"A"</span>],  <span class="co"># Annual frequency</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    indicator<span class="op">=</span>[<span class="st">"PPI"</span>],  <span class="co"># Producer Price Index</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
-</div>
-</section>
-<section id="advanced-approaches" class="level2">
-<h2 class="anchored" data-anchor-id="advanced-approaches">Advanced Approaches</h2>
-<p>For more complex queries, there are two programmatic ways to supply parameters to <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a>. These approaches are particularly useful when you need to filter parameters based on their descriptions or when working with multiple parameter values.</p>
-<section id="list-arguments-with-parameter-filtering" class="level3">
-<h3 class="anchored" data-anchor-id="list-arguments-with-parameter-filtering">1. List Arguments with Parameter Filtering</h3>
-<p>This approach uses string matching to find the correct parameter codes before passing them to <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a>:</p>
-<div id="01ed7c61" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the frequency parameter...</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>selected_frequency <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'frequency'</span>][<span class="st">'input_code'</span>][</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Annual"</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'frequency'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Fetch the input code column of the unit_measure parameter...</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>selected_type_of_transformation <span class="op">=</span> <span class="bu">list</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'type_of_transformation'</span>][<span class="st">'input_code'</span>][</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ...where the description contains "Index"</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        params[<span class="st">'type_of_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Request data from the API using the filtered parameter code lists</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    frequency<span class="op">=</span>selected_frequency,</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    type_of_transformation<span class="op">=</span>selected_type_of_transformation,</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div>
+<p>Dimension IDs are matched case-insensitively, so <code>"frequency"</code> and <code>"FREQUENCY"</code> both work.</p>
+<section id="fetching-several-dimensions-at-once" class="level2">
+<h2 class="anchored" data-anchor-id="fetching-several-dimensions-at-once">Fetching Several Dimensions at Once</h2>
+<p>Pass a list to get everything in one tidy frame — one row per code, with <code>dimension_id</code> telling you which dimension each row belongs to:</p>
+<div id="b2648a35" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codes <span class="op">=</span> imfp.imf_get_codelists(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"INDICATOR"</span>, <span class="st">"DATA_TRANSFORMATION"</span>, <span class="st">"FREQUENCY"</span>], <span class="st">"PCPS"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>codes.groupby(<span class="st">"dimension_id"</span>).size()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<div>
-
-<table class="dataframe table table-sm table-striped small">
-  <thead>
-    <tr>
-      <th></th>
-      <th>country</th>
-      <th>indicator</th>
-      <th>type_of_transformation</th>
-      <th>frequency</th>
-      <th>time_period</th>
-      <th>obs_value</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2008</td>
-      <td>80.099924</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2009</td>
-      <td>88.676029</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2010</td>
-      <td>100.000000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2011</td>
-      <td>111.889914</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2012</td>
-      <td>117.840781</td>
-    </tr>
-  </tbody>
-</table>
+<pre><code>dimension_id
+DATA_TRANSFORMATION      4
+FREQUENCY               34
+INDICATOR              136
+dtype: int64</code></pre>
 </div>
 </div>
-</div>
-</section>
-<section id="parameters-dictionary-approach" class="level3">
-<h3 class="anchored" data-anchor-id="parameters-dictionary-approach">2. Parameters Dictionary Approach</h3>
-<p>This approach modifies the parameters dictionary directly and passes the entire filtered dictionary to <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> as a single <code>parameters</code> keyword argument. This is more concise but requires understanding how the parameters dictionary works:</p>
-<div id="6b171744" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy the params dictionary</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>modified_params <span class="op">=</span> params.copy()</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Overwrite the data frame for each parameter in the dictionary with filtered rows</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'frequency'</span>] <span class="op">=</span> params[<span class="st">'frequency'</span>][</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for frequency contains "Annual"</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'frequency'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Annual"</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>modified_params[<span class="st">'type_of_transformation'</span>] <span class="op">=</span> params[<span class="st">'type_of_transformation'</span>][</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ...where the input code description for type_of_transformation contains "Index"</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    params[<span class="st">'type_of_transformation'</span>][<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Index"</span>)</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Pass the modified dictionary to imf_dataset</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PPI"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    parameters<span class="op">=</span>modified_params,</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    start_year<span class="op">=</span><span class="dv">2000</span>,</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    end_year<span class="op">=</span><span class="dv">2015</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div>
+<p>Since it is a single DataFrame, searching it is an ordinary filter:</p>
+<div id="808eaca9" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>codes[</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> codes[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>][[<span class="st">"code"</span>, <span class="st">"name"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <div>
 
@@ -748,70 +594,247 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <thead>
     <tr>
       <th></th>
-      <th>country</th>
-      <th>indicator</th>
-      <th>type_of_transformation</th>
-      <th>frequency</th>
-      <th>time_period</th>
-      <th>obs_value</th>
+      <th>code</th>
+      <th>name</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2008</td>
-      <td>80.099924</td>
+      <th>14</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2009</td>
-      <td>88.676029</td>
+      <th>15</th>
+      <td>PCOALAU</td>
+      <td>Coal, Australia, US dollars per metric tonne, ...</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2010</td>
-      <td>100.000000</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2011</td>
-      <td>111.889914</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>AGO</td>
-      <td>WPI</td>
-      <td>IX</td>
-      <td>A</td>
-      <td>2012</td>
-      <td>117.840781</td>
+      <th>16</th>
+      <td>PCOALSA</td>
+      <td>Coal, South Africa, US dollars per metric tonn...</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-<p>Note that when using the parameters dictionary approach, you cannot combine it with individual parameter arguments. If you supply a <code>parameters</code> argument, any other keyword arguments for individual parameters will be ignored.</p>
+<div id="5ab84acd" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>codes[codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"DATA_TRANSFORMATION"</span>][[<span class="st">"code"</span>, <span class="st">"name"</span>]]</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
 
-
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>code</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>136</th>
+      <td>INDEX</td>
+      <td>Index</td>
+    </tr>
+    <tr>
+      <th>137</th>
+      <td>INDEX_PCH</td>
+      <td>Index, percent change</td>
+    </tr>
+    <tr>
+      <th>138</th>
+      <td>INDEX_PCHY</td>
+      <td>Index, percent change from a year ago</td>
+    </tr>
+    <tr>
+      <th>139</th>
+      <td>USD</td>
+      <td>US dollars</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>To pull every dimension’s codes in one call, feed it the datastructure:</p>
+<div id="1d258243" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>all_codes <span class="op">=</span> imfp.imf_get_codelists(<span class="bu">list</span>(dimensions[<span class="st">"dimension_id"</span>]), <span class="st">"PCPS"</span>)</span></code></pre></div>
+</div>
+<p>Note that country codelists tend to be large, so this can take a moment.</p>
 </section>
 </section>
+<section id="using-codes-in-a-request" class="level1">
+<h1>Using Codes in a Request</h1>
+<p>The <code>code</code> column holds exactly the values <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> expects:</p>
+<div id="399bd416" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>coal <span class="op">=</span> codes[</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (codes[<span class="st">"code"</span>] <span class="op">==</span> <span class="st">"PCOAL"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>][<span class="st">"code"</span>].tolist()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_get(</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PCPS"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    dimensions<span class="op">=</span>{</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"INDICATOR"</span>: coal,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"DATA_TRANSFORMATION"</span>: [<span class="st">"INDEX"</span>],</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"FREQUENCY"</span>: [<span class="st">"A"</span>],</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>COUNTRY</th>
+      <th>INDICATOR</th>
+      <th>DATA_TRANSFORMATION</th>
+      <th>FREQUENCY</th>
+      <th>TIME_PERIOD</th>
+      <th>OBS_VALUE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1992</td>
+      <td>49.892138</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1993</td>
+      <td>43.279151</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1994</td>
+      <td>45.213931</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1995</td>
+      <td>55.433711</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>G001</td>
+      <td>PCOAL</td>
+      <td>INDEX</td>
+      <td>A</td>
+      <td>1996</td>
+      <td>53.179458</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="labelling-results" class="level1">
+<h1>Labelling Results</h1>
+<p>Because the codes and the data are both tidy DataFrames keyed on the code, attaching human-readable labels is a merge:</p>
+<div id="4bc9d537" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>labelled <span class="op">=</span> df.merge(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    codes[codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>][[<span class="st">"code"</span>, <span class="st">"name"</span>]],</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"INDICATOR"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">"code"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"left"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>).drop(columns<span class="op">=</span>[<span class="st">"code"</span>]).rename(columns<span class="op">=</span>{<span class="st">"name"</span>: <span class="st">"indicator_name"</span>})</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>labelled[[<span class="st">"INDICATOR"</span>, <span class="st">"indicator_name"</span>, <span class="st">"TIME_PERIOD"</span>, <span class="st">"OBS_VALUE"</span>]].head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>INDICATOR</th>
+      <th>indicator_name</th>
+      <th>TIME_PERIOD</th>
+      <th>OBS_VALUE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+      <td>1992</td>
+      <td>49.892138</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+      <td>1993</td>
+      <td>43.279151</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+      <td>1994</td>
+      <td>45.213931</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+      <td>1995</td>
+      <td>55.433711</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>PCOAL</td>
+      <td>Coal index, Commodity price index, Index, 2016...</td>
+      <td>1996</td>
+      <td>53.179458</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+<section id="handling-unknown-dimensions" class="level1">
+<h1>Handling Unknown Dimensions</h1>
+<p>Asking for a dimension a dataset does not have is an error, and the message tells you what is available:</p>
+<div id="9ee12959" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    imfp.imf_get_codelists(<span class="st">"FREQ"</span>, <span class="st">"PCPS"</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ValueError</span> <span class="im">as</span> e:</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(e)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Unknown dimension(s) for PCPS: FREQ. Available: COUNTRY, DATA_TRANSFORMATION, FREQUENCY, INDICATOR, OBS_VALUE, TIME_PERIOD. Use imf_get_datastructure('PCPS') to list them.</code></pre>
+</div>
+</div>
+</section>
+<section id="next-step" class="level1">
+<h1>Next Step</h1>
+<p>With dimension IDs and codes in hand, you are ready to request data. See <a href="../user-guide/datasets.html">Fetching Data</a>.</p>
+
+
 </section>
 
 </main> <!-- /main -->
@@ -1155,13 +1178,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../user-guide/databases.html" class="pagination-link" aria-label="Working with Databases">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Working with Databases</span>
+      <a href="../user-guide/databases.html" class="pagination-link" aria-label="Discovering Datasets">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Discovering Datasets</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../user-guide/datasets.html" class="pagination-link" aria-label="Requesting Datasets">
-        <span class="nav-page-text">Requesting Datasets</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../user-guide/datasets.html" class="pagination-link" aria-label="Fetching Data">
+        <span class="nav-page-text">Fetching Data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Working with Databases – imfp | imfp</title>
+<title>Discovering Datasets – imfp | imfp</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -126,15 +126,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
   <link rel="alternate" type="text/markdown" href="databases.md">
   <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/user-guide/databases.html">
-  <meta name="description" content="The IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from. Before...">
+  <meta name="description" content="The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a dataflow, and every...">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Working with Databases – imfp | imfp">
-  <meta property="og:description" content="The IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from. Before...">
+  <meta property="og:title" content="Discovering Datasets – imfp | imfp">
+  <meta property="og:description" content="The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a dataflow, and every...">
   <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp/user-guide/databases.html">
   <meta property="og:site_name" content="imfp">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Working with Databases – imfp | imfp">
-  <meta name="twitter:description" content="The IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from. Before...">
+  <meta name="twitter:title" content="Discovering Datasets – imfp | imfp">
+  <meta name="twitter:description" content="The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a dataflow, and every...">
 </head>
 
 <body class="nav-sidebar floating nav-fixed quarto-light">
@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs">Working with Databases</h1>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs">Discovering Datasets</h1>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -215,19 +215,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/databases.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Working with Databases</span></a>
+ <span class="menu-text">Discovering Datasets</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/parameters.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Working with Parameters</span></a>
+ <span class="menu-text">Dimensions and Codes</span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/datasets.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Requesting Datasets</span></a>
+ <span class="menu-text">Fetching Data</span></a>
   </div>
 </li>
       </ul>
@@ -248,6 +248,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../user-guide/rate_limits.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Rate Limits</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../user-guide/migration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Migrating from imfp 1.x</span></a>
   </div>
 </li>
       </ul>
@@ -276,14 +282,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
-  <li><a href="#understanding-imf-databases" id="toc-understanding-imf-databases" class="nav-link active" data-scroll-target="#understanding-imf-databases">Understanding IMF Databases</a></li>
-  <li><a href="#fetching-the-database-list" id="toc-fetching-the-database-list" class="nav-link" data-scroll-target="#fetching-the-database-list">Fetching the Database List</a>
-  <ul class="collapse">
-  <li><a href="#fetching-an-index-of-databases-with-the-imf_databases-function" id="toc-fetching-an-index-of-databases-with-the-imf_databases-function" class="nav-link" data-scroll-target="#fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a> Function</a></li>
-  </ul></li>
-  <li><a href="#exploring-the-database-list" id="toc-exploring-the-database-list" class="nav-link" data-scroll-target="#exploring-the-database-list">Exploring the Database List</a></li>
-  <li><a href="#best-practices" id="toc-best-practices" class="nav-link" data-scroll-target="#best-practices">Best Practices</a></li>
-  <li><a href="#next-steps" id="toc-next-steps" class="nav-link" data-scroll-target="#next-steps">Next Steps</a></li>
+  <li><a href="#dataflows" id="toc-dataflows" class="nav-link active" data-scroll-target="#dataflows">Dataflows</a></li>
+  <li><a href="#listing-dataflows" id="toc-listing-dataflows" class="nav-link" data-scroll-target="#listing-dataflows">Listing Dataflows</a></li>
+  <li><a href="#finding-the-dataset-you-want" id="toc-finding-the-dataset-you-want" class="nav-link" data-scroll-target="#finding-the-dataset-you-want">Finding the Dataset You Want</a></li>
+  <li><a href="#checking-how-current-a-dataset-is" id="toc-checking-how-current-a-dataset-is" class="nav-link" data-scroll-target="#checking-how-current-a-dataset-is">Checking How Current a Dataset Is</a></li>
+  <li><a href="#reading-the-dataflow-id" id="toc-reading-the-dataflow-id" class="nav-link" data-scroll-target="#reading-the-dataflow-id">Reading the Dataflow ID</a></li>
+  <li><a href="#next-step" id="toc-next-step" class="nav-link" data-scroll-target="#next-step">Next Step</a></li>
   </ul>
 </nav>
     </div>
@@ -292,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">Working with Databases</h1>
+<h1 class="title d-none d-lg-block">Discovering Datasets</h1>
 </div>
 
 
@@ -309,77 +313,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="understanding-imf-databases" class="level1">
-<h1>Understanding IMF Databases</h1>
-<p>The IMF serves many different databases through its API, and the API needs to know which of these many databases you’re requesting data from. Before you can fetch any data, you’ll need to:</p>
+<section id="dataflows" class="level1">
+<h1>Dataflows</h1>
+<p>The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a <strong>dataflow</strong>, and every request has to name one. So before you can fetch any data, you need to:</p>
 <ol type="1">
-<li>Get a list of available databases</li>
-<li>Find the database ID for the data you want</li>
+<li>Get the list of available dataflows</li>
+<li>Find the ID of the one you want</li>
 </ol>
-<p>Then you can use that database ID to fetch the data.</p>
+<p>That ID is the first argument to every other function in <code>imfp</code>.</p>
 </section>
-<section id="fetching-the-database-list" class="level1">
-<h1>Fetching the Database List</h1>
-<section id="fetching-an-index-of-databases-with-the-imf_databases-function" class="level2">
-<h2 class="anchored" data-anchor-id="fetching-an-index-of-databases-with-the-imf_databases-function">Fetching an Index of Databases with the <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a> Function</h2>
-<p>To obtain the list of available databases and their corresponding IDs, use <a href="../reference/imf_databases.html#imfp.imf_databases" class="gdls-link gdls-code">imf_databases</a>:</p>
-<div id="15bd9267" class="cell" data-execution_count="1">
+<section id="listing-dataflows" class="level1">
+<h1>Listing Dataflows</h1>
+<p><a href="../reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a> returns the full catalogue as a tidy DataFrame:</p>
+<div id="17e70b16" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Fetch the list of databases available through the IMF API</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>databases.head()</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dataflows.shape</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<div>
-
-<table class="dataframe table table-sm table-striped small">
-  <thead>
-    <tr>
-      <th></th>
-      <th>database_id</th>
-      <th>description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>ITG_2026_FEB_VINTAGE</td>
-      <td>International Trade in Goods (ITG) 2026 February</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>PI_2026_APR_VINTAGE</td>
-      <td>Production Indexes (PI) 2026 April</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>ER_2026_MAY_VINTAGE</td>
-      <td>Exchange Rates (ER) 2026 May</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>MFS_MA_2026_FEB_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Monet...</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>ITG_2026_APR_VINTAGE</td>
-      <td>International Trade in Goods (ITG) 2026 April</td>
-    </tr>
-  </tbody>
+<pre><code>(222, 7)</code></pre>
+</div>
+</div>
+<p>Each row describes one dataset:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Column</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>id</code></td>
+<td>The dataflow ID, e.g.&nbsp;<code>PCPS</code>. This is what you pass to the other functions.</td>
+</tr>
+<tr class="even">
+<td><code>name</code></td>
+<td>Human-readable title.</td>
+</tr>
+<tr class="odd">
+<td><code>description</code></td>
+<td>Longer prose description, where the IMF provides one.</td>
+</tr>
+<tr class="even">
+<td><code>version</code></td>
+<td>Version of the dataflow definition.</td>
+</tr>
+<tr class="odd">
+<td><code>agency</code></td>
+<td>The IMF department that publishes it, e.g.&nbsp;<code>IMF.STA</code>.</td>
+</tr>
+<tr class="even">
+<td><code>structure</code></td>
+<td>URN of the datastructure definition that backs it.</td>
+</tr>
+<tr class="odd">
+<td><code>last_updated</code></td>
+<td>When the dataset was last refreshed.</td>
+</tr>
+</tbody>
 </table>
-</div>
-</div>
-</div>
-<p>This function returns the IMF’s listing of 71 databases available through the API.</p>
-</section>
-</section>
-<section id="exploring-the-database-list" class="level1">
-<h1>Exploring the Database List</h1>
-<p>To view and explore the database list, it’s possible to explore subsets of the data frame by row number with <code>databases.loc</code>:</p>
-<div id="de76a6ec" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View a subset consisting of rows 5 through 9</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>databases.loc[<span class="dv">5</span>:<span class="dv">9</span>]</span></code></pre></div>
+<div id="8ca45231" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dataflows[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"last_updated"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
@@ -387,44 +382,61 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <thead>
     <tr>
       <th></th>
-      <th>database_id</th>
-      <th>description</th>
+      <th>id</th>
+      <th>name</th>
+      <th>agency</th>
+      <th>last_updated</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>5</th>
-      <td>CPI_2026_FEB_VINTAGE</td>
-      <td>Consumer Price Index (CPI) 2026 February</td>
+      <th>0</th>
+      <td>MFS_DC_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Depos...</td>
+      <td>IMF.STA</td>
+      <td>2026-05-27T14:51:58.879098Z</td>
     </tr>
     <tr>
-      <th>6</th>
-      <td>HPD</td>
-      <td>Historical Public Debt (HPD)</td>
+      <th>1</th>
+      <td>MCDREO</td>
+      <td>Middle East and Central Asia Regional Economic...</td>
+      <td>IMF.MCD</td>
+      <td>2025-10-16T00:20:10.062512Z</td>
     </tr>
     <tr>
-      <th>7</th>
-      <td>COFER_2025_OCT_VINTAGE</td>
-      <td>Currency Composition of Official Foreign Excha...</td>
+      <th>2</th>
+      <td>WHDREO_2025_OCT_VINTAGE</td>
+      <td>Western Hemisphere Regional Economic Outlook (...</td>
+      <td>IMF.WHD</td>
+      <td>2026-04-13T17:42:08.662531Z</td>
     </tr>
     <tr>
-      <th>8</th>
-      <td>IIP_2026_MAY_VINTAGE</td>
-      <td>International Investment Position (IIP) 2026 May</td>
+      <th>3</th>
+      <td>PCPS</td>
+      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+      <td>IMF.RES</td>
+      <td>2025-06-16T17:59:44.643694Z</td>
     </tr>
     <tr>
-      <th>9</th>
-      <td>IL_2026_APR_VINTAGE</td>
-      <td>International Liquidity (IL) 2026 April</td>
+      <th>4</th>
+      <td>MFS_DC</td>
+      <td>Monetary and Financial Statistics (MFS), Depos...</td>
+      <td>IMF.STA</td>
+      <td>2025-11-27T16:58:36.728552Z</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-<p>Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using <code>str.contains</code> and subsetting the data frame for matching rows. For instance, here’s how to search for commodities data:</p>
-<div id="dbffeb9f" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>databases[databases[<span class="st">'description'</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>)]</span></code></pre></div>
+</section>
+<section id="finding-the-dataset-you-want" class="level1">
+<h1>Finding the Dataset You Want</h1>
+<p>Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the <code>name</code> column for a keyword:</p>
+<div id="3a3aa5d9" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataflows[dataflows[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)][</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>]</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
@@ -432,49 +444,170 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <thead>
     <tr>
       <th></th>
-      <th>database_id</th>
-      <th>description</th>
+      <th>id</th>
+      <th>name</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>29</th>
-      <td>CTOT</td>
-      <td>Commodity Terms of Trade (CTOT)</td>
-    </tr>
-    <tr>
-      <th>59</th>
+      <th>3</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+    </tr>
+    <tr>
+      <th>114</th>
+      <td>CTOT</td>
+      <td>Commodity Terms of Trade (CTOT)</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-<p>See also <a href="../user-guide/usage.html#working-with-large-data-frames">Working with Large Data Frames</a> for sample code showing how to view the full contents of the data frame in a browser window.</p>
+<p>The <code>description</code> column often contains terms the title does not, so it is worth searching too:</p>
+<div id="02b80593" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> dataflows[</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataflows[<span class="st">"description"</span>].<span class="bu">str</span>.contains(<span class="st">"balance of payments"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>matches[[<span class="st">"id"</span>, <span class="st">"name"</span>]].head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>10</th>
+      <td>BOP</td>
+      <td>Balance of Payments (BOP)</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>COFER</td>
+      <td>Currency Composition of Official Foreign Excha...</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>BOP_2026_FEB_VINTAGE</td>
+      <td>Balance of Payments (BOP) 2026 February</td>
+    </tr>
+    <tr>
+      <th>128</th>
+      <td>IL</td>
+      <td>International Liquidity (IL)</td>
+    </tr>
+    <tr>
+      <th>173</th>
+      <td>ITS</td>
+      <td>International Trade in Services (ITS)</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
-<section id="best-practices" class="level1">
-<h1>Best Practices</h1>
-<ol type="1">
-<li><p><strong>Cache the Database List</strong>: The database list rarely changes. Consider saving it locally if you’ll be making multiple queries. See <a href="../user-guide/rate_limits.html#caching-strategy">Caching Strategy</a> for sample code.</p></li>
-<li><p><strong>Search Strategically</strong>: Use specific search terms to find relevant databases. For example:</p>
-<ul>
-<li>“Price” for price indices</li>
-<li>“Trade” for trade statistics</li>
-<li>“Financial” for financial data</li>
-</ul></li>
-<li><p><strong>Use a Browser Viewer</strong>: See <a href="../user-guide/usage.html#working-with-large-data-frames">Working with Large Data Frames</a> for sample code showing how to view the full contents of the data frame in a browser window.</p></li>
-<li><p><strong>Note Database IDs</strong>: Once you find a database you’ll use frequently, note its database ID for future reference.</p></li>
-</ol>
+<section id="checking-how-current-a-dataset-is" class="level1">
+<h1>Checking How Current a Dataset Is</h1>
+<p><code>last_updated</code> tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:</p>
+<div id="1e60026c" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>recent <span class="op">=</span> dataflows.dropna(subset<span class="op">=</span>[<span class="st">"last_updated"</span>]).copy()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>recent[<span class="st">"last_updated"</span>] <span class="op">=</span> pd.to_datetime(recent[<span class="st">"last_updated"</span>], <span class="bu">format</span><span class="op">=</span><span class="st">"mixed"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>recent.sort_values(<span class="st">"last_updated"</span>, ascending<span class="op">=</span><span class="va">False</span>)[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"last_updated"</span>]].head()</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+      <th>last_updated</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>206</th>
+      <td>IRFCL</td>
+      <td>International Reserves and Foreign Currency Li...</td>
+      <td>2026-06-19 15:17:41.650334+00:00</td>
+    </tr>
+    <tr>
+      <th>122</th>
+      <td>ISORA_LATEST_DATA_PUB</td>
+      <td>ISORA Latest Data</td>
+      <td>2026-06-15 17:13:23.041621+00:00</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>GPT</td>
+      <td>IMF Global Policy Tracker: How Countries are R...</td>
+      <td>2026-06-12 16:15:44.521971+00:00</td>
+    </tr>
+    <tr>
+      <th>220</th>
+      <td>FM</td>
+      <td>Fiscal Monitor (FM)</td>
+      <td>2026-06-03 16:00:56.895956+00:00</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>MFS_OFC_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Other...</td>
+      <td>2026-05-27 15:19:21.834692+00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
 </section>
-<section id="next-steps" class="level1">
-<h1>Next Steps</h1>
-<p>Once you’ve identified the database you want to use, you’ll need to:</p>
-<ol type="1">
-<li>Get the list of parameters for that database (see <a href="../user-guide/parameters.html">Parameters</a>)</li>
-<li>Use those parameters to fetch your data (see <a href="../user-guide/datasets.html">Datasets</a>)</li>
-</ol>
+<section id="reading-the-dataflow-id" class="level1">
+<h1>Reading the Dataflow ID</h1>
+<p>The <code>id</code> column is the value you pass everywhere else:</p>
+<div id="e35dd7d2" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pcps <span class="op">=</span> dataflows[dataflows[<span class="st">"id"</span>] <span class="op">==</span> <span class="st">"PCPS"</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pcps[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"version"</span>]]</span></code></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+<table class="dataframe table table-sm table-striped small">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>name</th>
+      <th>agency</th>
+      <th>version</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>PCPS</td>
+      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+      <td>IMF.RES</td>
+      <td>9.0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Note the <code>agency</code>. Different IMF departments publish through the same API but do not all support the same features — in particular, only <code>IMF.STA</code> currently honors server-side time filtering. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> warns you when you ask for a time window that the publishing agency will ignore. See <a href="../user-guide/datasets.html#time-filtering">Fetching Data</a>.</p>
+</section>
+<section id="next-step" class="level1">
+<h1>Next Step</h1>
+<p>With a dataflow ID in hand, the next step is finding out how that dataset can be filtered. See <a href="../user-guide/parameters.html">Dimensions and Codes</a>.</p>
 
 
 </section>
@@ -825,8 +958,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../user-guide/parameters.html" class="pagination-link" aria-label="Working with Parameters">
-        <span class="nav-page-text">Working with Parameters</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../user-guide/parameters.html" class="pagination-link" aria-label="Dimensions and Codes">
+        <span class="nav-page-text">Dimensions and Codes</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

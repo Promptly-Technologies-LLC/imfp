@@ -1,100 +1,139 @@
-# Working with Databases
+# Discovering Datasets
 
 
-# Understanding IMF Databases
+# Dataflows
 
-The IMF serves many different databases through its API, and the API needs to know which of these many databases you're requesting data from. Before you can fetch any data, you'll need to:
+The IMF publishes hundreds of separate datasets through its API. In SDMX -- the standard the API speaks -- a dataset is called a **dataflow**, and every request has to name one. So before you can fetch any data, you need to:
 
-1.  Get a list of available databases
-2.  Find the database ID for the data you want
+1.  Get the list of available dataflows
+2.  Find the ID of the one you want
 
-Then you can use that database ID to fetch the data.
-
-
-# Fetching the Database List
+That ID is the first argument to every other function in `imfp`.
 
 
-## Fetching an Index of Databases with the [imf_databases](../reference/imf_databases.md#imfp.imf_databases) Function
+# Listing Dataflows
 
-To obtain the list of available databases and their corresponding IDs, use [imf_databases](../reference/imf_databases.md#imfp.imf_databases):
+[imf_get_dataflows](../reference/imf_get_dataflows.md#imfp.imf_get_dataflows) returns the full catalogue as a tidy DataFrame:
 
 
 ``` python
 import imfp
 
-#Fetch the list of databases available through the IMF API
-databases = imfp.imf_databases()
-databases.head()
+dataflows = imfp.imf_get_dataflows()
+dataflows.shape
 ```
 
 
-|  | database_id | description |
-|----|----|----|
-| 0 | ITG_2026_FEB_VINTAGE | International Trade in Goods (ITG) 2026 February |
-| 1 | PI_2026_APR_VINTAGE | Production Indexes (PI) 2026 April |
-| 2 | ER_2026_MAY_VINTAGE | Exchange Rates (ER) 2026 May |
-| 3 | MFS_MA_2026_FEB_VINTAGE | Monetary and Financial Statistics (MFS), Monet... |
-| 4 | ITG_2026_APR_VINTAGE | International Trade in Goods (ITG) 2026 April |
+    (222, 7)
 
 
-This function returns the IMF's listing of 71 databases available through the API.
+Each row describes one dataset:
 
-
-# Exploring the Database List
-
-To view and explore the database list, it's possible to explore subsets of the data frame by row number with `databases.loc`:
+| Column | Meaning |
+|----|----|
+| `id` | The dataflow ID, e.g. `PCPS`. This is what you pass to the other functions. |
+| `name` | Human-readable title. |
+| `description` | Longer prose description, where the IMF provides one. |
+| `version` | Version of the dataflow definition. |
+| `agency` | The IMF department that publishes it, e.g. `IMF.STA`. |
+| `structure` | URN of the datastructure definition that backs it. |
+| `last_updated` | When the dataset was last refreshed. |
 
 
 ``` python
-# View a subset consisting of rows 5 through 9
-databases.loc[5:9]
+dataflows[["id", "name", "agency", "last_updated"]].head()
 ```
 
 
-|  | database_id | description |
-|----|----|----|
-| 5 | CPI_2026_FEB_VINTAGE | Consumer Price Index (CPI) 2026 February |
-| 6 | HPD | Historical Public Debt (HPD) |
-| 7 | COFER_2025_OCT_VINTAGE | Currency Composition of Official Foreign Excha... |
-| 8 | IIP_2026_MAY_VINTAGE | International Investment Position (IIP) 2026 May |
-| 9 | IL_2026_APR_VINTAGE | International Liquidity (IL) 2026 April |
+|  | id | name | agency | last_updated |
+|----|----|----|----|----|
+| 0 | MFS_DC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Depos... | IMF.STA | 2026-05-27T14:51:58.879098Z |
+| 1 | MCDREO | Middle East and Central Asia Regional Economic... | IMF.MCD | 2025-10-16T00:20:10.062512Z |
+| 2 | WHDREO_2025_OCT_VINTAGE | Western Hemisphere Regional Economic Outlook (... | IMF.WHD | 2026-04-13T17:42:08.662531Z |
+| 3 | PCPS | Primary Commodity Price System (PCPS) | IMF.RES | 2025-06-16T17:59:44.643694Z |
+| 4 | MFS_DC | Monetary and Financial Statistics (MFS), Depos... | IMF.STA | 2025-11-27T16:58:36.728552Z |
 
 
-Or, if you already know which database you want, you can fetch the corresponding code by searching for a string match using `str.contains` and subsetting the data frame for matching rows. For instance, here's how to search for commodities data:
+# Finding the Dataset You Want
+
+Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the `name` column for a keyword:
 
 
 ``` python
-databases[databases['description'].str.contains("Commodity")]
+dataflows[dataflows["name"].str.contains("Commodity", case=False, na=False)][
+    ["id", "name"]
+]
 ```
 
 
-|     | database_id | description                           |
-|-----|-------------|---------------------------------------|
-| 29  | CTOT        | Commodity Terms of Trade (CTOT)       |
-| 59  | PCPS        | Primary Commodity Price System (PCPS) |
+|     | id   | name                                  |
+|-----|------|---------------------------------------|
+| 3   | PCPS | Primary Commodity Price System (PCPS) |
+| 114 | CTOT | Commodity Terms of Trade (CTOT)       |
 
 
-See also [Working with Large Data Frames](usage.md#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window.
+The `description` column often contains terms the title does not, so it is worth searching too:
 
 
-# Best Practices
-
-1.  **Cache the Database List**: The database list rarely changes. Consider saving it locally if you'll be making multiple queries. See [Caching Strategy](rate_limits.md#caching-strategy) for sample code.
-
-2.  **Search Strategically**: Use specific search terms to find relevant databases. For example:
-
-    - "Price" for price indices
-    - "Trade" for trade statistics
-    - "Financial" for financial data
-
-3.  **Use a Browser Viewer**: See [Working with Large Data Frames](usage.md#working-with-large-data-frames) for sample code showing how to view the full contents of the data frame in a browser window.
-
-4.  **Note Database IDs**: Once you find a database you'll use frequently, note its database ID for future reference.
+``` python
+matches = dataflows[
+    dataflows["description"].str.contains("balance of payments", case=False, na=False)
+]
+matches[["id", "name"]].head()
+```
 
 
-# Next Steps
+|     | id                   | name                                              |
+|-----|----------------------|---------------------------------------------------|
+| 10  | BOP                  | Balance of Payments (BOP)                         |
+| 41  | COFER                | Currency Composition of Official Foreign Excha... |
+| 73  | BOP_2026_FEB_VINTAGE | Balance of Payments (BOP) 2026 February           |
+| 128 | IL                   | International Liquidity (IL)                      |
+| 173 | ITS                  | International Trade in Services (ITS)             |
 
-Once you've identified the database you want to use, you'll need to:
 
-1.  Get the list of parameters for that database (see [Parameters](parameters.md))
-2.  Use those parameters to fetch your data (see [Datasets](datasets.md))
+# Checking How Current a Dataset Is
+
+`last_updated` tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:
+
+
+``` python
+import pandas as pd
+
+recent = dataflows.dropna(subset=["last_updated"]).copy()
+recent["last_updated"] = pd.to_datetime(recent["last_updated"], format="mixed")
+recent.sort_values("last_updated", ascending=False)[["id", "name", "last_updated"]].head()
+```
+
+
+|  | id | name | last_updated |
+|----|----|----|----|
+| 206 | IRFCL | International Reserves and Foreign Currency Li... | 2026-06-19 15:17:41.650334+00:00 |
+| 122 | ISORA_LATEST_DATA_PUB | ISORA Latest Data | 2026-06-15 17:13:23.041621+00:00 |
+| 44 | GPT | IMF Global Policy Tracker: How Countries are R... | 2026-06-12 16:15:44.521971+00:00 |
+| 220 | FM | Fiscal Monitor (FM) | 2026-06-03 16:00:56.895956+00:00 |
+| 7 | MFS_OFC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Other... | 2026-05-27 15:19:21.834692+00:00 |
+
+
+# Reading the Dataflow ID
+
+The `id` column is the value you pass everywhere else:
+
+
+``` python
+pcps = dataflows[dataflows["id"] == "PCPS"]
+pcps[["id", "name", "agency", "version"]]
+```
+
+
+|     | id   | name                                  | agency  | version |
+|-----|------|---------------------------------------|---------|---------|
+| 3   | PCPS | Primary Commodity Price System (PCPS) | IMF.RES | 9.0.0   |
+
+
+Note the `agency`. Different IMF departments publish through the same API but do not all support the same features -- in particular, only `IMF.STA` currently honors server-side time filtering. [imf_get](../reference/imf_get.md#imfp.imf_get) warns you when you ask for a time window that the publishing agency will ignore. See [Fetching Data](datasets.md#time-filtering).
+
+
+# Next Step
+
+With a dataflow ID in hand, the next step is finding out how that dataset can be filtered. See [Dimensions and Codes](parameters.md).

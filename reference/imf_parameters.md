@@ -16,6 +16,10 @@ imf_parameters(
 
 making API requests from a given IMF database.
 
+> **Warning: Deprecated since version 2.0.0**
+>
+> Use [imfp.imf_get_codelists()](imf_get_codelists.md#imfp.imf_get_codelists) instead, which returns a single tidy DataFrame rather than a dict of DataFrames. This function will be removed in imfp 3.0.0.
+
 
 database_id : str A database_id from imf_databases(). times : int, optional, default 3 Maximum number of API requests to attempt.
 

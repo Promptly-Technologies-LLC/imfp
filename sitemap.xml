@@ -31,6 +31,12 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://Promptly-Technologies-LLC.github.io/imfp/user-guide/migration.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://Promptly-Technologies-LLC.github.io/imfp/user-guide/parameters.html</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
@@ -62,6 +68,30 @@
   </url>
   <url>
     <loc>https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_dataset.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_codelists.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_dataflows.html</loc>
+    <lastmod>2026-08-07</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_datastructure.html</loc>
     <lastmod>2026-08-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

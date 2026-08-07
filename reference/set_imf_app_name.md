@@ -31,8 +31,11 @@ None
 ## Raises
 
 
+`TypeError`  
+If the provided name is not a string.
+
 `ValueError`  
-If the provided name is not a valid string or contains
+If the provided name is too long or contains forbidden
 
 
 ## Examples

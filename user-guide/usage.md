@@ -3,7 +3,7 @@
 
 # Determining Data Availability
 
-The only way to be certain whether data is available for a given set of parameters is to make a request to the API and see if it succeeds. If you get an empty data frame, try a less restrictive version of your request.
+The only way to be certain whether data is available for a given set of dimension filters is to make a request to the API and see what comes back. [imf_get](../reference/imf_get.md#imfp.imf_get) returns an empty data frame and warns when a query matches nothing; if that happens, relax one dimension at a time to find the one that is over-restrictive.
 
 
 # Working with Large Data Frames
@@ -23,10 +23,10 @@ import pandas as pd
 # Set float format to 2 decimal places for pandas display output
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
-df: pd.DataFrame = imfp.imf_dataset(
-    database_id="PCPS",
+df: pd.DataFrame = imfp.imf_get(
+    "PCPS",
     indicator=["PCOAL"],
-    data_transformation=["IX"]
+    data_transformation=["INDEX"],
 )
 
 # Quick summary of DataFrame
@@ -34,23 +34,19 @@ df.info()
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:258: UserWarning: ['IX'] not valid value(s) for data_transformation and will be ignored. Use imf_parameters('PCPS') to get valid parameters.
-      warn(
-
-
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 1761 entries, 0 to 1760
+    RangeIndex: 587 entries, 0 to 586
     Data columns (total 6 columns):
      #   Column               Non-Null Count  Dtype  
     ---  ------               --------------  -----  
-     0   country              1761 non-null   object 
-     1   indicator            1761 non-null   object 
-     2   data_transformation  1761 non-null   object 
-     3   frequency            1761 non-null   object 
-     4   time_period          1761 non-null   object 
-     5   obs_value            1761 non-null   float64
+     0   COUNTRY              587 non-null    object 
+     1   INDICATOR            587 non-null    object 
+     2   DATA_TRANSFORMATION  587 non-null    object 
+     3   FREQUENCY            587 non-null    object 
+     4   TIME_PERIOD          587 non-null    object 
+     5   OBS_VALUE            587 non-null    float64
     dtypes: float64(1), object(5)
-    memory usage: 82.7+ KB
+    memory usage: 27.6+ KB
 
 
 Alternatively, you can use the `head()` method to view the first 5 rows of the data frame.
@@ -62,7 +58,7 @@ df.head()
 ```
 
 
-|     | country | indicator | data_transformation | frequency | time_period | obs_value |
+|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
 |-----|---------|-----------|---------------------|-----------|-------------|-----------|
 | 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.89     |
 | 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.28     |
@@ -74,31 +70,17 @@ df.head()
 ## Cleaning Data
 
 
-### Numeric Conversion
-
-All data is returned from the IMF API as a text (object) data type, so you will want to cast numeric columns to numeric.
-
-
-``` python
-# Numeric columns
-numeric_cols = ["obs_value"]
-
-# Cast numeric columns
-df[numeric_cols] = df[numeric_cols].apply(pd.to_numeric)
-```
-
-
 ### Categorical Conversion
 
-You can also convert string columns to categorical types for better memory usage.
+[imf_get](../reference/imf_get.md#imfp.imf_get) already returns `OBS_VALUE` as a float, so no numeric conversion is needed. Dimension columns come back as strings, and converting them to pandas categoricals can save a great deal of memory on large frames:
 
 
 ``` python
-# Convert categorical columns like ref_area and indicator to category type
+# Convert dimension columns to category type
 categorical_cols = [
-  "frequency",
-  "country",
-  "indicator"
+  "FREQUENCY",
+  "COUNTRY",
+  "INDICATOR"
 ]
 
 df[categorical_cols] = df[categorical_cols].astype("category")
@@ -107,7 +89,7 @@ df[categorical_cols] = df[categorical_cols].astype("category")
 
 ### NA Removal
 
-After conversion, you may want to drop any rows with missing values.
+Observations the IMF reports as missing come back as `NaN`, so you may want to drop them:
 
 
 ``` python
@@ -118,23 +100,21 @@ df = df.dropna()
 
 ### Time Period Conversion
 
-The `time_period` column can be more difficult to work with, because it may be differently formatted depending on the frequency of the data.
+The `TIME_PERIOD` column is the awkward one, because its format depends on the frequency of the series.
 
-Annual data will be formatted as a four-digit year, such as "2000", which can be trivially converted to numeric.
-
-However, quarterly data will be formatted as "2000-Q1", monthly data will be formatted like "2000-M01", etc.
+Annual data is formatted as a four-digit year, such as "2000", which converts trivially to numeric. Quarterly data, though, is formatted as "2000-Q1", monthly data as "2000-M01", and so on.
 
 You can use the `pandas` library's `to_datetime()` method with the `format="mixed"` argument to convert this column to a datetime object in a format-agnostic way:
 
 
 ``` python
-# Convert time_period to datetime
-df["datetime"] = pd.to_datetime(df["time_period"], format="mixed")
-df[["frequency", "datetime"]].head()
+# Convert TIME_PERIOD to datetime
+df["datetime"] = pd.to_datetime(df["TIME_PERIOD"], format="mixed")
+df[["FREQUENCY", "datetime"]].head()
 ```
 
 
-|     | frequency | datetime   |
+|     | FREQUENCY | datetime   |
 |-----|-----------|------------|
 | 0   | A         | 1992-01-01 |
 | 1   | A         | 1993-01-01 |
@@ -143,14 +123,14 @@ df[["frequency", "datetime"]].head()
 | 4   | A         | 1996-01-01 |
 
 
-Alternatively, you can split the `time_period` column into separate columns for year, quarter, and month, and then convert each to a numeric value:
+Alternatively, you can split the `TIME_PERIOD` column into separate columns for year, quarter, and month, and then convert each to a numeric value:
 
 
 ``` python
-# Split time_period into separate columns
-df["year"] = df["time_period"].str.extract(r"(\d{4})")[0]
-df["quarter"] = df["time_period"].str.extract(r"[Q](\d{1})")[0]
-df["month"] = df["time_period"].str.extract(r"[M](\d{2})")[0]
+# Split TIME_PERIOD into separate columns
+df["year"] = df["TIME_PERIOD"].str.extract(r"(\d{4})")[0]
+df["quarter"] = df["TIME_PERIOD"].str.extract(r"[Q](\d{1})")[0]
+df["month"] = df["TIME_PERIOD"].str.extract(r"[M](\d{2})")[0]
 
 # Convert year, quarter, and month to numeric
 df["year"] = pd.to_numeric(df["year"])
@@ -158,11 +138,11 @@ df["quarter"] = pd.to_numeric(df["quarter"])
 df["month"] = pd.to_numeric(df["month"])
 
 # Return head for non-na months
-df[["time_period", "year", "quarter", "month"]].dropna(subset=["month"]).head()
+df[["TIME_PERIOD", "year", "quarter", "month"]].dropna(subset=["month"]).head()
 ```
 
 
-|     | time_period | year | quarter | month |
+|     | TIME_PERIOD | year | quarter | month |
 |-----|-------------|------|---------|-------|
 | 34  | 1992-M01    | 1992 | NaN     | 1.00  |
 | 35  | 1992-M02    | 1992 | NaN     | 2.00  |
@@ -182,16 +162,16 @@ df.describe()
 ```
 
 
-|       | obs_value | datetime                      | year    | quarter | month   |
-|-------|-----------|-------------------------------|---------|---------|---------|
-| count | 1761.00   | 1761                          | 1761.00 | 414.00  | 1245.00 |
-| mean  | 42.16     | 2008-11-08 17:05:29.608177152 | 2008.77 | 2.49    | 6.46    |
-| min   | -69.21    | 1992-01-01 00:00:00           | 1992.00 | 1.00    | 1.00    |
-| 25%   | -3.92     | 2000-01-01 00:00:09           | 2000.00 | 1.00    | 3.00    |
-| 50%   | 9.28      | 2009-01-01 00:00:03           | 2009.00 | 2.00    | 6.00    |
-| 75%   | 66.26     | 2017-07-01 00:00:00           | 2017.00 | 3.00    | 9.00    |
-| max   | 577.58    | 2026-04-01 00:00:00           | 2026.00 | 4.00    | 12.00   |
-| std   | 77.31     | NaN                           | 9.97    | 1.12    | 3.45    |
+|       | OBS_VALUE | datetime                      | year    | quarter | month  |
+|-------|-----------|-------------------------------|---------|---------|--------|
+| count | 587.00    | 587                           | 587.00  | 138.00  | 415.00 |
+| mean  | 113.28    | 2008-11-08 17:05:29.608177152 | 2008.77 | 2.49    | 6.46   |
+| min   | 33.62     | 1992-01-01 00:00:00           | 1992.00 | 1.00    | 1.00   |
+| 25%   | 50.61     | 2000-01-01 00:00:09.500000    | 2000.00 | 1.25    | 3.00   |
+| 50%   | 94.61     | 2009-01-01 00:00:03           | 2009.00 | 2.00    | 6.00   |
+| 75%   | 145.70    | 2017-05-16 12:00:00           | 2017.00 | 3.00    | 9.00   |
+| max   | 577.58    | 2026-04-01 00:00:00           | 2026.00 | 4.00    | 12.00  |
+| std   | 86.94     | NaN                           | 9.98    | 1.12    | 3.45   |
 
 
 ## Viewing Data
@@ -238,34 +218,34 @@ First, let's retrieve the key adjustment variables:
 
 ``` python
 # Fetch GDP Deflator (Index, Quarterly)
-deflator = imfp.imf_dataset(
-    database_id="QNEA",
+deflator = imfp.imf_get(
+    "QNEA",
     indicator="B1GQ",
     price_type="PD",  # Price deflator
     type_of_transformation="IX",  # Index
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 
 # Fetch Population Estimates (Annual)
-population = imfp.imf_dataset(
-    database_id="WEO",
+population = imfp.imf_get(
+    "WEO",
     indicator="LP",
     frequency="A",
-    start_year=2010
+    start_period=2010,
 )
 
 # Fetch Exchange Rate (Quarterly)
-exchange_rate = imfp.imf_dataset(
-    database_id="ER", 
+exchange_rate = imfp.imf_get(
+    "ER",
     indicator="XDC_USD",  # Domestic currency per USD
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
 
-    /home/runner/work/imfp/imfp/imfp/data.py:405: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
+    /home/runner/work/imfp/imfp/imfp/utils.py:908: UserWarning: Agency IMF.RES does not support time filters; time window will be ignored.
       warn(
 
 
@@ -274,13 +254,13 @@ We'll also retrieve a nominal GDP series to be adjusted:
 
 ``` python
 # Fetch Nominal GDP (Domestic currency, annual)
-nominal_gdp = imfp.imf_dataset(
-    database_id="ANEA",
+nominal_gdp = imfp.imf_get(
+    "ANEA",
     indicator="B1GQ",
     price_type="V",  # Current prices
     type_of_transformation="XDC",  # Domestic currency
     frequency="A",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
@@ -302,7 +282,7 @@ nominal_gdp = imfp.imf_dataset(
 > - **CPI**: Consumer Price Index data
 > - **MFS_CBS**: Monetary and Financial Statistics, Central Bank data
 >
-> Use [imf_databases()](../reference/imf_databases.md#imfp.imf_databases) to see all available databases and `imf_parameters(database_id)` to explore their indicators.
+> Use [imf_get_dataflows()](../reference/imf_get_dataflows.md#imfp.imf_get_dataflows) to see all available datasets and `imf_get_datastructure(dataflow_id)` / `imf_get_codelists(dimensions, dataflow_id)` to explore their dimensions and indicators.
 
 
 ## Alternative: Using CPI for Price Adjustments
@@ -312,13 +292,13 @@ If you prefer to use the Consumer Price Index instead of the GDP deflator:
 
 ``` python
 # Fetch CPI (All Items, Index)
-cpi = imfp.imf_dataset(
-    database_id="CPI",
+cpi = imfp.imf_get(
+    "CPI",
     index_type="CPI",
     coicop_1999="_T",  # All Items
     type_of_transformation="IX",  # Index
     frequency="Q",
-    start_year=2010
+    start_period=2010,
 )
 ```
 
@@ -332,12 +312,12 @@ When working with data of different frequencies, you'll often need to harmonize 
 
 ``` python
 # Keep only Q4 observations for annual comparisons
-deflator = deflator[deflator['time_period'].str.contains("Q4")]
-exchange_rate = exchange_rate[exchange_rate['time_period'].str.contains("Q4")]
+deflator = deflator[deflator["TIME_PERIOD"].str.contains("Q4")]
+exchange_rate = exchange_rate[exchange_rate["TIME_PERIOD"].str.contains("Q4")]
 
 # Extract just the year from the time period for Q4 data
-deflator['time_period'] = deflator['time_period'].str[:4]
-exchange_rate['time_period'] = exchange_rate['time_period'].str[:4]
+deflator["TIME_PERIOD"] = deflator["TIME_PERIOD"].str[:4]
+exchange_rate["TIME_PERIOD"] = exchange_rate["TIME_PERIOD"].str[:4]
 ```
 
 
@@ -347,10 +327,10 @@ exchange_rate['time_period'] = exchange_rate['time_period'].str[:4]
 ``` python
 # Alternative: Calculate annual averages
 deflator = deflator.groupby(
-    ['country', deflator['time_period']], 
+    ["COUNTRY", deflator["TIME_PERIOD"]],
     as_index=False
 ).agg({
-    'obs_value': 'mean'
+    "OBS_VALUE": "mean"
 })
 ```
 
@@ -360,24 +340,24 @@ Choose the appropriate method based on your specific analysis needs and the econ
 
 ## Merging Datasets
 
-We can combine the datasets using `pd.DataFrame.merge()` with `country` and `time_period` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys:
 
 
 ``` python
 merged = (
     nominal_gdp.merge(
         deflator,
-        on=['country', 'time_period'],
-        suffixes=('_gdp', '_deflator')
+        on=["COUNTRY", "TIME_PERIOD"],
+        suffixes=("_gdp", "_deflator")
     )
     .merge(
         population,
-        on=['country', 'time_period']
+        on=["COUNTRY", "TIME_PERIOD"]
     )
     .merge(
         exchange_rate,
-        on=['country', 'time_period'],
-        suffixes=('_population', '_exchange_rate')
+        on=["COUNTRY", "TIME_PERIOD"],
+        suffixes=("_population", "_exchange_rate")
     )
 )
 ```
@@ -390,19 +370,19 @@ With the merged dataset, we can now calculate real GDP and per capita values:
 
 ``` python
 # Convert nominal to real GDP
-merged['real_gdp'] = (
-    (merged['obs_value_gdp'] / merged['obs_value_deflator']) * 100
+merged["real_gdp"] = (
+    (merged["OBS_VALUE_gdp"] / merged["OBS_VALUE_deflator"]) * 100
 )
 
-# Calculate per capita values (using population obs_value)
-merged['real_gdp_per_capita'] = merged['real_gdp'] / merged['obs_value_population']
+# Calculate per capita values (using population OBS_VALUE)
+merged["real_gdp_per_capita"] = merged["real_gdp"] / merged["OBS_VALUE_population"]
 
 # Display the first 5 rows of the transformed data
-merged[['country', 'time_period', 'real_gdp', 'real_gdp_per_capita']].head()
+merged[["COUNTRY", "TIME_PERIOD", "real_gdp", "real_gdp_per_capita"]].head()
 ```
 
 
-|     | country | time_period | real_gdp         | real_gdp_per_capita |
+|     | COUNTRY | TIME_PERIOD | real_gdp         | real_gdp_per_capita |
 |-----|---------|-------------|------------------|---------------------|
 | 0   | ALB     | 2011        | 1266392354394.82 | 435906.15           |
 | 1   | ALB     | 2011        | 1266392354394.82 | 435906.15           |
@@ -417,23 +397,23 @@ Note that this result is still in the domestic currency of the country. If you n
 
 
 ``` python
-# Because 'obs_value_exchange_rate' is local-currency-per-USD,
+# Because "OBS_VALUE_exchange_rate" is local-currency-per-USD,
 # dividing local-currency real GDP by it yields GDP in USD.
 merged["real_gdp_usd"] = (
-    merged["real_gdp"] / merged["obs_value_exchange_rate"]
+    merged["real_gdp"] / merged["OBS_VALUE_exchange_rate"]
 )
 
 # (Optional) real GDP per capita in USD
 merged["real_gdp_usd_per_capita"] = (
-    merged["real_gdp_usd"] / merged["obs_value_population"]
+    merged["real_gdp_usd"] / merged["OBS_VALUE_population"]
 )
 
 # Inspect results
-merged[["time_period","country","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
+merged[["TIME_PERIOD","COUNTRY","real_gdp","real_gdp_usd","real_gdp_usd_per_capita"]].head()
 ```
 
 
-|  | time_period | country | real_gdp | real_gdp_usd | real_gdp_usd_per_capita |
+|  | TIME_PERIOD | COUNTRY | real_gdp | real_gdp_usd | real_gdp_usd_per_capita |
 |----|----|----|----|----|----|
 | 0 | 2011 | ALB | 1266392354394.82 | 11776012222.38 | 4053.43 |
 | 1 | 2011 | ALB | 1266392354394.82 | 12190133681.53 | 4195.98 |

@@ -1,14 +1,31 @@
 # imfp
 
-> Python package for downloading economic data from the International Monetary Fund JSON RESTful API endpoint.
+> Python package for downloading economic data from the International Monetary Fund SDMX 3.0 API, following econdataverse conventions.
 
 ## Docs
 
 ### API Reference
 
+#### Fetching Data
+> The econdataverse-style workflow: discover a dataset, inspect how it can be filtered, look up valid codes, then request observations.
+
+
+- [imf_get_dataflows](https://promptlytechnologies.com/imfp/reference/imf_get_dataflows.html): List every dataset published through the IMF Data API
+- [imf_get_datastructure](https://promptlytechnologies.com/imfp/reference/imf_get_datastructure.html): List the dimensions a dataset can be filtered on
+- [imf_get_codelists](https://promptlytechnologies.com/imfp/reference/imf_get_codelists.html): Look up the valid codes for one or more of a dataset's dimensions
+- [imf_get](https://promptlytechnologies.com/imfp/reference/imf_get.html): Fetch observations from an IMF dataset
+
+#### Configuration
+> Settings that affect how requests are made
+
+- [set_imf_app_name](https://promptlytechnologies.com/imfp/reference/set_imf_app_name.html): Set the IMF Application Name
+- [set_imf_wait_time](https://promptlytechnologies.com/imfp/reference/set_imf_wait_time.html): Set the IMF wait time as an environment variable
+
+#### Deprecated
+> The pre-2.0 interface. These still work but emit a DeprecationWarning and will be removed in imfp 3.0.0. See the migration guide.
+
+
 - [imf_databases](https://promptlytechnologies.com/imfp/reference/imf_databases.html): List IMF database IDs and descriptions
 - [imf_parameters](https://promptlytechnologies.com/imfp/reference/imf_parameters.html): List input parameters and available parameter values for use in
 - [imf_parameter_defs](https://promptlytechnologies.com/imfp/reference/imf_parameter_defs.html): Get text descriptions of input parameters used in making API
 - [imf_dataset](https://promptlytechnologies.com/imfp/reference/imf_dataset.html): Download a data series from the IMF
-- [set_imf_app_name](https://promptlytechnologies.com/imfp/reference/set_imf_app_name.html): Set the IMF Application Name
-- [set_imf_wait_time](https://promptlytechnologies.com/imfp/reference/set_imf_wait_time.html): Set the IMF wait time as an environment variable

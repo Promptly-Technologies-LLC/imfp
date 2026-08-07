@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>imf_dataset() – imfp | imfp</title>
+<title>imf_get_codelists() – imfp | imfp</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -119,9 +119,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../theme-init.js"></script>
 
 
-  <link rel="alternate" type="text/markdown" href="imf_dataset.md">
-  <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_dataset.html">
-  <meta name="description" content="Download a data series from the IMF.">
+  <link rel="alternate" type="text/markdown" href="imf_get_codelists.md">
+  <link rel="canonical" href="https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_codelists.html">
+  <meta name="description" content="Look up the valid codes for one or more of a dataset’s dimensions.">
   <script type="application/ld+json">
 [
   {
@@ -140,23 +140,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "imf_dataset - imfp",
+    "name": "imf_get_codelists - imfp",
     "isPartOf": {
       "@type": "WebSite",
       "name": "imfp"
     },
-    "url": "https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_dataset.html"
+    "url": "https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_codelists.html"
   }
 ]
 </script>
   <meta property="og:type" content="website">
-  <meta property="og:title" content="imf_dataset() – imfp | imfp">
-  <meta property="og:description" content="Download a data series from the IMF.">
-  <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_dataset.html">
+  <meta property="og:title" content="imf_get_codelists() – imfp | imfp">
+  <meta property="og:description" content="Look up the valid codes for one or more of a dataset’s dimensions.">
+  <meta property="og:url" content="https://Promptly-Technologies-LLC.github.io/imfp/reference/imf_get_codelists.html">
   <meta property="og:site_name" content="imfp">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="imf_dataset() – imfp | imfp">
-  <meta name="twitter:description" content="Download a data series from the IMF.">
+  <meta name="twitter:title" content="imf_get_codelists() – imfp | imfp">
+  <meta name="twitter:description" content="Look up the valid codes for one or more of a dataset’s dimensions.">
 </head>
 
 <body class="gd-ref-sidebar nav-sidebar floating nav-fixed doc-api-page quarto-light">
@@ -202,7 +202,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <h1 class="quarto-secondary-nav-title no-breadcrumbs gd-ref-title"><span class="gd-ref-title-prefix">API</span><span class="gd-ref-title-sep">/</span><span class="gd-ref-title-name">imf_dataset()</span></h1>
+        <h1 class="quarto-secondary-nav-title no-breadcrumbs gd-ref-title"><span class="gd-ref-title-prefix">API</span><span class="gd-ref-title-sep">/</span><span class="gd-ref-title-name">imf_get_codelists()</span></h1>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -240,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/imf_get_codelists.html" class="sidebar-item-text sidebar-link">
+  <a href="../reference/imf_get_codelists.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">imf_get_codelists</span></a>
   </div>
 </li>
@@ -298,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../reference/imf_dataset.html" class="sidebar-item-text sidebar-link active">
+  <a href="../reference/imf_dataset.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">imf_dataset</span></a>
   </div>
 </li>
@@ -316,6 +316,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#parameters" id="toc-parameters" class="nav-link active" data-scroll-target="#parameters">Parameters</a></li>
   <li><a href="#returns" id="toc-returns" class="nav-link" data-scroll-target="#returns">Returns</a></li>
+  <li><a href="#raises" id="toc-raises" class="nav-link" data-scroll-target="#raises">Raises</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul>
 </nav>
     </div>
@@ -324,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h2 class="title" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 1.25rem;"><span class="doc-object-name doc-function doc-label doc-label-function">imf_dataset()</span></h2>
+<h2 class="title" style="font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace; font-size: 1.25rem;"><span class="doc-object-name doc-function doc-label doc-label-function">imf_get_codelists()</span></h2>
 </div>
 
 
@@ -342,75 +344,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="doc-subject">
-<p>Download a data series from the IMF.</p>
+<p>Look up the valid codes for one or more of a dataset’s dimensions.</p>
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/data.py#L453-L592" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/api.py#L263-L375" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_dataset</span>(<span class="va">database_id</span>: <span class="bu">str</span>, <span class="va">parameters</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">DataFrame</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">times</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">include_metadata</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">kwargs</span>: <span class="va">DimensionFilter</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="va">DataFrame</span></span>
-<span id="cb1-2" class="overload-spacer"> </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_dataset</span>(<span class="va">database_id</span>: <span class="bu">str</span>, <span class="va">parameters</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">DataFrame</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">times</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">include_metadata</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">kwargs</span>: <span class="va">DimensionFilter</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">tuple</span>[<span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>], <span class="va">DataFrame</span>]</span>
-<span id="cb1-4" class="overload-spacer"> </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_dataset</span>(<span class="va">database_id</span>: <span class="bu">str</span>, <span class="va">parameters</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">DataFrame</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">times</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">include_metadata</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">kwargs</span>: <span class="va">DimensionFilter</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>]</span>
-<span id="cb1-6" class="overload-spacer"> </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_dataset</span>(<span class="va">database_id</span>: <span class="bu">str</span>, <span class="va">parameters</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">DataFrame</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_year</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">times</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">include_metadata</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">kwargs</span>: <span class="va">DimensionFilter</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">tuple</span>[<span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>], <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>]]</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_get_codelists</span>(
+    <span class="va">dimension_ids</span>,
+    <span class="va">dataflow_id</span>,
+    <span class="va">max_tries</span><span class="op">=</span><span class="dv">3</span>,
+)</span></code></pre></div>
 </div>
 <div class="doc-text">
-<div class="callout callout-style-default callout-warning callout-titled" title="Deprecated since version 2.0.0">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Deprecated since version 2.0.0
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Use <a href="imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imfp.imf_get()</a> instead. This function will be removed in imfp 3.0.0.</p>
-</div>
-</div>
+<p>This is step 3 of the workflow: the <code>code</code> column holds the values to pass to <a href="imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get()</a>.</p>
 </div>
 <section id="parameters" class="level2 doc-parameters">
 <h2 class="doc-parameters">Parameters</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code><span class="doc-parameter-name">database_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
+<dt><code><span class="doc-parameter-name">dimension_ids</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str or list</span></code></dt>
 <dd>
-<p>Database ID for the database from which you would like to request data. Can be found using imf_databases().</p>
+<p>One or more dimension IDs from imf_get_datastructure(). Matching is case-insensitive.</p>
 </dd>
-<dt><code><span class="doc-parameter-name">parameters</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">dict</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">dataflow_id</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">str</span></code></dt>
 <dd>
-<p>Dictionary of data frames providing input parameters for your API request. Retrieve dictionary of all possible input parameters using imf_parameters() and filter each data frame in the dictionary to reduce it to the inputs you want.</p>
+<p>A dataflow ID from imf_get_dataflows().</p>
 </dd>
-<dt><code><span class="doc-parameter-name">start_year</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
+<dt><code><span class="doc-parameter-name">max_tries</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="dv">3</span></span></code></dt>
 <dd>
-<p>Four-digit year. Earliest year for which you would like to request data.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">end_year</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default">None</span></code></dt>
-<dd>
-<p>Four-digit year. Latest year for which you would like to request data.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">return_raw</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">bool</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="va">False</span></span></code></dt>
-<dd>
-<p>Whether to return the raw list returned by the API instead of a cleaned-up data frame.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">print_url</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">bool</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="va">False</span></span></code></dt>
-<dd>
-<p>Whether to print the URL used in the API call.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">times</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">int</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="dv">3</span></span></code></dt>
-<dd>
-<p>Maximum number of requests to attempt.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">include_metadata</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">bool</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="va">False</span></span></code></dt>
-<dd>
-<p>Whether to return the database metadata header along with the data series.</p>
-</dd>
-<dt><code><span class="doc-parameter-name">**kwargs</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">DimensionFilter</span></code></dt>
-<dd>
-Dimension filters as keyword arguments. Each value must be a code string or a list of code strings. Use imf_parameters() to identify which parameters to use for requests from a given database and to see all valid input codes for each parameter.
+Maximum number of requests to attempt. Defaults to 3.
 </dd>
 </dl>
 </div>
@@ -419,16 +383,37 @@ Dimension filters as keyword arguments. Each value must be a code string or a li
 <h2 class="doc-returns">Returns</h2>
 <div class="doc-definition-items">
 <dl>
-<dt><code> <span class="doc-parameter-annotation">DataFrame | dict[str, Any] | tuple[dict[str, Any], DataFrame | dict[str, Any]]</span></code></dt>
+<dt><code> <span class="doc-parameter-annotation">DataFrame</span></code></dt>
 <dd>
-<p>If return_raw == False and include_metadata == False, returns a pandas</p>
-<p>DataFrame with the data series. If return_raw == False but</p>
-<p>include_metadata == True, returns a tuple whose first item is the</p>
-<p>database header, and whose second item is the pandas DataFrame. If</p>
-return_raw == True, returns the raw JSON fetched from the API endpoint.
+<p>pandas.DataFrame: One row per code, with columns <code>dimension_id</code>,</p>
+<p><code>code</code>, <code>name</code>, <code>description</code>, <code>codelist_id</code>,</p>
+<p><code>codelist_agency</code>, and <code>codelist_version</code>. Dimensions that are not</p>
+enumerated (they accept free-form values) contribute no rows.
 </dd>
 </dl>
 </div>
+</section>
+<section id="raises" class="level2 doc-raises">
+<h2 class="doc-raises">Raises</h2>
+<div class="doc-definition-items">
+<dl>
+<dt><code> <span class="doc-parameter-annotation">TypeError</span></code></dt>
+<dd>
+<p>If an argument has the wrong type.</p>
+</dd>
+<dt><code> <span class="doc-parameter-annotation">ValueError</span></code></dt>
+<dd>
+If no dimension is named, if max_tries is less than 1, or if the dataflow does not exist or lacks a requested dimension.
+</dd>
+</dl>
+</div>
+</section>
+<section id="examples" class="level2 doc-examples">
+<h2 class="doc-examples">Examples</h2>
+<p>Find the commodity indicator codes for PCPS</p>
+<p>imf_get_codelists(“COMMODITY”, “PCPS”)</p>
+<p>Fetch two dimensions at once</p>
+<p>imf_get_codelists([“COMMODITY”, “FREQ”], “PCPS”)</p>
 
 
 </section>

@@ -72,7 +72,7 @@ def load_or_fetch_databases():
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print("Fetching databases from IMF API...")
-    databases = imfp.imf_databases()
+    databases = imfp.imf_get_dataflows()
 
     # Save to CSV for future use
     databases.to_csv(csv_path, index=False)
@@ -94,7 +94,10 @@ def load_or_fetch_parameters(database_name):
 
     # If pickle doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching parameters for {database_name} from IMF API...")
-    parameters = imfp.imf_parameters(database_name)
+    dimensions = imfp.imf_get_datastructure(database_name)
+    parameters = imfp.imf_get_codelists(
+        list(dimensions["dimension_id"]), database_name
+    )
 
     # Save to pickle file for future use
     os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
@@ -118,7 +121,10 @@ def load_or_fetch_dataset(database_id, indicator):
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching dataset for {database_id}.{indicator} from IMF API...")
-    dataset = imfp.imf_dataset(database_id=database_id, indicator=[indicator])
+    dataset = imfp.imf_get(database_id, indicator=[indicator])
+    # The cached CSVs below this notebook were written with lower-cased column
+    # names, so normalize the API's SDMX casing to match them.
+    dataset.columns = dataset.columns.str.lower()
 
     # Save to CSV file for future use
     os.makedirs("data", exist_ok=True)  # Ensure the data directory exists
@@ -184,10 +190,10 @@ Path("data").mkdir(exist_ok=True)
 # Load or fetch databases
 databases = load_or_fetch_databases()
 
-# Filter out databases that contain a year in the description
+# Filter out databases whose name contains a year
 databases[
-  ~databases['description'].str.contains(r"[\d]{4}", regex=True)
-]
+  ~databases['name'].str.contains(r"[\d]{4}", regex=True)
+][['id', 'name']]
 
 # view_dataframe_in_browser(databases)
 ```
@@ -197,19 +203,19 @@ databases[
     Databases saved to data/databases.csv
 
 
-|     | database_id | description                                       |
-|-----|-------------|---------------------------------------------------|
-| 1   | MCDREO      | Middle East and Central Asia Regional Economic... |
-| 3   | PCPS        | Primary Commodity Price System (PCPS)             |
-| 4   | MFS_DC      | Monetary and Financial Statistics (MFS), Depos... |
-| 5   | LS          | Labor Statistics (LS)                             |
-| 8   | PIP         | Portfolio Investment Positions by Counterpart ... |
-| ... | ...         | ...                                               |
-| 210 | BOP_AGG     | Balance of Payments and International Investme... |
-| 212 | MFS_FC      | Monetary and Financial Statistics (MFS), Finan... |
-| 216 | AEA         | Air Emissions Accounts (AEA)                      |
-| 220 | FM          | Fiscal Monitor (FM)                               |
-| 221 | ANEA        | National Economic Accounts (NEA), Annual Data     |
+|  | id | name |
+|----|----|----|
+| 1 | FSIBSIS | Financial Soundness Indicators (FSI), Balance ... |
+| 2 | ITG | International Trade in Goods (ITG) |
+| 8 | FSICDM | Financial Soundness Indicators (FSI), Concentr... |
+| 11 | INFORMRISK | Climate-Driven INFORM Risk Indicator |
+| 12 | FSI_COUNTRY_METADATA_TABLE_2 | Financial Soundness Indicators (FSI), Country ... |
+| ... | ... | ... |
+| 215 | NSDP | National Summary Data Page (NSDP) |
+| 216 | PCPS | Primary Commodity Price System (PCPS) |
+| 218 | MPFT | Monetary Policy Frameworks Toolkit (MPFT) |
+| 219 | GFS_SSUC | GFS Statement of Sources and Uses of Cash |
+| 220 | IRFCL | International Reserves and Foreign Currency Li... |
 
 101 rows × 2 columns
 
@@ -228,15 +234,15 @@ Three IMF databases were used: World Economic Outlook (WEO), and National Econom
 
 
 ``` python
-databases[databases['database_id'].isin(['QNEA','ANEA','WEO'])]
+databases[databases['id'].isin(['QNEA','ANEA','WEO'])][['id', 'name']]
 ```
 
 
-|     | database_id | description                                      |
-|-----|-------------|--------------------------------------------------|
-| 74  | QNEA        | National Economic Accounts (NEA), Quarterly Data |
-| 166 | WEO         | World Economic Outlook (WEO)                     |
-| 221 | ANEA        | National Economic Accounts (NEA), Annual Data    |
+|     | id   | name                                             |
+|-----|------|--------------------------------------------------|
+| 22  | QNEA | National Economic Accounts (NEA), Quarterly Data |
+| 150 | WEO  | World Economic Outlook (WEO)                     |
+| 188 | ANEA | National Economic Accounts (NEA), Annual Data    |
 
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -250,20 +256,22 @@ params = {}
 for dataset in datasets_list:
     params[dataset] = load_or_fetch_parameters(dataset)
 
-    valid_keys = list(params[dataset].keys())
+    # imf_get_codelists returns one tidy frame, so the dimensions are the
+    # distinct values of its dimension_id column.
+    valid_keys = sorted(params[dataset]["dimension_id"].unique())
     print(f"Parameters for {dataset}: ", valid_keys)
 ```
 
 
     Fetching parameters for QNEA from IMF API...
     Parameters saved to data/QNEA.pickle
-    Parameters for QNEA:  ['country', 'indicator', 'price_type', 's_adjustment', 'type_of_transformation', 'frequency']
+    Parameters for QNEA:  ['COUNTRY', 'FREQUENCY', 'INDICATOR', 'PRICE_TYPE', 'S_ADJUSTMENT', 'TYPE_OF_TRANSFORMATION']
     Fetching parameters for ANEA from IMF API...
     Parameters saved to data/ANEA.pickle
-    Parameters for ANEA:  ['country', 'indicator', 'price_type', 'type_of_transformation', 'frequency']
+    Parameters for ANEA:  ['COUNTRY', 'FREQUENCY', 'INDICATOR', 'PRICE_TYPE', 'TYPE_OF_TRANSFORMATION']
     Fetching parameters for WEO from IMF API...
     Parameters saved to data/WEO.pickle
-    Parameters for WEO:  ['country', 'indicator', 'frequency']
+    Parameters for WEO:  ['COUNTRY', 'FREQUENCY', 'INDICATOR']
 
 
 We'll need to update the `load_or_fetch_dataset` function to handle the new database parameters:
@@ -284,7 +292,9 @@ def load_or_fetch_dataset_with_params(database_id, filename_suffix, **kwargs):
 
     # If CSV doesn't exist or couldn't be loaded, fetch from API
     print(f"Fetching dataset for {database_id}.{filename_suffix} from IMF API...")
-    dataset = imfp.imf_dataset(database_id=database_id, **kwargs)
+    dataset = imfp.imf_get(database_id, **kwargs)
+    # Match the lower-cased column names used by the cached CSVs.
+    dataset.columns = dataset.columns.str.lower()
 
     # Save to CSV file for future use
     os.makedirs("data", exist_ok=True)
@@ -982,7 +992,7 @@ model.summary()
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.8936 |
 | Date:             | Fri, 07 Aug 2026 | Prob (F-statistic): | 0.345  |
-| Time:             | 15:02:55         | Log-Likelihood:     | 1323.1 |
+| Time:             | 19:46:24         | Log-Likelihood:     | 1323.1 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2633. |
 | Df Model:         | 1                |                     |        |
@@ -1118,7 +1128,7 @@ time_model_fitted.summary()
     Model:                         VAR
     Method:                        OLS
     Date:           Fri, 07, Aug, 2026
-    Time:                     15:02:55
+    Time:                     19:46:25
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0475
     Nobs:                     638.000    HQIC:                  -12.1758

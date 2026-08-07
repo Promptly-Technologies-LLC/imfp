@@ -1,0 +1,182 @@
+# Migrating from imfp 1.x
+
+
+# What Changed
+
+Version 2.0.0 reorganizes `imfp` around the [econdataverse](https://econdataverse.org/) conventions, matching the R package [imfapi](https://github.com/Teal-Insights/r-imfapi) so that the same workflow reads the same way in both languages. Concretely:
+
+- Functions are named for what they retrieve (`imf_get_*`), and every one returns a tidy DataFrame.
+- Vocabulary follows SDMX, the standard the IMF API actually speaks: *dataflows* rather than databases, *dimensions* rather than parameters, *codes* rather than input codes.
+- [imf_get_codelists](../reference/imf_get_codelists.md#imfp.imf_get_codelists) returns a single tidy DataFrame instead of a dict of DataFrames.
+
+The four pre-2.0 functions still work, but each now emits a `DeprecationWarning` and will be removed in 3.0.0.
+
+
+# Function Mapping
+
+| imfp 1.x | imfp 2.0 | Notes |
+|----|----|----|
+| [imf_databases()](../reference/imf_databases.md#imfp.imf_databases) | [imf_get_dataflows()](../reference/imf_get_dataflows.md#imfp.imf_get_dataflows) | Now also returns version, agency, structure, and last-updated columns. |
+| `imf_parameters(db)` | `imf_get_codelists(dims, db)` | Returns one tidy DataFrame instead of a dict of DataFrames. Takes the dimensions you want. |
+| `imf_parameter_defs(db)` | `imf_get_datastructure(db)` | Returns dimension IDs with their type and position. |
+| `imf_dataset(db, ...)` | `imf_get(db, ...)` | Takes plain code strings; returns SDMX-cased columns. |
+
+
+# Argument Mapping
+
+| imfp 1.x | imfp 2.0 |
+|----|----|
+| `database_id=` | first positional argument, `dataflow_id` |
+| `parameters=` (dict of DataFrames) | `dimensions=` (dict of code lists) |
+| `start_year=` / `end_year=` | `start_period=` / `end_period=` |
+| `times=` | `max_tries=` |
+| `print_url=` | `print_url=` (unchanged) |
+| `return_raw=` | `return_raw=` (unchanged) |
+| `include_metadata=` | removed -- use [imf_get_dataflows()](../reference/imf_get_dataflows.md#imfp.imf_get_dataflows) for dataset metadata |
+
+
+# Side-by-Side
+
+
+## Listing datasets
+
+
+``` python
+# imfp 1.x
+databases = imfp.imf_databases()          # database_id, description
+
+# imfp 2.0
+dataflows = imfp.imf_get_dataflows()      # id, name, description, version, ...
+```
+
+
+The old `description` column held the dataset's *name*. In 2.0 the name and the description are separate columns.
+
+
+## Discovering how to filter
+
+
+``` python
+# imfp 1.x -- a dict of DataFrames, one per parameter
+params = imfp.imf_parameters("PCPS")
+params.keys()
+params["frequency"]                       # input_code, description
+
+# imfp 2.0 -- dimensions first, then codes, both tidy
+dims = imfp.imf_get_datastructure("PCPS") # dimension_id, type, position
+codes = imfp.imf_get_codelists("FREQUENCY", "PCPS")
+codes[["code", "name"]]
+```
+
+
+Note the dimension is now `FREQUENCY`, not `frequency`. Dimension IDs are matched case-insensitively, so either spelling works as an argument, but the values in the returned data keep the SDMX casing.
+
+
+## Fetching data
+
+
+``` python
+# imfp 1.x
+df = imfp.imf_dataset(
+    database_id="PCPS",
+    indicator=["PCOAL"],
+    data_transformation=["INDEX"],
+    frequency=["A"],
+    start_year=2000,
+    end_year=2015,
+)
+
+# imfp 2.0
+df = imfp.imf_get(
+    "PCPS",
+    dimensions={
+        "INDICATOR": ["PCOAL"],
+        "DATA_TRANSFORMATION": ["INDEX"],
+        "FREQUENCY": ["A"],
+    },
+    start_period=2000,
+    end_period=2015,
+)
+```
+
+
+Keyword-argument style still works, so the shortest migration for many calls is to rename `database_id`, `start_year`, and `end_year`:
+
+
+``` python
+df = imfp.imf_get(
+    "PCPS", indicator=["PCOAL"], data_transformation=["INDEX"], frequency=["A"],
+    start_period=2000, end_period=2015,
+)
+```
+
+
+## Filtering by a DataFrame of parameters
+
+In 1.x you filtered a DataFrame from [imf_parameters](../reference/imf_parameters.md#imfp.imf_parameters) and passed the whole dict back in. In 2.0 you pass plain strings, so take the `code` column:
+
+
+``` python
+# imfp 1.x
+params = imfp.imf_parameters("PCPS")
+params["indicator"] = params["indicator"][
+    params["indicator"]["description"].str.contains("Coal")
+]
+df = imfp.imf_dataset("PCPS", parameters=params)
+
+# imfp 2.0
+codes = imfp.imf_get_codelists("INDICATOR", "PCPS")
+coal = codes[codes["name"].str.contains("Coal", na=False)]["code"].tolist()
+df = imfp.imf_get("PCPS", indicator=coal)
+```
+
+
+Passing a DataFrame where codes are expected raises a `ValueError` that says exactly this, rather than failing obscurely later.
+
+
+# Column Name Changes
+
+[imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) lower-cased its columns. [imf_get](../reference/imf_get.md#imfp.imf_get) keeps the SDMX dimension IDs as the API reports them, which is what `imfapi` does in R:
+
+
+``` python
+# imfp 1.x columns
+["country", "indicator", "data_transformation", "frequency", "time_period", "obs_value"]
+
+# imfp 2.0 columns
+["COUNTRY", "INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY", "TIME_PERIOD", "OBS_VALUE"]
+```
+
+
+If you have downstream code that depends on the old casing, rename after fetching:
+
+
+``` python
+df.columns = df.columns.str.lower()
+```
+
+
+# Behavior Changes
+
+**Empty results no longer raise.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) raised a `ValueError` when a query matched nothing. [imf_get](../reference/imf_get.md#imfp.imf_get) returns an empty DataFrame and emits a `UserWarning`, so a legitimately empty query does not break a pipeline. Check `df.empty` where you previously caught the exception.
+
+**`OBS_VALUE` is numeric.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) returned everything as strings, so guides recommended `pd.to_numeric`. [imf_get](../reference/imf_get.md#imfp.imf_get) returns `OBS_VALUE` as `float64` already. `TIME_PERIOD` stays a string, since its format varies with frequency.
+
+**Codes are not pre-validated.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) downloaded every codelist to check your inputs and warned about invalid ones. [imf_get](../reference/imf_get.md#imfp.imf_get) skips that, which makes requests substantially faster; the API rejects genuinely invalid codes. Use [imf_get_codelists](../reference/imf_get_codelists.md#imfp.imf_get_codelists) when you want to check first.
+
+**No parameter-name coercion.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) quietly rewrote `freq` to `frequency`, `country` to `ref_area`, and so on, warning as it went. [imf_get](../reference/imf_get.md#imfp.imf_get) does not guess: name the dimension the dataset actually uses. If you are unsure, [imf_get_datastructure](../reference/imf_get_datastructure.md#imfp.imf_get_datastructure) will tell you, and an incorrect name produces an error listing the valid ones.
+
+
+# Silencing the Deprecation Warnings
+
+If you are not ready to migrate, the old functions keep working through the 2.x series. To silence the warnings in the meantime:
+
+
+``` python
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning, module="imfp")
+```
+
+
+They will stop working in 3.0.0, so treat this as a stopgap rather than a fix.
