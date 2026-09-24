@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.0.1 (2026-09-24)
+
+### Chores
+
+- **deps-dev**: Bump tornado in the uv group across 1 directory
+  ([`8f6c2bd`](https://github.com/Promptly-Technologies-LLC/imfp/commit/8f6c2bd37540d0809b2b1235e7b97f89c9ce391e))
+
+
 ## v2.0.0 (2026-08-07)
 
 ### Bug Fixes

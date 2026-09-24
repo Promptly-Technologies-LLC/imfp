@@ -1,6 +1,6 @@
 [project]
 name = "imfp"
-version = "2.0.0"
+version = "2.0.1"
 description = "Python package for downloading economic data from the International Monetary Fund SDMX 3.0 API, following econdataverse conventions."
 authors = [
     {name = "Christopher C. Smith", email = "christopher.smith@promptlytechnologies.com"}
