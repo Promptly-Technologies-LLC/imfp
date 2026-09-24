@@ -57,11 +57,11 @@ df[categorical_cols] = df[categorical_cols].astype("category")
 
 #### NA Removal
 
-Observations the IMF reports as missing come back as `NaN`, so you may want to drop them:
+Observations the IMF reports as missing come back as `NaN`, so you may want to drop them. Restrict the check to `OBS_VALUE`, since attribute columns are often legitimately empty:
 
 ``` {python}
 # Drop rows with missing values
-df = df.dropna()
+df = df.dropna(subset=["OBS_VALUE"])
 ```
 
 #### Time Period Conversion
@@ -135,7 +135,7 @@ These transformations are essential for:
 - Converting nominal to real dollar values
 - Calculating per capita metrics
 - Harmonizing data across different frequencies
-- Adjusting for different unit scales
+- Adjusting for different unit scales (see the `UNIT` and `SCALE` [attribute columns](datasets.qmd#attributes-units-scale-and-status))
 
 For a complete, end-to-end example of these transformations in a real analysis workflow, see Jenny Xu's superb [demo notebook](https://github.com/jennyxu/imfp-demo).
 
@@ -263,22 +263,24 @@ Choose the appropriate method based on your specific analysis needs and the econ
 
 ### Merging Datasets
 
-We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys. Selecting just the keys and values first keeps the dimension and attribute columns of each dataset from colliding:
 
 ``` {python}
+keys = ["COUNTRY", "TIME_PERIOD"]
+columns = [*keys, "OBS_VALUE"]
 merged = (
-    nominal_gdp.merge(
-        deflator,
-        on=["COUNTRY", "TIME_PERIOD"],
+    nominal_gdp[columns].merge(
+        deflator[columns],
+        on=keys,
         suffixes=("_gdp", "_deflator")
     )
     .merge(
-        population,
-        on=["COUNTRY", "TIME_PERIOD"]
+        population[columns],
+        on=keys
     )
     .merge(
-        exchange_rate,
-        on=["COUNTRY", "TIME_PERIOD"],
+        exchange_rate[columns],
+        on=keys,
         suffixes=("_population", "_exchange_rate")
     )
 )

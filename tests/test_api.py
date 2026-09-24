@@ -215,7 +215,46 @@ def test_imf_get(set_options, use_saved_responses):
 
     assert isinstance(result, pd.DataFrame)
     assert len(result) > 0
-    # Dimension columns keep their SDMX IDs, then TIME_PERIOD and OBS_VALUE.
+    # Dimension columns keep their SDMX IDs, then TIME_PERIOD and OBS_VALUE,
+    # then every attribute that has a value somewhere in the response.
+    assert list(result.columns) == [
+        "COUNTRY",
+        "SECTOR",
+        "GFS_GRP",
+        "INDICATOR",
+        "TYPE_OF_TRANSFORMATION",
+        "FREQUENCY",
+        "TIME_PERIOD",
+        "OBS_VALUE",
+        "GFS_STO",
+        "FLOW_STOCK_ENTRY",
+        "TRANSFORMATION",
+        "ACCOUNTS",
+        "UNIT",
+        "SCALE",
+        "DERIVATION_TYPE",
+        "BASES_OF_RECORDING_GROSS_NET",
+        "VALUATION",
+    ]
+    assert set(result["COUNTRY"]) == {"ABW"}
+    assert set(result["INDICATOR"]) == {"G23_T"}
+    # UNIT comes from a dimension group keyed on TYPE_OF_TRANSFORMATION.
+    assert set(result["UNIT"]) == {"PT"}
+    assert set(result["SCALE"]) == {"0"}
+    assert set(result["DERIVATION_TYPE"]) == {"O"}
+
+
+def test_imf_get_attributes_false_returns_only_dimensions(
+    set_options, use_saved_responses
+):
+    result = imf_get(
+        "GFS_SOO",
+        dimensions=GFS_SOO_QUERY,
+        start_period=1972,
+        end_period=1976,
+        attributes=False,
+    )
+
     assert list(result.columns) == [
         "COUNTRY",
         "SECTOR",
@@ -226,8 +265,18 @@ def test_imf_get(set_options, use_saved_responses):
         "TIME_PERIOD",
         "OBS_VALUE",
     ]
-    assert set(result["COUNTRY"]) == {"ABW"}
-    assert set(result["INDICATOR"]) == {"G23_T"}
+
+
+def test_imf_get_attributes_vary_by_series(set_options, use_saved_responses):
+    result = imf_get(
+        "AFRREO", indicator=["TTT_IX", "GGX_G01_GDP_PT"], start_period=2021
+    )
+
+    units = result.groupby("INDICATOR")["UNIT"].unique()
+    assert units["TTT_IX"].tolist() == ["IX"]
+    assert units["GGX_G01_GDP_PT"].tolist() == ["PT"]
+    # An attribute set only for some series is missing for the others.
+    assert result.loc[result["INDICATOR"] == "TTT_IX", "GFS_STO"].isna().all()
 
 
 def test_imf_get_kwargs_match_dimensions_dict(set_options, use_saved_responses):
@@ -280,9 +329,10 @@ def test_imf_get_matches_legacy_imf_dataset(set_options, use_saved_responses):
         "GFS_SOO", dimensions=GFS_SOO_QUERY, start_period=1972, end_period=1976
     )
 
-    # imf_dataset lower-cases its columns; imf_get keeps the SDMX IDs.
+    # imf_dataset lower-cases its columns and omits attributes; imf_get keeps
+    # the SDMX IDs.
     legacy.columns = [column.upper() for column in legacy.columns]
-    assert legacy.equals(new)
+    assert legacy.equals(new[legacy.columns])
 
 
 def test_imf_get_rejects_unknown_dimension(set_options, use_saved_responses):
@@ -414,6 +464,7 @@ def test_legacy_imf_dataset_warns(set_options, use_saved_responses):
         lambda: imf_get("GFS_SOO", max_tries=1.5),  # ty: ignore[no-matching-overload]
         lambda: imf_get("GFS_SOO", print_url="yes"),  # ty: ignore[no-matching-overload]
         lambda: imf_get("GFS_SOO", return_raw="yes"),  # ty: ignore[no-matching-overload]
+        lambda: imf_get("GFS_SOO", attributes="yes"),  # ty: ignore[no-matching-overload]
         lambda: imf_get("GFS_SOO", dimensions=["COUNTRY"]),  # ty: ignore[no-matching-overload]
         lambda: imf_get("GFS_SOO", country="ABW", start_period=[1999, 2004]),  # ty: ignore[no-matching-overload]
     ],

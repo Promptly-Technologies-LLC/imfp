@@ -1,0 +1,24 @@
+{
+  "url": "https://api.imf.org/external/sdmx/3.0/structure/dataflow/IMF.WHD/WHDREO/+",
+  "status_code": 200,
+  "headers": {
+    "Date": "Thu, 24 Sep 2026 19:01:06 GMT",
+    "Content-Type": "application/vnd.sdmx.structure+json;version=2.0.0",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Set-Cookie": "ApplicationGatewayAffinityCORS=dca9138616203b0df55300d07b8e6a61; Path=/; SameSite=None; Secure, ApplicationGatewayAffinity=dca9138616203b0df55300d07b8e6a61; Path=/",
+    "x-correlation-id": "02185b2ffef222127e90a54ad15f45fd",
+    "x-content-type-options": "nosniff",
+    "x-xss-protection": "0",
+    "cache-control": "no-cache, no-store, max-age=0, must-revalidate",
+    "pragma": "no-cache",
+    "expires": "0",
+    "strict-transport-security": "max-age=31536000 ; includeSubDomains",
+    "x-frame-options": "DENY",
+    "x-envoy-upstream-service-time": "26",
+    "server": "istio-envoy",
+    "Request-Context": "appId=cid-v1:e4518baf-f7f4-42d7-900e-7dd820548dc8"
+  },
+  "text": "{\"data\":{\"dataflows\":[{\"annotations\":[{\"id\":\"dataEngineSettings\",\"value\":\"{\\\"historySettingType\\\":\\\"FULL_HISTORY\\\"}\"},{\"id\":\"origin\",\"value\":\"INTEGRATION\"},{\"id\":\"DataEngine\",\"title\":\"timeseries_v2\"},{\"id\":\"isFinal\"},{\"id\":\"lastUpdatedAt\",\"value\":\"2025-10-15T22:08:42.286708Z\"}],\"id\":\"WHDREO\",\"name\":\"Western Hemisphere Regional Economic Outlook (WHDREO)\",\"names\":{\"en\":\"Western Hemisphere Regional Economic Outlook (WHDREO)\"},\"description\":\"The WHD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in the Western Hemisphere. Data for the Western Hemisphere REO are prepared in conjunction and are consistent with the semi-annual World Economic Outlook (WEO) exercises. REO aggregate data may differ from WEO aggregates due to differences in group membership. Composite data for country groups are weighted averages of data for individual countries. Arithmetic weighted averages are used for all concepts except for inflation and broad money, for which geometric averages are used. PPP GDP weights from the WEO database are used for the aggregation of real GDP growth, real non-oil GDP growth, real per capita GDP growth, investment, national savings, broad money, claims on the nonfinancial private sector, and real and nominal effective exchange rates. Aggregates for other concepts are weighted by GDP in U.S. dollars at market exchange rates.\",\"descriptions\":{\"en\":\"The WHD Regional Economic Outlook (REO) provides information on recent economic developments and prospects for countries in the Western Hemisphere. Data for the Western Hemisphere REO are prepared in conjunction and are consistent with the semi-annual World Economic Outlook (WEO) exercises. REO aggregate data may differ from WEO aggregates due to differences in group membership. Composite data for country groups are weighted averages of data for individual countries. Arithmetic weighted averages are used for all concepts except for inflation and broad money, for which geometric averages are used. PPP GDP weights from the WEO database are used for the aggregation of real GDP growth, real non-oil GDP growth, real per capita GDP growth, investment, national savings, broad money, claims on the nonfinancial private sector, and real and nominal effective exchange rates. Aggregates for other concepts are weighted by GDP in U.S. dollars at market exchange rates.\"},\"version\":\"5.0.0\",\"agencyID\":\"IMF.WHD\",\"structure\":\"urn:sdmx:org.sdmx.infomodel.datastructure.DataStructure=IMF.WHD:DSD_WHDREO(5.0+.0)\"}]},\"meta\":{\"schema\":\"https://raw.githubusercontent.com/sdmx-twg/sdmx-json/master/metadata-message/tools/schemas/2.0.0/sdmx-json-metadata-schema.json\",\"id\":\"IDREF2775\",\"test\":false,\"prepared\":\"2026-09-24T19:01:06.744257782Z\",\"contentLanguages\":[\"en\"],\"sender\":{\"id\":\"IMF\"}}}",
+  "encoding": null
+}

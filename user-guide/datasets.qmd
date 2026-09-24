@@ -69,6 +69,31 @@ There is one column per dimension, named with its SDMX dimension ID, plus two mo
 
 `TIME_PERIOD` stays a string because its format depends on the frequency of the series: `"2000"` for annual data, `"2000-Q1"` for quarterly, `"2000-M01"` for monthly. See [Suggestions for Usage](usage.qmd#time-period-conversion) for conversion recipes.
 
+### Attributes: Units, Scale, and Status
+
+After `OBS_VALUE` come the dataset's SDMX *attributes*, which describe how to read each value. Which ones appear depends on the dataset, but the most useful are:
+
+- `UNIT` — the unit of measure, e.g. `PT` (percent), `IX` (index), `XDC` (domestic currency), `USD`
+- `SCALE` — the power of ten the value is expressed in: `"0"` for units, `"6"` for millions, `"9"` for billions
+- `STATUS` — an observation-level flag, e.g. `E` for estimated or `P` for provisional
+- `DERIVATION_TYPE` — whether a value was observed or derived
+
+``` {python}
+growth = imfp.imf_get("WEO", country="USA", indicator="NGDP_RPCH", frequency="A")
+growth[["INDICATOR", "TIME_PERIOD", "OBS_VALUE", "UNIT", "SCALE"]].head(3)
+```
+
+An attribute appears as a column only when it has a value somewhere in the response, and is `NaN` for rows it does not apply to. Attributes can vary between series, so check `UNIT` and `SCALE` before combining series or comparing across countries. In rare cases an attribute has the same ID as a dimension; it is then suffixed with `_ATTRIBUTE`.
+
+Not every dataset reports `UNIT`. The coal price index above has no `UNIT` column, for example; its unit is implied by the `DATA_TRANSFORMATION` dimension. Look up such codes with `imf_get_codelists`.
+
+Pass `attributes=False` for just the dimensions, `TIME_PERIOD`, and `OBS_VALUE`:
+
+``` {python}
+#| eval: false
+imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", attributes=False)
+```
+
 ## Time Filtering
 
 `start_period` and `end_period` bound the time window. They accept a year, a quarter, or a month:
