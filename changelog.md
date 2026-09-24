@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.1.0 (2026-09-24)
+
+### Features
+
+- Return SDMX attributes (unit, scale, status) from imf_get
+  ([`990894b`](https://github.com/Promptly-Technologies-LLC/imfp/commit/990894b298c26d70a7bc066a7ef1372b70ac2f04))
+
+
 ## v2.0.1 (2026-09-24)
 
 ### Chores
