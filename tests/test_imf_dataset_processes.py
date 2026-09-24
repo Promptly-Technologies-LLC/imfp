@@ -237,6 +237,92 @@ def test_parse_imf_sdmx_json_maps_common_missing_value_flags():
     assert df["OBS_VALUE"].isna().all()
 
 
+def _attribute_message() -> dict:
+    """A two-series message carrying attributes at every level."""
+    message = _synthetic_sdmx_message(
+        series={
+            "0:0:0": {
+                "attributes": [0, None],
+                "observations": {"0": ["1.0", 0, None], "1": ["2.0", 1, "x"]},
+            },
+            "1:0:0": {
+                "attributes": [1, None],
+                "observations": {"0": ["3.0", None, None]},
+            },
+        }
+    )
+    data = message["data"]
+    data["dataSets"][0]["dimensionGroupAttributes"] = {
+        # Slots are COUNTRY:INDICATOR:FREQUENCY:TIME_PERIOD; empty is a wildcard.
+        ":0::": [0, None, None],
+        "1:::": [None, 0, None],
+        ":::1": [None, None, 0],
+    }
+    data["structures"][0]["measures"] = {"observation": [{"id": "OBS_VALUE"}]}
+    data["structures"][0]["attributes"] = {
+        "dimensionGroup": [
+            {"id": "UNIT", "values": [{"id": "PT"}]},
+            {"id": "COUNTRY", "values": [{"id": "clash"}]},
+            {"id": "BREAK", "values": [{"id": "B"}]},
+        ],
+        "series": [
+            {"id": "SCALE", "values": [{"id": "0"}, {"id": "6"}]},
+            {"id": "EMPTY", "values": []},
+        ],
+        "observation": [
+            {"id": "STATUS", "values": [{"id": "E"}, {"id": "P"}]},
+            {"id": "COMMENT", "values": []},
+        ],
+    }
+    return message
+
+
+def test_parse_imf_sdmx_json_decodes_attributes():
+    df = _parse_imf_sdmx_json(_attribute_message(), attributes=True)
+
+    assert list(df.columns) == [
+        "COUNTRY",
+        "INDICATOR",
+        "FREQUENCY",
+        "TIME_PERIOD",
+        "OBS_VALUE",
+        "UNIT",
+        "COUNTRY_ATTRIBUTE",
+        "BREAK",
+        "SCALE",
+        "STATUS",
+        "COMMENT",
+    ]
+    rows = df.set_index(["COUNTRY", "TIME_PERIOD"])
+    # Dimension group pinned on INDICATOR applies to both series.
+    assert set(df["UNIT"]) == {"PT"}
+    # Dimension group pinned on COUNTRY applies to CA only, under a new name.
+    assert rows.loc[("CA", "2020"), "COUNTRY_ATTRIBUTE"] == "clash"
+    assert pd.isna(rows.loc[("US", "2020"), "COUNTRY_ATTRIBUTE"])
+    # Dimension group pinned on the time slot applies to one period only.
+    assert rows.loc[("US", "2021"), "BREAK"] == "B"
+    assert pd.isna(rows.loc[("US", "2020"), "BREAK"])
+    # Series attributes index into their value lists.
+    assert rows.loc[("US", "2020"), "SCALE"] == "0"
+    assert rows.loc[("CA", "2020"), "SCALE"] == "6"
+    # Observation attributes follow the measure; literals pass through.
+    assert rows.loc[("US", "2020"), "STATUS"] == "E"
+    assert rows.loc[("US", "2021"), "STATUS"] == "P"
+    assert pd.isna(rows.loc[("CA", "2020"), "STATUS"])
+    assert rows.loc[("US", "2021"), "COMMENT"] == "x"
+
+
+def test_parse_imf_sdmx_json_omits_attributes_by_default():
+    df = _parse_imf_sdmx_json(_attribute_message())
+    assert list(df.columns) == [
+        "COUNTRY",
+        "INDICATOR",
+        "FREQUENCY",
+        "TIME_PERIOD",
+        "OBS_VALUE",
+    ]
+
+
 def test_parse_imf_sdmx_json_performance_large_message():
     """Parsing should stay linear-ish: large synthetic payload finishes quickly."""
     n_series = 200
@@ -464,7 +550,7 @@ def test_imf_dataset_return_raw_and_print_url(set_options, capsys):
 
     assert isinstance(raw, dict)
     assert "data" in raw
-    assert isinstance(meta, dict)
+    assert meta["database_id"] == "WHDREO"
     assert isinstance(raw_meta, dict)
 
     printed = capsys.readouterr().out

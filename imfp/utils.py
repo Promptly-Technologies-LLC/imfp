@@ -979,7 +979,84 @@ def _build_data_request(
     return f"data/dataflow/{provider_agency}/{dataflow_id}/+/{key}", query_params
 
 
-def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
+# Attribute columns are named by their SDMX ID; one that clashes with a
+# dimension or measure column gets this suffix instead of overwriting it.
+_ATTRIBUTE_COLLISION_SUFFIX = "_ATTRIBUTE"
+
+# A dimension group's pinned key slots, mapped from slot codes to the attribute
+# value indices that apply to every series (or observation) sharing those codes.
+_DimensionGroupIndex = list[tuple[tuple[int, ...], dict[tuple[str, ...], list[Any]]]]
+
+
+def _attribute_value(attr_def: dict[str, Any], raw: Any) -> Any:
+    """
+    (Internal) Decode one attribute slot from an SDMX-JSON data message.
+
+    Coded slots hold an index into the attribute's ``values`` list. The IMF
+    occasionally sends a literal string instead, which is passed through.
+    """
+    if raw is None or isinstance(raw, bool):
+        return None
+    if not isinstance(raw, int):
+        return raw
+    values = attr_def.get("values") or []
+    if not 0 <= raw < len(values):
+        return None
+    entry = values[raw]
+    value = entry.get("id")
+    if value is None:
+        value = _extract_first(entry.get("value"))
+    return value
+
+
+def _index_dimension_groups(
+    group_values: dict[str, list[Any]] | None,
+) -> _DimensionGroupIndex:
+    """
+    (Internal) Index dimension-group attribute values by the key slots they pin.
+
+    Each ``dimensionGroupAttributes`` key has one colon-separated slot per
+    series dimension plus one for the time dimension, and an empty slot is a
+    wildcard. Keys that pin the same slots are grouped, so resolving a series
+    costs one dict lookup per group rather than a scan over every key.
+    """
+    groups: dict[tuple[int, ...], dict[tuple[str, ...], list[Any]]] = {}
+    for key, values in (group_values or {}).items():
+        parts = key.split(":")
+        positions = tuple(i for i, part in enumerate(parts) if part != "")
+        groups.setdefault(positions, {})[tuple(parts[i] for i in positions)] = values
+    return list(groups.items())
+
+
+def _apply_attributes(
+    row: dict[str, Any],
+    attr_defs: list[dict[str, Any]],
+    column_names: list[str],
+    raw_values: list[Any] | None,
+) -> None:
+    """(Internal) Decode attribute slots into ``row``, keeping existing values."""
+    for attr_def, name, raw in zip(attr_defs, column_names, raw_values or []):
+        value = _attribute_value(attr_def, raw)
+        if value is not None and name not in row:
+            row[name] = value
+
+
+def _apply_dimension_groups(
+    row: dict[str, Any],
+    groups: _DimensionGroupIndex,
+    key_parts: list[Any],
+    attr_defs: list[dict[str, Any]],
+    column_names: list[str],
+) -> None:
+    """(Internal) Apply every dimension group whose pinned slots match."""
+    for positions, table in groups:
+        lookup = tuple(key_parts[i] if i < len(key_parts) else None for i in positions)
+        _apply_attributes(row, attr_defs, column_names, table.get(lookup))
+
+
+def _parse_imf_sdmx_json(
+    message: dict[str, Any], attributes: bool = False
+) -> DataFrame:
     """
     (Internal) Flatten an SDMX-JSON data message into one row per observation.
 
@@ -988,13 +1065,19 @@ def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
     observation key indexes into the time dimension's value list. Both are
     expanded back into codes here.
 
+    Attributes (units, scale, observation status and so on) are encoded the
+    same way at three levels: per dimension group (keyed by a partial series
+    key), per series, and per observation.
+
     Args:
         message (dict): The parsed JSON response from the API.
+        attributes (bool, optional): Whether to add a column per attribute
+            that has at least one value in the message. Defaults to False.
 
     Returns:
         pandas.DataFrame: One row per observation, with a column per series
-        dimension plus TIME_PERIOD and OBS_VALUE. Empty if the message carries
-        no observations.
+        dimension plus TIME_PERIOD and OBS_VALUE, followed by any attribute
+        columns. Empty if the message carries no observations.
     """
     if not message or not message.get("data"):
         return DataFrame()
@@ -1035,6 +1118,42 @@ def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
         return DataFrame()
 
     series_dim_ids = [_extract_first(dim.get("id")) for dim in series_dims or []]
+    base_columns = [*series_dim_ids, "TIME_PERIOD", "OBS_VALUE"]
+
+    attr_structure = (st.get("attributes") or {}) if attributes else {}
+    group_attr_defs = attr_structure.get("dimensionGroup") or []
+    series_attr_defs = attr_structure.get("series") or []
+    obs_attr_defs = attr_structure.get("observation") or []
+    # Observation arrays hold every measure's value before the attributes.
+    n_measures = len(st.get("measures", {}).get("observation") or []) or 1
+
+    reserved = set(base_columns)
+
+    def column_names(defs: list[dict[str, Any]]) -> list[str]:
+        names = []
+        for attr_def in defs:
+            attr_id = _extract_first(attr_def.get("id"))
+            if attr_id in reserved:
+                attr_id = f"{attr_id}{_ATTRIBUTE_COLLISION_SUFFIX}"
+            names.append(attr_id)
+        return names
+
+    group_columns = column_names(group_attr_defs)
+    series_columns = column_names(series_attr_defs)
+    obs_columns = column_names(obs_attr_defs)
+
+    # Groups that pin the time slot vary by observation; the rest by series.
+    n_series_dims = len(series_dim_ids)
+    all_groups = (
+        _index_dimension_groups(ds.get("dimensionGroupAttributes"))
+        if group_attr_defs
+        else []
+    )
+    series_groups: _DimensionGroupIndex = []
+    time_groups: _DimensionGroupIndex = []
+    for group in all_groups:
+        pins_time = any(i >= n_series_dims for i in group[0])
+        (time_groups if pins_time else series_groups).append(group)
 
     rows = []
     for series_key, series in ds["series"].items():
@@ -1052,6 +1171,22 @@ def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
             for dim_def, idx in zip(series_dims or [], key_parts)
         ]
 
+        series_attrs: dict[str, Any] = {}
+        if attributes:
+            _apply_attributes(
+                series_attrs,
+                series_attr_defs,
+                series_columns,
+                series.get("attributes"),
+            )
+            _apply_dimension_groups(
+                series_attrs,
+                series_groups,
+                key_parts[:n_series_dims],
+                group_attr_defs,
+                group_columns,
+            )
+
         for obs_key, obs in observations.items():
             raw_value = obs[0] if obs else None
             obs_value = None
@@ -1065,9 +1200,31 @@ def _parse_imf_sdmx_json(message: dict[str, Any]) -> DataFrame:
             row = dict(zip(series_dim_ids, series_codes))
             row["TIME_PERIOD"] = index_to_value(obs_dim, obs_key, ("value", "id"))
             row["OBS_VALUE"] = obs_value
+            if attributes:
+                row.update(series_attrs)
+                _apply_attributes(row, obs_attr_defs, obs_columns, obs[n_measures:])
+                if time_groups:
+                    _apply_dimension_groups(
+                        row,
+                        time_groups,
+                        [*key_parts[:n_series_dims], obs_key],
+                        group_attr_defs,
+                        group_columns,
+                    )
             rows.append(row)
 
-    return DataFrame(rows) if rows else DataFrame()
+    if not rows:
+        return DataFrame()
+
+    result = DataFrame(rows)
+    # Attributes with no value anywhere in the message never became columns;
+    # order the rest by level, as the datastructure lists them.
+    attribute_columns = [
+        name
+        for name in [*group_columns, *series_columns, *obs_columns]
+        if name in result.columns
+    ]
+    return result[[*base_columns, *attribute_columns]]
 
 
 def _imf_metadata(database_id: str, times: int = 3) -> dict[str, Any]:

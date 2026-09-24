@@ -26,6 +26,7 @@ from .utils import (
     _extract_first,
     _find_dataflow,
     _imf_dimensions,
+    _imf_metadata,
     _require_bool,
     _require_int,
     _require_str,
@@ -574,8 +575,7 @@ def imf_dataset(
 
     if return_raw:
         if include_metadata:
-            metadata: dict[str, Any] = {}
-            return metadata, message
+            return _imf_metadata(database_id, times=times), message
         return message
 
     result = _parse_imf_sdmx_json(message)
@@ -587,6 +587,5 @@ def imf_dataset(
 
     result.columns = result.columns.str.lower()
     if include_metadata:
-        metadata = {}
-        return metadata, result
+        return _imf_metadata(database_id, times=times), result
     return result

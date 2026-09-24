@@ -296,6 +296,8 @@ def test_imf_dataset_include_metadata(set_options, use_saved_responses):
     assert len(output) == 2
     assert isinstance(output[0], dict)
     assert isinstance(output[1], pd.DataFrame)
+    assert output[0]["database_id"] == "WHDREO"
+    assert output[0]["agency_id"] == "IMF.WHD"
     assert all([not pd.isna(value) for value in output[0].values()])
 
 

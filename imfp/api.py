@@ -384,6 +384,7 @@ def imf_get(
     max_tries: int = 3,
     print_url: bool = False,
     return_raw: Literal[False] = False,
+    attributes: bool = True,
     **kwargs: Any,
 ) -> DataFrame: ...
 
@@ -397,6 +398,7 @@ def imf_get(
     max_tries: int = 3,
     print_url: bool = False,
     return_raw: Literal[True] = True,
+    attributes: bool = True,
     **kwargs: Any,
 ) -> dict[str, Any]: ...
 
@@ -409,6 +411,7 @@ def imf_get(
     max_tries: int = 3,
     print_url: bool = False,
     return_raw: bool = False,
+    attributes: bool = True,
     **kwargs: Any,
 ) -> DataFrame | dict[str, Any]:
     """
@@ -435,13 +438,18 @@ def imf_get(
             useful when reporting a problem with a specific query.
         return_raw (bool, optional): Whether to return the parsed JSON response
             as a dict instead of a DataFrame.
+        attributes (bool, optional): Whether to add a column for each SDMX
+            attribute the response carries, such as ``UNIT``, ``SCALE`` and
+            ``STATUS``. Attributes with no value anywhere in the response are
+            omitted, and one whose ID clashes with a dimension is suffixed
+            with ``_ATTRIBUTE``. Defaults to True.
         **kwargs: Dimension filters given as keyword arguments, e.g.
             ``freq="A"``. Equivalent to passing them in ``dimensions``.
 
     Returns:
         pandas.DataFrame: One row per observation, with a column per series
         dimension (named as in the datastructure), plus ``TIME_PERIOD`` and
-        ``OBS_VALUE``. Returns an empty DataFrame, and warns, when the query
+        ``OBS_VALUE``, followed by a column per attribute. Returns an empty DataFrame, and warns, when the query
         matches no observations. If return_raw is True, returns the raw parsed
         JSON dict instead.
 
@@ -468,6 +476,7 @@ def imf_get(
     _require_int(max_tries, "max_tries", minimum=1)
     _require_bool(print_url, "print_url")
     _require_bool(return_raw, "return_raw")
+    _require_bool(attributes, "attributes")
 
     dimension_filters = _normalize_dimensions(dimensions, kwargs)
     start = _normalize_period(start_period, "start_period")
@@ -494,7 +503,7 @@ def imf_get(
     if return_raw:
         return message
 
-    result = _parse_imf_sdmx_json(message)
+    result = _parse_imf_sdmx_json(message, attributes=attributes)
 
     if result.empty:
         warn(
