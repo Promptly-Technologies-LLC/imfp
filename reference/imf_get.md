@@ -7,9 +7,9 @@ Fetch observations from an IMF dataset.
 Usage
 
 ``` python
-imf_get(dataflow_id: str, dimensions: dict[str, Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: Literal[False] = False, kwargs: Any = {}) -> DataFrame
+imf_get(dataflow_id: str, dimensions: dict[str, Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: Literal[False] = False, attributes: bool = True, kwargs: Any = {}) -> DataFrame
  
-imf_get(dataflow_id: str, dimensions: dict[str, Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: Literal[True] = True, kwargs: Any = {}) -> dict[str, Any]
+imf_get(dataflow_id: str, dimensions: dict[str, Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: Literal[True] = True, attributes: bool = True, kwargs: Any = {}) -> dict[str, Any]
 ```
 
 
@@ -42,6 +42,9 @@ Whether to print the request URL, which is useful when reporting a problem with 
 `return_raw: bool = ``False`  
 Whether to return the parsed JSON response as a dict instead of a DataFrame.
 
+`attributes: bool = ``True`  
+Whether to add a column for each SDMX attribute the response carries, such as `UNIT`, `SCALE` and `STATUS`. Attributes with no value anywhere in the response are omitted, and one whose ID clashes with a dimension is suffixed with `_ATTRIBUTE`. Defaults to True.
+
 `**kwargs: Any`  
 Dimension filters given as keyword arguments, e.g. `freq="A"`. Equivalent to passing them in `dimensions`.
 
@@ -54,7 +57,7 @@ pandas.DataFrame: One row per observation, with a column per series
 
 dimension (named as in the datastructure), plus `TIME_PERIOD` and
 
-`OBS_VALUE`. Returns an empty DataFrame, and warns, when the query
+`OBS_VALUE`, followed by a column per attribute. Returns an empty DataFrame, and warns, when the query
 
 matches no observations. If return_raw is True, returns the raw parsed
 

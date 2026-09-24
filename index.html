@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.0.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -290,14 +290,14 @@ section.level2:first-of-type > h2:first-child,
 <p>To install the stable version of imfp from PyPi, use pip.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> imfp</span></code></pre></div>
 <p>To load the library, use <code>import</code>:</p>
-<div id="288eb20f" class="cell" data-execution_count="1">
+<div id="71622bf7" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span></code></pre></div>
 </div>
 <p>Fetching data from the IMF takes four steps, one per function. Each step tells you what to pass to the next.</p>
 <section id="find-a-dataset-with-imf_get_dataflows" class="level3">
 <h3 class="anchored" data-anchor-id="find-a-dataset-with-imf_get_dataflows">1. Find a dataset with <a href="reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a></h3>
 <p>The IMF serves hundreds of datasets, called <em>dataflows</em>, and every request has to name one. <a href="reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a> lists them all:</p>
-<div id="e562bf44" class="cell" data-execution_count="2">
+<div id="1384c79e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataflows[[<span class="st">"id"</span>, <span class="st">"name"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
@@ -314,28 +314,28 @@ section.level2:first-of-type > h2:first-child,
   <tbody>
     <tr>
       <th>0</th>
-      <td>ITG_2026_FEB_VINTAGE</td>
-      <td>International Trade in Goods (ITG) 2026 February</td>
+      <td>SPE_2026_MAY_VINTAGE</td>
+      <td>Special Purpose Entities (SPEs) 2026 May</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>PI_2026_APR_VINTAGE</td>
-      <td>Production Indexes (PI) 2026 April</td>
+      <td>FDI</td>
+      <td>Financial Development Index (FDI)</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>ER_2026_MAY_VINTAGE</td>
-      <td>Exchange Rates (ER) 2026 May</td>
+      <td>QNEA</td>
+      <td>National Economic Accounts (NEA), Quarterly Data</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>MFS_MA_2026_FEB_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Monet...</td>
+      <td>QNEA_2026_MAY_VINTAGE</td>
+      <td>National Economic Accounts (NEA), Quarterly Da...</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>ITG_2026_APR_VINTAGE</td>
-      <td>International Trade in Goods (ITG) 2026 April</td>
+      <td>GS_ED</td>
+      <td>Gender Statistics (GS) Education</td>
     </tr>
   </tbody>
 </table>
@@ -343,7 +343,7 @@ section.level2:first-of-type > h2:first-child,
 </div>
 </div>
 <p>We want the Primary Commodity Price System, whose ID is <code>PCPS</code>:</p>
-<div id="ecc15cbe" class="cell" data-execution_count="3">
+<div id="1fe602fa" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataflows[dataflows[<span class="st">"id"</span>] <span class="op">==</span> <span class="st">"PCPS"</span>][[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"last_updated"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
 <div>
@@ -359,7 +359,7 @@ section.level2:first-of-type > h2:first-child,
   </thead>
   <tbody>
     <tr>
-      <th>59</th>
+      <th>65</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
       <td>2025-06-16T17:59:44.643694Z</td>
@@ -374,7 +374,7 @@ section.level2:first-of-type > h2:first-child,
 <section id="find-its-dimensions-with-imf_get_datastructure" class="level3">
 <h3 class="anchored" data-anchor-id="find-its-dimensions-with-imf_get_datastructure">2. Find its dimensions with <a href="reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="gdls-link gdls-code">imf_get_datastructure</a></h3>
 <p>Each dataset is filtered on its own set of <em>dimensions</em>, so the next step is to ask which ones <code>PCPS</code> has:</p>
-<div id="57172436" class="cell" data-execution_count="4">
+<div id="c043255b" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dimensions <span class="op">=</span> imfp.imf_get_datastructure(<span class="st">"PCPS"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dimensions</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
@@ -423,7 +423,7 @@ section.level2:first-of-type > h2:first-child,
 <section id="find-valid-codes-with-imf_get_codelists" class="level3">
 <h3 class="anchored" data-anchor-id="find-valid-codes-with-imf_get_codelists">3. Find valid codes with <a href="reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a></h3>
 <p>Dimensions are categorical: each accepts a fixed set of <em>codes</em>. <a href="reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a> returns them as a tidy DataFrame:</p>
-<div id="26a7a102" class="cell" data-execution_count="5">
+<div id="170d2381" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>codes <span class="op">=</span> imfp.imf_get_codelists([<span class="st">"INDICATOR"</span>, <span class="st">"DATA_TRANSFORMATION"</span>, <span class="st">"FREQUENCY"</span>], <span class="st">"PCPS"</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>codes.head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
@@ -499,7 +499,7 @@ section.level2:first-of-type > h2:first-child,
 </div>
 </div>
 <p>Because the result is one DataFrame, finding the code you want is an ordinary pandas filter:</p>
-<div id="ae9acacb" class="cell" data-execution_count="6">
+<div id="782a1e64" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the indicator code for coal</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>codes[</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>)</span>
@@ -527,7 +527,7 @@ section.level2:first-of-type > h2:first-child,
 </div>
 </div>
 </div>
-<div id="1f74c530" class="cell" data-execution_count="7">
+<div id="891eb123" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Find the data transformation code for an index</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>codes[</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"DATA_TRANSFORMATION"</span>)</span>
@@ -570,7 +570,7 @@ section.level2:first-of-type > h2:first-child,
 <section id="fetch-the-data-with-imf_get" class="level3">
 <h3 class="anchored" data-anchor-id="fetch-the-data-with-imf_get">4. Fetch the data with <a href="reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a></h3>
 <p>Now pass those codes to <a href="reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a>. Dimensions you leave out are wildcarded:</p>
-<div id="26c026d4" class="cell" data-execution_count="8">
+<div id="aeabfbf2" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_get(</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PCPS"</span>,</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    dimensions<span class="op">=</span>{</span>
@@ -594,6 +594,8 @@ section.level2:first-of-type > h2:first-child,
       <th>FREQUENCY</th>
       <th>TIME_PERIOD</th>
       <th>OBS_VALUE</th>
+      <th>SCALE</th>
+      <th>DERIVATION_TYPE</th>
     </tr>
   </thead>
   <tbody>
@@ -605,6 +607,8 @@ section.level2:first-of-type > h2:first-child,
       <td>A</td>
       <td>1992</td>
       <td>49.892138</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>1</th>
@@ -614,6 +618,8 @@ section.level2:first-of-type > h2:first-child,
       <td>A</td>
       <td>1993</td>
       <td>43.279151</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>2</th>
@@ -623,6 +629,8 @@ section.level2:first-of-type > h2:first-child,
       <td>A</td>
       <td>1994</td>
       <td>45.213931</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>3</th>
@@ -632,6 +640,8 @@ section.level2:first-of-type > h2:first-child,
       <td>A</td>
       <td>1995</td>
       <td>55.433711</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>4</th>
@@ -641,6 +651,8 @@ section.level2:first-of-type > h2:first-child,
       <td>A</td>
       <td>1996</td>
       <td>53.179458</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
   </tbody>
 </table>
@@ -648,7 +660,7 @@ section.level2:first-of-type > h2:first-child,
 </div>
 </div>
 <p>Dimensions can also be passed as keyword arguments, which is terser for short queries:</p>
-<div id="f11793e1" class="cell" data-execution_count="9">
+<div id="27547cb3" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_get(<span class="st">"PCPS"</span>, indicator<span class="op">=</span><span class="st">"PCOAL"</span>, data_transformation<span class="op">=</span><span class="st">"INDEX"</span>, frequency<span class="op">=</span><span class="st">"A"</span>)</span></code></pre></div>
 </div>
 <p>See <a href="./user-guide/datasets.html">Fetching Data</a> for more.</p>
@@ -657,11 +669,11 @@ section.level2:first-of-type > h2:first-child,
 <section id="working-with-the-returned-data-frame" class="level2">
 <h2 class="anchored" data-anchor-id="working-with-the-returned-data-frame">Working with the Returned Data Frame</h2>
 <p><a href="reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> returns tidy data: one observation per row, one variable per column. <code>OBS_VALUE</code> is already numeric, but <code>TIME_PERIOD</code> is a string, because its format depends on the frequency of the series (“2000” for annual data, “2000-Q1” for quarterly, “2000-M01” for monthly). For an annual series it converts directly:</p>
-<div id="eb825563" class="cell" data-execution_count="10">
+<div id="89f5b0cf" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.astype({<span class="st">"TIME_PERIOD"</span>: <span class="bu">int</span>})</span></code></pre></div>
 </div>
 <p>Then, using <code>seaborn</code> with <code>hue</code>, we can plot different indicators in different colors:</p>
-<div id="e91c3eba" class="cell" data-execution_count="11">
+<div id="e8a1dcd5" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot prices of different commodities in different colors with seaborn</span></span>

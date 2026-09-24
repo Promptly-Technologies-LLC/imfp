@@ -202,13 +202,13 @@ df.head()
 ```
 
 
-|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
-|-----|---------|-----------|---------------------|-----------|-------------|-----------|
-| 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.892138 |
-| 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.279151 |
-| 2   | G001    | PCOAL     | INDEX               | A         | 1994        | 45.213931 |
-| 3   | G001    | PCOAL     | INDEX               | A         | 1995        | 55.433711 |
-| 4   | G001    | PCOAL     | INDEX               | A         | 1996        | 53.179458 |
+|  | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE | SCALE | DERIVATION_TYPE |
+|----|----|----|----|----|----|----|----|----|
+| 0 | G001 | PCOAL | INDEX | A | 1992 | 49.892138 | 0 | R |
+| 1 | G001 | PCOAL | INDEX | A | 1993 | 43.279151 | 0 | R |
+| 2 | G001 | PCOAL | INDEX | A | 1994 | 45.213931 | 0 | R |
+| 3 | G001 | PCOAL | INDEX | A | 1995 | 55.433711 | 0 | R |
+| 4 | G001 | PCOAL | INDEX | A | 1996 | 53.179458 | 0 | R |
 
 
 # Labelling Results

@@ -35,18 +35,20 @@ df.info()
 
 
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 587 entries, 0 to 586
-    Data columns (total 6 columns):
+    RangeIndex: 588 entries, 0 to 587
+    Data columns (total 8 columns):
      #   Column               Non-Null Count  Dtype  
     ---  ------               --------------  -----  
-     0   COUNTRY              587 non-null    object 
-     1   INDICATOR            587 non-null    object 
-     2   DATA_TRANSFORMATION  587 non-null    object 
-     3   FREQUENCY            587 non-null    object 
-     4   TIME_PERIOD          587 non-null    object 
-     5   OBS_VALUE            587 non-null    float64
-    dtypes: float64(1), object(5)
-    memory usage: 27.6+ KB
+     0   COUNTRY              588 non-null    object 
+     1   INDICATOR            588 non-null    object 
+     2   DATA_TRANSFORMATION  588 non-null    object 
+     3   FREQUENCY            588 non-null    object 
+     4   TIME_PERIOD          588 non-null    object 
+     5   OBS_VALUE            588 non-null    float64
+     6   SCALE                588 non-null    object 
+     7   DERIVATION_TYPE      588 non-null    object 
+    dtypes: float64(1), object(7)
+    memory usage: 36.9+ KB
 
 
 Alternatively, you can use the `head()` method to view the first 5 rows of the data frame.
@@ -58,13 +60,13 @@ df.head()
 ```
 
 
-|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
-|-----|---------|-----------|---------------------|-----------|-------------|-----------|
-| 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.89     |
-| 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.28     |
-| 2   | G001    | PCOAL     | INDEX               | A         | 1994        | 45.21     |
-| 3   | G001    | PCOAL     | INDEX               | A         | 1995        | 55.43     |
-| 4   | G001    | PCOAL     | INDEX               | A         | 1996        | 53.18     |
+|  | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE | SCALE | DERIVATION_TYPE |
+|----|----|----|----|----|----|----|----|----|
+| 0 | G001 | PCOAL | INDEX | A | 1992 | 49.89 | 0 | R |
+| 1 | G001 | PCOAL | INDEX | A | 1993 | 43.28 | 0 | R |
+| 2 | G001 | PCOAL | INDEX | A | 1994 | 45.21 | 0 | R |
+| 3 | G001 | PCOAL | INDEX | A | 1995 | 55.43 | 0 | R |
+| 4 | G001 | PCOAL | INDEX | A | 1996 | 53.18 | 0 | R |
 
 
 ## Cleaning Data
@@ -89,12 +91,12 @@ df[categorical_cols] = df[categorical_cols].astype("category")
 
 ### NA Removal
 
-Observations the IMF reports as missing come back as `NaN`, so you may want to drop them:
+Observations the IMF reports as missing come back as `NaN`, so you may want to drop them. Restrict the check to `OBS_VALUE`, since attribute columns are often legitimately empty:
 
 
 ``` python
 # Drop rows with missing values
-df = df.dropna()
+df = df.dropna(subset=["OBS_VALUE"])
 ```
 
 
@@ -164,14 +166,14 @@ df.describe()
 
 |       | OBS_VALUE | datetime                      | year    | quarter | month  |
 |-------|-----------|-------------------------------|---------|---------|--------|
-| count | 587.00    | 587                           | 587.00  | 138.00  | 415.00 |
-| mean  | 113.28    | 2008-11-08 17:05:29.608177152 | 2008.77 | 2.49    | 6.46   |
+| count | 588.00    | 588                           | 588.00  | 138.00  | 416.00 |
+| mean  | 113.40    | 2008-11-19 08:41:42.530612224 | 2008.80 | 2.49    | 6.46   |
 | min   | 33.62     | 1992-01-01 00:00:00           | 1992.00 | 1.00    | 1.00   |
-| 25%   | 50.61     | 2000-01-01 00:00:09.500000    | 2000.00 | 1.25    | 3.00   |
-| 50%   | 94.61     | 2009-01-01 00:00:03           | 2009.00 | 2.00    | 6.00   |
-| 75%   | 145.70    | 2017-05-16 12:00:00           | 2017.00 | 3.00    | 9.00   |
+| 25%   | 50.61     | 2000-01-01 00:00:09.750000    | 2000.00 | 1.25    | 3.00   |
+| 50%   | 94.64     | 2009-01-01 00:00:03.500000    | 2009.00 | 2.00    | 6.00   |
+| 75%   | 145.83    | 2017-07-24 00:00:00           | 2017.00 | 3.00    | 9.00   |
 | max   | 577.58    | 2026-04-01 00:00:00           | 2026.00 | 4.00    | 12.00  |
-| std   | 86.94     | NaN                           | 9.98    | 1.12    | 3.45   |
+| std   | 86.92     | NaN                           | 10.00   | 1.12    | 3.45   |
 
 
 ## Viewing Data
@@ -206,7 +208,7 @@ These transformations are essential for:
 - Converting nominal to real dollar values
 - Calculating per capita metrics
 - Harmonizing data across different frequencies
-- Adjusting for different unit scales
+- Adjusting for different unit scales (see the `UNIT` and `SCALE` [attribute columns](datasets.md#attributes-units-scale-and-status))
 
 For a complete, end-to-end example of these transformations in a real analysis workflow, see Jenny Xu's superb [demo notebook](https://github.com/jennyxu/imfp-demo).
 
@@ -340,23 +342,25 @@ Choose the appropriate method based on your specific analysis needs and the econ
 
 ## Merging Datasets
 
-We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys. Selecting just the keys and values first keeps the dimension and attribute columns of each dataset from colliding:
 
 
 ``` python
+keys = ["COUNTRY", "TIME_PERIOD"]
+columns = [*keys, "OBS_VALUE"]
 merged = (
-    nominal_gdp.merge(
-        deflator,
-        on=["COUNTRY", "TIME_PERIOD"],
+    nominal_gdp[columns].merge(
+        deflator[columns],
+        on=keys,
         suffixes=("_gdp", "_deflator")
     )
     .merge(
-        population,
-        on=["COUNTRY", "TIME_PERIOD"]
+        population[columns],
+        on=keys
     )
     .merge(
-        exchange_rate,
-        on=["COUNTRY", "TIME_PERIOD"],
+        exchange_rate[columns],
+        on=keys,
         suffixes=("_population", "_exchange_rate")
     )
 )
@@ -384,11 +388,11 @@ merged[["COUNTRY", "TIME_PERIOD", "real_gdp", "real_gdp_per_capita"]].head()
 
 |     | COUNTRY | TIME_PERIOD | real_gdp         | real_gdp_per_capita |
 |-----|---------|-------------|------------------|---------------------|
-| 0   | ALB     | 2011        | 1266392354394.82 | 435906.15           |
-| 1   | ALB     | 2011        | 1266392354394.82 | 435906.15           |
-| 2   | ALB     | 2012        | 1302994927918.21 | 449246.48           |
-| 3   | ALB     | 2012        | 1302994927918.21 | 449246.48           |
-| 4   | ALB     | 2013        | 1327471211207.68 | 458524.71           |
+| 0   | ALB     | 2011        | 1276495535151.79 | 439383.77           |
+| 1   | ALB     | 2011        | 1276495535151.79 | 439383.77           |
+| 2   | ALB     | 2012        | 1311850147762.80 | 452299.58           |
+| 3   | ALB     | 2012        | 1311850147762.80 | 452299.58           |
+| 4   | ALB     | 2013        | 1318582910877.47 | 455454.58           |
 
 
 ## Exchange Rate Adjustment
@@ -415,8 +419,8 @@ merged[["TIME_PERIOD","COUNTRY","real_gdp","real_gdp_usd","real_gdp_usd_per_capi
 
 |  | TIME_PERIOD | COUNTRY | real_gdp | real_gdp_usd | real_gdp_usd_per_capita |
 |----|----|----|----|----|----|
-| 0 | 2011 | ALB | 1266392354394.82 | 11776012222.38 | 4053.43 |
-| 1 | 2011 | ALB | 1266392354394.82 | 12190133681.53 | 4195.98 |
-| 2 | 2012 | ALB | 1302994927918.21 | 12309824543.39 | 4244.18 |
-| 3 | 2012 | ALB | 1302994927918.21 | 12088272826.03 | 4167.79 |
-| 4 | 2013 | ALB | 1327471211207.68 | 13032311125.15 | 4501.52 |
+| 0 | 2011 | ALB | 1276495535151.79 | 11869960341.75 | 4085.77 |
+| 1 | 2011 | ALB | 1276495535151.79 | 12287385630.03 | 4229.45 |
+| 2 | 2012 | ALB | 1311850147762.80 | 12393482737.49 | 4273.02 |
+| 3 | 2012 | ALB | 1311850147762.80 | 12170425343.38 | 4196.12 |
+| 4 | 2013 | ALB | 1318582910877.47 | 12945051157.25 | 4471.38 |

@@ -21,13 +21,13 @@ df.head()
 ```
 
 
-|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
-|-----|---------|-----------|---------------------|-----------|-------------|-----------|
-| 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.892138 |
-| 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.279151 |
-| 2   | G001    | PCOAL     | INDEX               | A         | 1994        | 45.213931 |
-| 3   | G001    | PCOAL     | INDEX               | A         | 1995        | 55.433711 |
-| 4   | G001    | PCOAL     | INDEX               | A         | 1996        | 53.179458 |
+|  | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE | SCALE | DERIVATION_TYPE |
+|----|----|----|----|----|----|----|----|----|
+| 0 | G001 | PCOAL | INDEX | A | 1992 | 49.892138 | 0 | R |
+| 1 | G001 | PCOAL | INDEX | A | 1993 | 43.279151 | 0 | R |
+| 2 | G001 | PCOAL | INDEX | A | 1994 | 45.213931 | 0 | R |
+| 3 | G001 | PCOAL | INDEX | A | 1995 | 55.433711 | 0 | R |
+| 4 | G001 | PCOAL | INDEX | A | 1996 | 53.179458 | 0 | R |
 
 
 Dimensions you do not mention are wildcarded, so the request above returns coal for every country in the dataset.
@@ -44,11 +44,11 @@ df.head(3)
 ```
 
 
-|     | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE |
-|-----|---------|-----------|---------------------|-----------|-------------|-----------|
-| 0   | G001    | PCOAL     | INDEX               | A         | 1992        | 49.892138 |
-| 1   | G001    | PCOAL     | INDEX               | A         | 1993        | 43.279151 |
-| 2   | G001    | PCOAL     | INDEX               | A         | 1994        | 45.213931 |
+|  | COUNTRY | INDICATOR | DATA_TRANSFORMATION | FREQUENCY | TIME_PERIOD | OBS_VALUE | SCALE | DERIVATION_TYPE |
+|----|----|----|----|----|----|----|----|----|
+| 0 | G001 | PCOAL | INDEX | A | 1992 | 49.892138 | 0 | R |
+| 1 | G001 | PCOAL | INDEX | A | 1993 | 43.279151 | 0 | R |
+| 2 | G001 | PCOAL | INDEX | A | 1994 | 45.213931 | 0 | R |
 
 
 A single code can be given as a bare string; several go in a list:
@@ -98,6 +98,8 @@ df.dtypes
     FREQUENCY               object
     TIME_PERIOD             object
     OBS_VALUE              float64
+    SCALE                   object
+    DERIVATION_TYPE         object
     dtype: object
 
 
@@ -109,6 +111,41 @@ There is one column per dimension, named with its SDMX dimension ID, plus two mo
 `OBS_VALUE` arrives already converted to `float64`, with non-numeric missing-value flags turned into `NaN`.
 
 `TIME_PERIOD` stays a string because its format depends on the frequency of the series: `"2000"` for annual data, `"2000-Q1"` for quarterly, `"2000-M01"` for monthly. See [Suggestions for Usage](usage.md#time-period-conversion) for conversion recipes.
+
+
+## Attributes: Units, Scale, and Status
+
+After `OBS_VALUE` come the dataset's SDMX *attributes*, which describe how to read each value. Which ones appear depends on the dataset, but the most useful are:
+
+- `UNIT` -- the unit of measure, e.g. `PT` (percent), `IX` (index), `XDC` (domestic currency), `USD`
+- `SCALE` -- the power of ten the value is expressed in: `"0"` for units, `"6"` for millions, `"9"` for billions
+- `STATUS` -- an observation-level flag, e.g. `E` for estimated or `P` for provisional
+- `DERIVATION_TYPE` -- whether a value was observed or derived
+
+
+``` python
+growth = imfp.imf_get("WEO", country="USA", indicator="NGDP_RPCH", frequency="A")
+growth[["INDICATOR", "TIME_PERIOD", "OBS_VALUE", "UNIT", "SCALE"]].head(3)
+```
+
+
+|     | INDICATOR | TIME_PERIOD | OBS_VALUE | UNIT | SCALE |
+|-----|-----------|-------------|-----------|------|-------|
+| 0   | NGDP_RPCH | 1980        | -0.256666 | PT   | 0     |
+| 1   | NGDP_RPCH | 1981        | 2.537436  | PT   | 0     |
+| 2   | NGDP_RPCH | 1982        | -1.803070 | PT   | 0     |
+
+
+An attribute appears as a column only when it has a value somewhere in the response, and is `NaN` for rows it does not apply to. Attributes can vary between series, so check `UNIT` and `SCALE` before combining series or comparing across countries. In rare cases an attribute has the same ID as a dimension; it is then suffixed with `_ATTRIBUTE`.
+
+Not every dataset reports `UNIT`. The coal price index above has no `UNIT` column, for example; its unit is implied by the `DATA_TRANSFORMATION` dimension. Look up such codes with [imf_get_codelists](../reference/imf_get_codelists.md#imfp.imf_get_codelists).
+
+Pass `attributes=False` for just the dimensions, `TIME_PERIOD`, and `OBS_VALUE`:
+
+
+``` python
+imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", attributes=False)
+```
 
 
 # Time Filtering
@@ -129,7 +166,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > Time filtering happens server-side, and at present only datasets published by `IMF.STA` support it. For datasets published by other departments, [imf_get](../reference/imf_get.md#imfp.imf_get) warns you and returns the full time range:
 >
-> <div id="8395fac0" class="cell" data-execution_count="7">
+> <div id="0b4ce05e" class="cell" data-execution_count="9">
 >
 > ``` python
 > df = imfp.imf_get(
@@ -149,7 +186,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > A query that matches nothing returns an empty DataFrame and warns, rather than raising. This keeps a query that legitimately has no data from breaking an automated pipeline:
 >
-> <div id="fd21470f" class="cell" data-execution_count="9">
+> <div id="368777e9" class="cell" data-execution_count="11">
 >
 > ``` python
 > df = imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", data_transformation="USD")
@@ -167,7 +204,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > [imf_get](../reference/imf_get.md#imfp.imf_get) checks that the *dimensions* you name belong to the dataset:
 >
-> <div id="f72a8c2e" class="cell" data-execution_count="10">
+> <div id="e13488b0" class="cell" data-execution_count="12">
 >
 > ``` python
 > try:
@@ -192,7 +229,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > `print_url=True` prints the URL being requested, which is the most useful thing to include when reporting a problem with a particular query:
 >
-> <div id="21c58cd7" class="cell" data-execution_count="11">
+> <div id="fac889e5" class="cell" data-execution_count="13">
 >
 > ``` python
 > df = imfp.imf_get(
@@ -211,7 +248,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > For the unparsed SDMX-JSON response, use `return_raw=True`:
 >
-> <div id="c114805c" class="cell" data-execution_count="12">
+> <div id="921413c1" class="cell" data-execution_count="14">
 >
 > ``` python
 > raw = imfp.imf_get(
@@ -221,7 +258,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 > list(raw.keys())
 > ```
 >
-> <div class="cell-output cell-output-display" data-execution_count="10">
+> <div class="cell-output cell-output-display" data-execution_count="11">
 >
 >     ['meta', 'data']
 >
@@ -235,7 +272,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > `max_tries` controls how many times a failed request is retried with exponential backoff. The default is 3:
 >
-> <div id="ef953f1c" class="cell" data-execution_count="13">
+> <div id="7d008711" class="cell" data-execution_count="15">
 >
 > ``` python
 > df = imfp.imf_get("PCPS", indicator="PCOAL", max_tries=5)

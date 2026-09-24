@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.0.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -325,7 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="listing-dataflows" class="level1">
 <h1>Listing Dataflows</h1>
 <p><a href="../reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a> returns the full catalogue as a tidy DataFrame:</p>
-<div id="17e70b16" class="cell" data-execution_count="1">
+<div id="1ab619d5" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
@@ -373,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div id="8ca45231" class="cell" data-execution_count="2">
+<div id="15aead5e" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dataflows[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"last_updated"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -391,38 +391,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>0</th>
-      <td>MFS_DC_2026_MAY_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Depos...</td>
+      <td>IIPCC_2026_APR_VINTAGE</td>
+      <td>Currency Composition of the International Inve...</td>
       <td>IMF.STA</td>
-      <td>2026-05-27T14:51:58.879098Z</td>
+      <td>2026-04-27T15:03:17.665208Z</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>MCDREO</td>
-      <td>Middle East and Central Asia Regional Economic...</td>
-      <td>IMF.MCD</td>
-      <td>2025-10-16T00:20:10.062512Z</td>
+      <td>ANEA</td>
+      <td>National Economic Accounts (NEA), Annual Data</td>
+      <td>IMF.STA</td>
+      <td>2025-03-28T08:00:46.650082Z</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>WHDREO_2025_OCT_VINTAGE</td>
-      <td>Western Hemisphere Regional Economic Outlook (...</td>
-      <td>IMF.WHD</td>
-      <td>2026-04-13T17:42:08.662531Z</td>
+      <td>GFS_COFOG</td>
+      <td>GFS Government Expenditures by Function</td>
+      <td>IMF.STA</td>
+      <td>2025-06-06T01:34:26.584454Z</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>PCPS</td>
-      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
-      <td>IMF.RES</td>
-      <td>2025-06-16T17:59:44.643694Z</td>
+      <td>MFS_FMP_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Finan...</td>
+      <td>IMF.STA</td>
+      <td>2026-05-27T14:59:17.737322Z</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>MFS_DC</td>
-      <td>Monetary and Financial Statistics (MFS), Depos...</td>
+      <td>LS_2026_FEB_VINTAGE</td>
+      <td>Labor Statistics (LS) 2026 February</td>
       <td>IMF.STA</td>
-      <td>2025-11-27T16:58:36.728552Z</td>
+      <td>2026-02-25T20:34:44.315994Z</td>
     </tr>
   </tbody>
 </table>
@@ -433,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="finding-the-dataset-you-want" class="level1">
 <h1>Finding the Dataset You Want</h1>
 <p>Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the <code>name</code> column for a keyword:</p>
-<div id="3a3aa5d9" class="cell" data-execution_count="3">
+<div id="f5e44de6" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataflows[dataflows[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)][</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
@@ -450,14 +450,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>3</th>
-      <td>PCPS</td>
-      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
-    </tr>
-    <tr>
-      <th>114</th>
+      <th>85</th>
       <td>CTOT</td>
       <td>Commodity Terms of Trade (CTOT)</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>PCPS</td>
+      <td>Primary Commodity Price System&nbsp;(PCPS)</td>
     </tr>
   </tbody>
 </table>
@@ -465,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>description</code> column often contains terms the title does not, so it is worth searching too:</p>
-<div id="02b80593" class="cell" data-execution_count="4">
+<div id="a1cd23fe" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> dataflows[</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataflows[<span class="st">"description"</span>].<span class="bu">str</span>.contains(<span class="st">"balance of payments"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>]</span>
@@ -483,29 +483,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>10</th>
-      <td>BOP</td>
-      <td>Balance of Payments (BOP)</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>COFER</td>
-      <td>Currency Composition of Official Foreign Excha...</td>
-    </tr>
-    <tr>
-      <th>73</th>
-      <td>BOP_2026_FEB_VINTAGE</td>
-      <td>Balance of Payments (BOP) 2026 February</td>
-    </tr>
-    <tr>
-      <th>128</th>
+      <th>42</th>
       <td>IL</td>
       <td>International Liquidity (IL)</td>
     </tr>
     <tr>
-      <th>173</th>
-      <td>ITS</td>
-      <td>International Trade in Services (ITS)</td>
+      <th>55</th>
+      <td>BOP_2026_FEB_VINTAGE</td>
+      <td>Balance of Payments (BOP) 2026 February</td>
+    </tr>
+    <tr>
+      <th>78</th>
+      <td>COFER</td>
+      <td>Currency Composition of Official Foreign Excha...</td>
+    </tr>
+    <tr>
+      <th>123</th>
+      <td>BOP</td>
+      <td>Balance of Payments (BOP)</td>
+    </tr>
+    <tr>
+      <th>143</th>
+      <td>BOP_AGG</td>
+      <td>Balance of Payments and International Investme...</td>
     </tr>
   </tbody>
 </table>
@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="checking-how-current-a-dataset-is" class="level1">
 <h1>Checking How Current a Dataset Is</h1>
 <p><code>last_updated</code> tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:</p>
-<div id="1e60026c" class="cell" data-execution_count="5">
+<div id="f9e4dd00" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>recent <span class="op">=</span> dataflows.dropna(subset<span class="op">=</span>[<span class="st">"last_updated"</span>]).copy()</span>
@@ -536,31 +536,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>206</th>
+      <th>214</th>
       <td>IRFCL</td>
       <td>International Reserves and Foreign Currency Li...</td>
       <td>2026-06-19 15:17:41.650334+00:00</td>
     </tr>
     <tr>
-      <th>122</th>
+      <th>11</th>
       <td>ISORA_LATEST_DATA_PUB</td>
       <td>ISORA Latest Data</td>
       <td>2026-06-15 17:13:23.041621+00:00</td>
     </tr>
     <tr>
-      <th>44</th>
+      <th>99</th>
       <td>GPT</td>
       <td>IMF Global Policy Tracker: How Countries are R...</td>
       <td>2026-06-12 16:15:44.521971+00:00</td>
     </tr>
     <tr>
-      <th>220</th>
+      <th>19</th>
       <td>FM</td>
       <td>Fiscal Monitor (FM)</td>
       <td>2026-06-03 16:00:56.895956+00:00</td>
     </tr>
     <tr>
-      <th>7</th>
+      <th>111</th>
       <td>MFS_OFC_2026_MAY_VINTAGE</td>
       <td>Monetary and Financial Statistics (MFS), Other...</td>
       <td>2026-05-27 15:19:21.834692+00:00</td>
@@ -574,7 +574,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reading-the-dataflow-id" class="level1">
 <h1>Reading the Dataflow ID</h1>
 <p>The <code>id</code> column is the value you pass everywhere else:</p>
-<div id="e35dd7d2" class="cell" data-execution_count="6">
+<div id="d69c7e60" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pcps <span class="op">=</span> dataflows[dataflows[<span class="st">"id"</span>] <span class="op">==</span> <span class="st">"PCPS"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pcps[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"version"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -592,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>3</th>
+      <th>211</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
       <td>IMF.RES</td>

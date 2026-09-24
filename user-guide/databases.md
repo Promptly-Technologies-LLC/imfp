@@ -47,11 +47,11 @@ dataflows[["id", "name", "agency", "last_updated"]].head()
 
 |  | id | name | agency | last_updated |
 |----|----|----|----|----|
-| 0 | MFS_DC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Depos... | IMF.STA | 2026-05-27T14:51:58.879098Z |
-| 1 | MCDREO | Middle East and Central Asia Regional Economic... | IMF.MCD | 2025-10-16T00:20:10.062512Z |
-| 2 | WHDREO_2025_OCT_VINTAGE | Western Hemisphere Regional Economic Outlook (... | IMF.WHD | 2026-04-13T17:42:08.662531Z |
-| 3 | PCPS | Primary Commodity Price System (PCPS) | IMF.RES | 2025-06-16T17:59:44.643694Z |
-| 4 | MFS_DC | Monetary and Financial Statistics (MFS), Depos... | IMF.STA | 2025-11-27T16:58:36.728552Z |
+| 0 | IIPCC_2026_APR_VINTAGE | Currency Composition of the International Inve... | IMF.STA | 2026-04-27T15:03:17.665208Z |
+| 1 | ANEA | National Economic Accounts (NEA), Annual Data | IMF.STA | 2025-03-28T08:00:46.650082Z |
+| 2 | GFS_COFOG | GFS Government Expenditures by Function | IMF.STA | 2025-06-06T01:34:26.584454Z |
+| 3 | MFS_FMP_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Finan... | IMF.STA | 2026-05-27T14:59:17.737322Z |
+| 4 | LS_2026_FEB_VINTAGE | Labor Statistics (LS) 2026 February | IMF.STA | 2026-02-25T20:34:44.315994Z |
 
 
 # Finding the Dataset You Want
@@ -68,8 +68,8 @@ dataflows[dataflows["name"].str.contains("Commodity", case=False, na=False)][
 
 |     | id   | name                                  |
 |-----|------|---------------------------------------|
-| 3   | PCPS | Primary Commodity Price System (PCPS) |
-| 114 | CTOT | Commodity Terms of Trade (CTOT)       |
+| 85  | CTOT | Commodity Terms of Trade (CTOT)       |
+| 211 | PCPS | Primary Commodity Price System (PCPS) |
 
 
 The `description` column often contains terms the title does not, so it is worth searching too:
@@ -85,11 +85,11 @@ matches[["id", "name"]].head()
 
 |     | id                   | name                                              |
 |-----|----------------------|---------------------------------------------------|
-| 10  | BOP                  | Balance of Payments (BOP)                         |
-| 41  | COFER                | Currency Composition of Official Foreign Excha... |
-| 73  | BOP_2026_FEB_VINTAGE | Balance of Payments (BOP) 2026 February           |
-| 128 | IL                   | International Liquidity (IL)                      |
-| 173 | ITS                  | International Trade in Services (ITS)             |
+| 42  | IL                   | International Liquidity (IL)                      |
+| 55  | BOP_2026_FEB_VINTAGE | Balance of Payments (BOP) 2026 February           |
+| 78  | COFER                | Currency Composition of Official Foreign Excha... |
+| 123 | BOP                  | Balance of Payments (BOP)                         |
+| 143 | BOP_AGG              | Balance of Payments and International Investme... |
 
 
 # Checking How Current a Dataset Is
@@ -108,11 +108,11 @@ recent.sort_values("last_updated", ascending=False)[["id", "name", "last_updated
 
 |  | id | name | last_updated |
 |----|----|----|----|
-| 206 | IRFCL | International Reserves and Foreign Currency Li... | 2026-06-19 15:17:41.650334+00:00 |
-| 122 | ISORA_LATEST_DATA_PUB | ISORA Latest Data | 2026-06-15 17:13:23.041621+00:00 |
-| 44 | GPT | IMF Global Policy Tracker: How Countries are R... | 2026-06-12 16:15:44.521971+00:00 |
-| 220 | FM | Fiscal Monitor (FM) | 2026-06-03 16:00:56.895956+00:00 |
-| 7 | MFS_OFC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Other... | 2026-05-27 15:19:21.834692+00:00 |
+| 214 | IRFCL | International Reserves and Foreign Currency Li... | 2026-06-19 15:17:41.650334+00:00 |
+| 11 | ISORA_LATEST_DATA_PUB | ISORA Latest Data | 2026-06-15 17:13:23.041621+00:00 |
+| 99 | GPT | IMF Global Policy Tracker: How Countries are R... | 2026-06-12 16:15:44.521971+00:00 |
+| 19 | FM | Fiscal Monitor (FM) | 2026-06-03 16:00:56.895956+00:00 |
+| 111 | MFS_OFC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Other... | 2026-05-27 15:19:21.834692+00:00 |
 
 
 # Reading the Dataflow ID
@@ -128,7 +128,7 @@ pcps[["id", "name", "agency", "version"]]
 
 |     | id   | name                                  | agency  | version |
 |-----|------|---------------------------------------|---------|---------|
-| 3   | PCPS | Primary Commodity Price System (PCPS) | IMF.RES | 9.0.0   |
+| 211 | PCPS | Primary Commodity Price System (PCPS) | IMF.RES | 9.0.0   |
 
 
 Note the `agency`. Different IMF departments publish through the same API but do not all support the same features -- in particular, only `IMF.STA` currently honors server-side time filtering. [imf_get](../reference/imf_get.md#imfp.imf_get) warns you when you ask for a time window that the publishing agency will ignore. See [Fetching Data](datasets.md#time-filtering).

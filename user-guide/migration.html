@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -142,7 +142,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.0.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -406,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Side-by-Side</h1>
 <section id="listing-datasets" class="level2">
 <h2 class="anchored" data-anchor-id="listing-datasets">Listing datasets</h2>
-<div id="dea9204f" class="cell" data-execution_count="1">
+<div id="aa0a9493" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 1.x</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>databases <span class="op">=</span> imfp.imf_databases()          <span class="co"># database_id, description</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -417,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="discovering-how-to-filter" class="level2">
 <h2 class="anchored" data-anchor-id="discovering-how-to-filter">Discovering how to filter</h2>
-<div id="b78e5733" class="cell" data-execution_count="2">
+<div id="c20e97f1" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 1.x — a dict of DataFrames, one per parameter</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>params.keys()</span>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fetching-data" class="level2">
 <h2 class="anchored" data-anchor-id="fetching-data">Fetching data</h2>
-<div id="f98d007c" class="cell" data-execution_count="3">
+<div id="9fb6743f" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 1.x</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_dataset(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    database_id<span class="op">=</span><span class="st">"PCPS"</span>,</span>
@@ -456,7 +456,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 <p>Keyword-argument style still works, so the shortest migration for many calls is to rename <code>database_id</code>, <code>start_year</code>, and <code>end_year</code>:</p>
-<div id="64872e89" class="cell" data-execution_count="4">
+<div id="67be5f34" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> imfp.imf_get(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PCPS"</span>, indicator<span class="op">=</span>[<span class="st">"PCOAL"</span>], data_transformation<span class="op">=</span>[<span class="st">"INDEX"</span>], frequency<span class="op">=</span>[<span class="st">"A"</span>],</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    start_period<span class="op">=</span><span class="dv">2000</span>, end_period<span class="op">=</span><span class="dv">2015</span>,</span>
@@ -466,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="filtering-by-a-dataframe-of-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="filtering-by-a-dataframe-of-parameters">Filtering by a DataFrame of parameters</h2>
 <p>In 1.x you filtered a DataFrame from <a href="../reference/imf_parameters.html#imfp.imf_parameters" class="gdls-link gdls-code">imf_parameters</a> and passed the whole dict back in. In 2.0 you pass plain strings, so take the <code>code</code> column:</p>
-<div id="42ce3304" class="cell" data-execution_count="5">
+<div id="26609970" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 1.x</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> imfp.imf_parameters(<span class="st">"PCPS"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>params[<span class="st">"indicator"</span>] <span class="op">=</span> params[<span class="st">"indicator"</span>][</span>
@@ -485,21 +485,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="column-name-changes" class="level1">
 <h1>Column Name Changes</h1>
 <p><a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> lower-cased its columns. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> keeps the SDMX dimension IDs as the API reports them, which is what <code>imfapi</code> does in R:</p>
-<div id="00de125c" class="cell" data-execution_count="6">
+<div id="cc990524" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 1.x columns</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>[<span class="st">"country"</span>, <span class="st">"indicator"</span>, <span class="st">"data_transformation"</span>, <span class="st">"frequency"</span>, <span class="st">"time_period"</span>, <span class="st">"obs_value"</span>]</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 2.0 columns</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># imfp 2.0 columns, followed by attribute columns such as SCALE</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>[<span class="st">"COUNTRY"</span>, <span class="st">"INDICATOR"</span>, <span class="st">"DATA_TRANSFORMATION"</span>, <span class="st">"FREQUENCY"</span>, <span class="st">"TIME_PERIOD"</span>, <span class="st">"OBS_VALUE"</span>]</span></code></pre></div>
 </div>
 <p>If you have downstream code that depends on the old casing, rename after fetching:</p>
-<div id="aec926bc" class="cell" data-execution_count="7">
+<div id="edc14df9" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.lower()</span></code></pre></div>
 </div>
 </section>
 <section id="behavior-changes" class="level1">
 <h1>Behavior Changes</h1>
 <p><strong>Empty results no longer raise.</strong> <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> raised a <code>ValueError</code> when a query matched nothing. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> returns an empty DataFrame and emits a <code>UserWarning</code>, so a legitimately empty query does not break a pipeline. Check <code>df.empty</code> where you previously caught the exception.</p>
+<p><strong>Attribute columns.</strong> <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> discarded the SDMX attributes the API sends with each observation. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> returns them as extra columns after <code>OBS_VALUE</code>, including <code>UNIT</code> and <code>SCALE</code>. Pass <code>attributes=False</code> to get the old column set.</p>
 <p><strong><code>OBS_VALUE</code> is numeric.</strong> <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> returned everything as strings, so guides recommended <code>pd.to_numeric</code>. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> returns <code>OBS_VALUE</code> as <code>float64</code> already. <code>TIME_PERIOD</code> stays a string, since its format varies with frequency.</p>
 <p><strong>Codes are not pre-validated.</strong> <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> downloaded every codelist to check your inputs and warned about invalid ones. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> skips that, which makes requests substantially faster; the API rejects genuinely invalid codes. Use <a href="../reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a> when you want to check first.</p>
 <p><strong>No parameter-name coercion.</strong> <a href="../reference/imf_dataset.html#imfp.imf_dataset" class="gdls-link gdls-code">imf_dataset</a> quietly rewrote <code>freq</code> to <code>frequency</code>, <code>country</code> to <code>ref_area</code>, and so on, warning as it went. <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> does not guess: name the dimension the dataset actually uses. If you are unsure, <a href="../reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="gdls-link gdls-code">imf_get_datastructure</a> will tell you, and an incorrect name produces an error listing the valid ones.</p>
@@ -507,7 +508,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="silencing-the-deprecation-warnings" class="level1">
 <h1>Silencing the Deprecation Warnings</h1>
 <p>If you are not ready to migrate, the old functions keep working through the 2.x series. To silence the warnings in the meantime:</p>
-<div id="b762dc62" class="cell" data-execution_count="8">
+<div id="3da4f8fe" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>warnings.filterwarnings(<span class="st">"ignore"</span>, category<span class="op">=</span><span class="pp">DeprecationWarning</span>, module<span class="op">=</span><span class="st">"imfp"</span>)</span></code></pre></div>

@@ -99,7 +99,7 @@ Examples:
     # Fetch two dimensions at once
     imf_get_codelists(["COMMODITY", "FREQ"], "PCPS")
 
-imf_get(dataflow_id: str, dimensions: dict[str, typing.Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: bool = False, **kwargs: Any) -> pandas.core.frame.DataFrame | dict[str, typing.Any]
+imf_get(dataflow_id: str, dimensions: dict[str, typing.Any] | None = None, start_period: int | str | None = None, end_period: int | str | None = None, max_tries: int = 3, print_url: bool = False, return_raw: bool = False, attributes: bool = True, **kwargs: Any) -> pandas.core.frame.DataFrame | dict[str, typing.Any]
 
 Fetch observations from an IMF dataset.
 
@@ -124,13 +124,18 @@ Args:
         useful when reporting a problem with a specific query.
     return_raw (bool, optional): Whether to return the parsed JSON response
         as a dict instead of a DataFrame.
+    attributes (bool, optional): Whether to add a column for each SDMX
+        attribute the response carries, such as ``UNIT``, ``SCALE`` and
+        ``STATUS``. Attributes with no value anywhere in the response are
+        omitted, and one whose ID clashes with a dimension is suffixed
+        with ``_ATTRIBUTE``. Defaults to True.
     **kwargs: Dimension filters given as keyword arguments, e.g.
         ``freq="A"``. Equivalent to passing them in ``dimensions``.
 
 Returns:
     pandas.DataFrame: One row per observation, with a column per series
     dimension (named as in the datastructure), plus ``TIME_PERIOD`` and
-    ``OBS_VALUE``. Returns an empty DataFrame, and warns, when the query
+    ``OBS_VALUE``, followed by a column per attribute. Returns an empty DataFrame, and warns, when the query
     matches no observations. If return_raw is True, returns the raw parsed
     JSON dict instead.
 
@@ -716,6 +721,31 @@ There is one column per dimension, named with its SDMX dimension ID, plus two mo
 
 `TIME_PERIOD` stays a string because its format depends on the frequency of the series: `"2000"` for annual data, `"2000-Q1"` for quarterly, `"2000-M01"` for monthly. See [Suggestions for Usage](usage.qmd#time-period-conversion) for conversion recipes.
 
+### Attributes: Units, Scale, and Status
+
+After `OBS_VALUE` come the dataset's SDMX *attributes*, which describe how to read each value. Which ones appear depends on the dataset, but the most useful are:
+
+- `UNIT` — the unit of measure, e.g. `PT` (percent), `IX` (index), `XDC` (domestic currency), `USD`
+- `SCALE` — the power of ten the value is expressed in: `"0"` for units, `"6"` for millions, `"9"` for billions
+- `STATUS` — an observation-level flag, e.g. `E` for estimated or `P` for provisional
+- `DERIVATION_TYPE` — whether a value was observed or derived
+
+``` {python}
+growth = imfp.imf_get("WEO", country="USA", indicator="NGDP_RPCH", frequency="A")
+growth[["INDICATOR", "TIME_PERIOD", "OBS_VALUE", "UNIT", "SCALE"]].head(3)
+```
+
+An attribute appears as a column only when it has a value somewhere in the response, and is `NaN` for rows it does not apply to. Attributes can vary between series, so check `UNIT` and `SCALE` before combining series or comparing across countries. In rare cases an attribute has the same ID as a dimension; it is then suffixed with `_ATTRIBUTE`.
+
+Not every dataset reports `UNIT`. The coal price index above has no `UNIT` column, for example; its unit is implied by the `DATA_TRANSFORMATION` dimension. Look up such codes with `imf_get_codelists`.
+
+Pass `attributes=False` for just the dimensions, `TIME_PERIOD`, and `OBS_VALUE`:
+
+``` {python}
+#| eval: false
+imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", attributes=False)
+```
+
 ## Time Filtering
 
 `start_period` and `end_period` bound the time window. They accept a year, a quarter, or a month:
@@ -866,11 +896,11 @@ df[categorical_cols] = df[categorical_cols].astype("category")
 
 #### NA Removal
 
-Observations the IMF reports as missing come back as `NaN`, so you may want to drop them:
+Observations the IMF reports as missing come back as `NaN`, so you may want to drop them. Restrict the check to `OBS_VALUE`, since attribute columns are often legitimately empty:
 
 ``` {python}
 # Drop rows with missing values
-df = df.dropna()
+df = df.dropna(subset=["OBS_VALUE"])
 ```
 
 #### Time Period Conversion
@@ -944,7 +974,7 @@ These transformations are essential for:
 - Converting nominal to real dollar values
 - Calculating per capita metrics
 - Harmonizing data across different frequencies
-- Adjusting for different unit scales
+- Adjusting for different unit scales (see the `UNIT` and `SCALE` [attribute columns](datasets.qmd#attributes-units-scale-and-status))
 
 For a complete, end-to-end example of these transformations in a real analysis workflow, see Jenny Xu's superb [demo notebook](https://github.com/jennyxu/imfp-demo).
 
@@ -1072,22 +1102,24 @@ Choose the appropriate method based on your specific analysis needs and the econ
 
 ### Merging Datasets
 
-We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys:
+We can combine the datasets using `pd.DataFrame.merge()` with `COUNTRY` and `TIME_PERIOD` as keys. Selecting just the keys and values first keeps the dimension and attribute columns of each dataset from colliding:
 
 ``` {python}
+keys = ["COUNTRY", "TIME_PERIOD"]
+columns = [*keys, "OBS_VALUE"]
 merged = (
-    nominal_gdp.merge(
-        deflator,
-        on=["COUNTRY", "TIME_PERIOD"],
+    nominal_gdp[columns].merge(
+        deflator[columns],
+        on=keys,
         suffixes=("_gdp", "_deflator")
     )
     .merge(
-        population,
-        on=["COUNTRY", "TIME_PERIOD"]
+        population[columns],
+        on=keys
     )
     .merge(
-        exchange_rate,
-        on=["COUNTRY", "TIME_PERIOD"],
+        exchange_rate[columns],
+        on=keys,
         suffixes=("_population", "_exchange_rate")
     )
 )
@@ -1340,7 +1372,7 @@ Passing a DataFrame where codes are expected raises a `ValueError` that says exa
 # imfp 1.x columns
 ["country", "indicator", "data_transformation", "frequency", "time_period", "obs_value"]
 
-# imfp 2.0 columns
+# imfp 2.0 columns, followed by attribute columns such as SCALE
 ["COUNTRY", "INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY", "TIME_PERIOD", "OBS_VALUE"]
 ```
 
@@ -1354,6 +1386,8 @@ df.columns = df.columns.str.lower()
 ## Behavior Changes
 
 **Empty results no longer raise.** `imf_dataset` raised a `ValueError` when a query matched nothing. `imf_get` returns an empty DataFrame and emits a `UserWarning`, so a legitimately empty query does not break a pipeline. Check `df.empty` where you previously caught the exception.
+
+**Attribute columns.** `imf_dataset` discarded the SDMX attributes the API sends with each observation. `imf_get` returns them as extra columns after `OBS_VALUE`, including `UNIT` and `SCALE`. Pass `attributes=False` to get the old column set.
 
 **`OBS_VALUE` is numeric.** `imf_dataset` returned everything as strings, so guides recommended `pd.to_numeric`. `imf_get` returns `OBS_VALUE` as `float64` already. `TIME_PERIOD` stays a string, since its format varies with frequency.
 

@@ -143,7 +143,7 @@ Passing a DataFrame where codes are expected raises a `ValueError` that says exa
 # imfp 1.x columns
 ["country", "indicator", "data_transformation", "frequency", "time_period", "obs_value"]
 
-# imfp 2.0 columns
+# imfp 2.0 columns, followed by attribute columns such as SCALE
 ["COUNTRY", "INDICATOR", "DATA_TRANSFORMATION", "FREQUENCY", "TIME_PERIOD", "OBS_VALUE"]
 ```
 
@@ -159,6 +159,8 @@ df.columns = df.columns.str.lower()
 # Behavior Changes
 
 **Empty results no longer raise.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) raised a `ValueError` when a query matched nothing. [imf_get](../reference/imf_get.md#imfp.imf_get) returns an empty DataFrame and emits a `UserWarning`, so a legitimately empty query does not break a pipeline. Check `df.empty` where you previously caught the exception.
+
+**Attribute columns.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) discarded the SDMX attributes the API sends with each observation. [imf_get](../reference/imf_get.md#imfp.imf_get) returns them as extra columns after `OBS_VALUE`, including `UNIT` and `SCALE`. Pass `attributes=False` to get the old column set.
 
 **`OBS_VALUE` is numeric.** [imf_dataset](../reference/imf_dataset.md#imfp.imf_dataset) returned everything as strings, so guides recommended `pd.to_numeric`. [imf_get](../reference/imf_get.md#imfp.imf_get) returns `OBS_VALUE` as `float64` already. `TIME_PERIOD` stays a string, since its format varies with frequency.
 

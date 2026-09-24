@@ -80,7 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -167,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.0.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -348,12 +348,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="doc-usage-source">
 <p>Usage</p>
-<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/api.py#L404-L506" target="_blank" rel="noopener">Source</a></p>
+<p><a href="https://github.com/Promptly-Technologies-LLC/imfp/blob/main/imfp/api.py#L406-L515" target="_blank" rel="noopener">Source</a></p>
 </div>
 <div class="doc-signature doc-Kind.FUNCTION">
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_get</span>(<span class="va">dataflow_id</span>: <span class="bu">str</span>, <span class="va">dimensions</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">max_tries</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">kwargs</span>: <span class="va">Any</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="va">DataFrame</span></span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_get</span>(<span class="va">dataflow_id</span>: <span class="bu">str</span>, <span class="va">dimensions</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">max_tries</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">False</span>] <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">attributes</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">kwargs</span>: <span class="va">Any</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="va">DataFrame</span></span>
 <span id="cb1-2" class="overload-spacer"> </span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_get</span>(<span class="va">dataflow_id</span>: <span class="bu">str</span>, <span class="va">dimensions</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">max_tries</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">kwargs</span>: <span class="va">Any</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>]</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="sig-name">imf_get</span>(<span class="va">dataflow_id</span>: <span class="bu">str</span>, <span class="va">dimensions</span>: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>] <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">start_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">end_period</span>: <span class="bu">int</span> <span class="op">|</span> <span class="bu">str</span> <span class="op">|</span> <span class="cn-none">None</span> <span class="op">=</span> <span class="cn-none">None</span>, <span class="va">max_tries</span>: <span class="bu">int</span> <span class="op">=</span> <span class="dv">3</span>, <span class="va">print_url</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">False</span>, <span class="va">return_raw</span>: <span class="va">Literal</span>[<span class="cn-bool">True</span>] <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">attributes</span>: <span class="bu">bool</span> <span class="op">=</span> <span class="cn-bool">True</span>, <span class="va">kwargs</span>: <span class="va">Any</span> <span class="op">=</span> {}) <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="va">Any</span>]</span></code></pre></div>
 </div>
 <div class="doc-text">
 <p>This is step 4 of the workflow. Dimensions you do not filter on are wildcarded, so omitting <code>dimensions</code> entirely requests the whole dataset — which for most datasets is slow and very large.</p>
@@ -391,6 +391,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <dd>
 <p>Whether to return the parsed JSON response as a dict instead of a DataFrame.</p>
 </dd>
+<dt><code><span class="doc-parameter-name">attributes</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">bool</span> <span class="doc-parameter-default-sep op">=</span> <span class="doc-parameter-default"><span class="va">True</span></span></code></dt>
+<dd>
+<p>Whether to add a column for each SDMX attribute the response carries, such as <code>UNIT</code>, <code>SCALE</code> and <code>STATUS</code>. Attributes with no value anywhere in the response are omitted, and one whose ID clashes with a dimension is suffixed with <code>_ATTRIBUTE</code>. Defaults to True.</p>
+</dd>
 <dt><code><span class="doc-parameter-name">**kwargs</span><span class="doc-parameter-annotation-sep">:</span> <span class="doc-parameter-annotation">Any</span></code></dt>
 <dd>
 Dimension filters given as keyword arguments, e.g. <code>freq="A"</code>. Equivalent to passing them in <code>dimensions</code>.
@@ -406,7 +410,7 @@ Dimension filters given as keyword arguments, e.g. <code>freq="A"</code>. Equiva
 <dd>
 <p>pandas.DataFrame: One row per observation, with a column per series</p>
 <p>dimension (named as in the datastructure), plus <code>TIME_PERIOD</code> and</p>
-<p><code>OBS_VALUE</code>. Returns an empty DataFrame, and warns, when the query</p>
+<p><code>OBS_VALUE</code>, followed by a column per attribute. Returns an empty DataFrame, and warns, when the query</p>
 <p>matches no observations. If return_raw is True, returns the raw parsed</p>
 JSON dict instead.
 </dd>

@@ -82,7 +82,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-bf476c94c8758bc321fd5fd3b984c438.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-08-03">v1.3.4</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.0.1</span></span>
     </a>
   </div>
             <div id="quarto-search" class=""></div>
@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="why-filtering-matters" class="level1">
 <h1>Why Filtering Matters</h1>
 <p>Once you have a dataflow ID, you can in principle request the whole dataset:</p>
-<div id="2fdaf47d" class="cell" data-execution_count="1">
+<div id="034d78dc" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Requests all of the Producer Price Index dataset</span></span>
@@ -341,7 +341,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Dimensions</h1>
 <p>Every dataset is described by a <em>datastructure definition</em> (DSD), which lists the <strong>dimensions</strong> the data is broken out by. Each dimension becomes a column in the returned data, and each is categorical: it accepts only a fixed set of values.</p>
 <p>Datasets do not share a common set of dimensions. Some use <code>COUNTRY</code>, others <code>REF_AREA</code>; some spell frequency <code>FREQUENCY</code> and others <code>FREQ</code>. This is why you have to ask.</p>
-<div id="5b0013ea" class="cell" data-execution_count="2">
+<div id="d8133e95" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>dimensions <span class="op">=</span> imfp.imf_get_datastructure(<span class="st">"PCPS"</span>)</span>
@@ -418,7 +418,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="time-and-measures" class="level2">
 <h2 class="anchored" data-anchor-id="time-and-measures">Time and Measures</h2>
 <p>By default <a href="../reference/imf_get_datastructure.html#imfp.imf_get_datastructure" class="gdls-link gdls-code">imf_get_datastructure</a> lists only the dimensions you can filter on. Time is excluded because you filter it through <code>start_period</code>/<code>end_period</code> rather than through the key, and measures are excluded because they are outputs rather than filters. Ask for them explicitly if you want to see them:</p>
-<div id="cef9a700" class="cell" data-execution_count="3">
+<div id="4b00ac2b" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>imfp.imf_get_datastructure(<span class="st">"PCPS"</span>, include_time<span class="op">=</span><span class="va">True</span>, include_measures<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -480,7 +480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="codes" class="level1">
 <h1>Codes</h1>
 <p>Knowing that <code>PCPS</code> has an <code>INDICATOR</code> dimension does not tell you that coal is <code>PCOAL</code>. For that, use <a href="../reference/imf_get_codelists.html#imfp.imf_get_codelists" class="gdls-link gdls-code">imf_get_codelists</a>, which returns the valid codes for one or more dimensions:</p>
-<div id="50044192" class="cell" data-execution_count="4">
+<div id="a155b2c1" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>frequencies <span class="op">=</span> imfp.imf_get_codelists(<span class="st">"FREQUENCY"</span>, <span class="st">"PCPS"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>frequencies[[<span class="st">"code"</span>, <span class="st">"name"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="3">
@@ -568,7 +568,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="fetching-several-dimensions-at-once" class="level2">
 <h2 class="anchored" data-anchor-id="fetching-several-dimensions-at-once">Fetching Several Dimensions at Once</h2>
 <p>Pass a list to get everything in one tidy frame — one row per code, with <code>dimension_id</code> telling you which dimension each row belongs to:</p>
-<div id="b2648a35" class="cell" data-execution_count="5">
+<div id="52062142" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>codes <span class="op">=</span> imfp.imf_get_codelists(</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"INDICATOR"</span>, <span class="st">"DATA_TRANSFORMATION"</span>, <span class="st">"FREQUENCY"</span>], <span class="st">"PCPS"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
@@ -582,7 +582,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 <p>Since it is a single DataFrame, searching it is an ordinary filter:</p>
-<div id="808eaca9" class="cell" data-execution_count="6">
+<div id="14e3f038" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>codes[</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> codes[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Coal"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
@@ -619,7 +619,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 </div>
-<div id="5ab84acd" class="cell" data-execution_count="7">
+<div id="74224b01" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>codes[codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"DATA_TRANSFORMATION"</span>][[<span class="st">"code"</span>, <span class="st">"name"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
@@ -659,7 +659,7 @@ dtype: int64</code></pre>
 </div>
 </div>
 <p>To pull every dimension’s codes in one call, feed it the datastructure:</p>
-<div id="1d258243" class="cell" data-execution_count="8">
+<div id="25cf4dcc" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>all_codes <span class="op">=</span> imfp.imf_get_codelists(<span class="bu">list</span>(dimensions[<span class="st">"dimension_id"</span>]), <span class="st">"PCPS"</span>)</span></code></pre></div>
 </div>
 <p>Note that country codelists tend to be large, so this can take a moment.</p>
@@ -668,7 +668,7 @@ dtype: int64</code></pre>
 <section id="using-codes-in-a-request" class="level1">
 <h1>Using Codes in a Request</h1>
 <p>The <code>code</code> column holds exactly the values <a href="../reference/imf_get.html#imfp.imf_get" class="gdls-link gdls-code">imf_get</a> expects:</p>
-<div id="399bd416" class="cell" data-execution_count="9">
+<div id="37bbb6a4" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>coal <span class="op">=</span> codes[</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    (codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&amp;</span> (codes[<span class="st">"code"</span>] <span class="op">==</span> <span class="st">"PCOAL"</span>)</span>
@@ -696,6 +696,8 @@ dtype: int64</code></pre>
       <th>FREQUENCY</th>
       <th>TIME_PERIOD</th>
       <th>OBS_VALUE</th>
+      <th>SCALE</th>
+      <th>DERIVATION_TYPE</th>
     </tr>
   </thead>
   <tbody>
@@ -707,6 +709,8 @@ dtype: int64</code></pre>
       <td>A</td>
       <td>1992</td>
       <td>49.892138</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>1</th>
@@ -716,6 +720,8 @@ dtype: int64</code></pre>
       <td>A</td>
       <td>1993</td>
       <td>43.279151</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>2</th>
@@ -725,6 +731,8 @@ dtype: int64</code></pre>
       <td>A</td>
       <td>1994</td>
       <td>45.213931</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>3</th>
@@ -734,6 +742,8 @@ dtype: int64</code></pre>
       <td>A</td>
       <td>1995</td>
       <td>55.433711</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
     <tr>
       <th>4</th>
@@ -743,6 +753,8 @@ dtype: int64</code></pre>
       <td>A</td>
       <td>1996</td>
       <td>53.179458</td>
+      <td>0</td>
+      <td>R</td>
     </tr>
   </tbody>
 </table>
@@ -753,7 +765,7 @@ dtype: int64</code></pre>
 <section id="labelling-results" class="level1">
 <h1>Labelling Results</h1>
 <p>Because the codes and the data are both tidy DataFrames keyed on the code, attaching human-readable labels is a merge:</p>
-<div id="4bc9d537" class="cell" data-execution_count="10">
+<div id="77cdcbb0" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>labelled <span class="op">=</span> df.merge(</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    codes[codes[<span class="st">"dimension_id"</span>] <span class="op">==</span> <span class="st">"INDICATOR"</span>][[<span class="st">"code"</span>, <span class="st">"name"</span>]],</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"INDICATOR"</span>,</span>
@@ -820,7 +832,7 @@ dtype: int64</code></pre>
 <section id="handling-unknown-dimensions" class="level1">
 <h1>Handling Unknown Dimensions</h1>
 <p>Asking for a dimension a dataset does not have is an error, and the message tells you what is available:</p>
-<div id="9ee12959" class="cell" data-execution_count="11">
+<div id="596d00f8" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    imfp.imf_get_codelists(<span class="st">"FREQ"</span>, <span class="st">"PCPS"</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ValueError</span> <span class="im">as</span> e:</span>
