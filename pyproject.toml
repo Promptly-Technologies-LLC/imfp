@@ -150,3 +150,6 @@ dev = [
     "ruff>=0.16.1",
     "ty>=0.0.69",
 ]
+
+[tool.uv]
+constraint-dependencies = ["certifi>=2026.10.19"]
