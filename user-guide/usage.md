@@ -35,20 +35,20 @@ df.info()
 
 
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 588 entries, 0 to 587
+    RangeIndex: 590 entries, 0 to 589
     Data columns (total 8 columns):
      #   Column               Non-Null Count  Dtype  
     ---  ------               --------------  -----  
-     0   COUNTRY              588 non-null    object 
-     1   INDICATOR            588 non-null    object 
-     2   DATA_TRANSFORMATION  588 non-null    object 
-     3   FREQUENCY            588 non-null    object 
-     4   TIME_PERIOD          588 non-null    object 
-     5   OBS_VALUE            588 non-null    float64
-     6   SCALE                588 non-null    object 
-     7   DERIVATION_TYPE      588 non-null    object 
+     0   COUNTRY              590 non-null    object 
+     1   INDICATOR            590 non-null    object 
+     2   DATA_TRANSFORMATION  590 non-null    object 
+     3   FREQUENCY            590 non-null    object 
+     4   TIME_PERIOD          590 non-null    object 
+     5   OBS_VALUE            590 non-null    float64
+     6   SCALE                590 non-null    object 
+     7   DERIVATION_TYPE      590 non-null    object 
     dtypes: float64(1), object(7)
-    memory usage: 36.9+ KB
+    memory usage: 37.0+ KB
 
 
 Alternatively, you can use the `head()` method to view the first 5 rows of the data frame.
@@ -166,14 +166,14 @@ df.describe()
 
 |       | OBS_VALUE | datetime                      | year    | quarter | month  |
 |-------|-----------|-------------------------------|---------|---------|--------|
-| count | 588.00    | 588                           | 588.00  | 138.00  | 416.00 |
-| mean  | 113.40    | 2008-11-19 08:41:42.530612224 | 2008.80 | 2.49    | 6.46   |
+| count | 590.00    | 590                           | 590.00  | 139.00  | 417.00 |
+| mean  | 113.69    | 2008-12-10 20:39:56.435593216 | 2008.86 | 2.49    | 6.47   |
 | min   | 33.62     | 1992-01-01 00:00:00           | 1992.00 | 1.00    | 1.00   |
-| 25%   | 50.61     | 2000-01-01 00:00:09.750000    | 2000.00 | 1.25    | 3.00   |
-| 50%   | 94.64     | 2009-01-01 00:00:03.500000    | 2009.00 | 2.00    | 6.00   |
-| 75%   | 145.83    | 2017-07-24 00:00:00           | 2017.00 | 3.00    | 9.00   |
-| max   | 577.58    | 2026-04-01 00:00:00           | 2026.00 | 4.00    | 12.00  |
-| std   | 86.92     | NaN                           | 10.00   | 1.12    | 3.45   |
+| 25%   | 50.64     | 2000-01-01 00:00:10.250000    | 2000.00 | 1.50    | 3.00   |
+| 50%   | 94.74     | 2009-01-01 00:00:04.500000    | 2009.00 | 2.00    | 6.00   |
+| 75%   | 146.04    | 2017-12-09 00:00:00           | 2017.75 | 3.00    | 9.00   |
+| max   | 577.58    | 2026-07-01 00:00:00           | 2026.00 | 4.00    | 12.00  |
+| std   | 86.91     | NaN                           | 10.03   | 1.12    | 3.45   |
 
 
 ## Viewing Data
@@ -390,9 +390,9 @@ merged[["COUNTRY", "TIME_PERIOD", "real_gdp", "real_gdp_per_capita"]].head()
 |-----|---------|-------------|------------------|---------------------|
 | 0   | ALB     | 2011        | 1276495535151.79 | 439383.77           |
 | 1   | ALB     | 2011        | 1276495535151.79 | 439383.77           |
-| 2   | ALB     | 2012        | 1311850147762.80 | 452299.58           |
-| 3   | ALB     | 2012        | 1311850147762.80 | 452299.58           |
-| 4   | ALB     | 2013        | 1318582910877.47 | 455454.58           |
+| 2   | ALB     | 2012        | 1311850147762.80 | 454979.98           |
+| 3   | ALB     | 2012        | 1311850147762.80 | 454979.98           |
+| 4   | ALB     | 2013        | 1318582910877.47 | 463757.25           |
 
 
 ## Exchange Rate Adjustment
@@ -421,6 +421,6 @@ merged[["TIME_PERIOD","COUNTRY","real_gdp","real_gdp_usd","real_gdp_usd_per_capi
 |----|----|----|----|----|----|
 | 0 | 2011 | ALB | 1276495535151.79 | 11869960341.75 | 4085.77 |
 | 1 | 2011 | ALB | 1276495535151.79 | 12287385630.03 | 4229.45 |
-| 2 | 2012 | ALB | 1311850147762.80 | 12393482737.49 | 4273.02 |
-| 3 | 2012 | ALB | 1311850147762.80 | 12170425343.38 | 4196.12 |
-| 4 | 2013 | ALB | 1318582910877.47 | 12945051157.25 | 4471.38 |
+| 2 | 2012 | ALB | 1311850147762.80 | 12393482737.49 | 4298.35 |
+| 3 | 2012 | ALB | 1311850147762.80 | 12170425343.38 | 4220.99 |
+| 4 | 2013 | ALB | 1318582910877.47 | 12945051157.25 | 4552.89 |

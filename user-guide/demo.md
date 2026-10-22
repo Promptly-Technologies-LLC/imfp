@@ -203,21 +203,21 @@ databases[
     Databases saved to data/databases.csv
 
 
-|     | id         | name                                              |
-|-----|------------|---------------------------------------------------|
-| 1   | ED         | Export Diversification (ED)                       |
-| 2   | MFS_OFC    | Monetary and Financial Statistics (MFS), Other... |
-| 3   | ITS        | International Trade in Services (ITS)             |
-| 6   | PI_WCA     | Production Indexes, World and Country Group Ag... |
-| 7   | SDG        | IMF Reported SDG Data                             |
-| ... | ...        | ...                                               |
-| 207 | EQ         | Export Quality (EQ)                               |
-| 208 | FAS        | Financial Access Survey (FAS)                     |
-| 210 | GS_LGRGHTS | Gender Statistics (GS) Legal Rights               |
-| 218 | TEG        | Trade in Low Carbon Technology Goods (TEG)        |
-| 220 | IL         | International Liquidity (IL)                      |
+|     | id        | name                                              |
+|-----|-----------|---------------------------------------------------|
+| 7   | CO2E      | CO2 emissions embodied in domestic final deman... |
+| 8   | FM        | Fiscal Monitor (FM)                               |
+| 9   | GFS_COFOG | GFS Government Expenditures by Function           |
+| 10  | AEA       | Air Emissions Accounts (AEA)                      |
+| 11  | GDD       | Global Debt Database (GDD)                        |
+| ... | ...       | ...                                               |
+| 213 | WEO       | World Economic Outlook (WEO)                      |
+| 214 | MCDREO    | Middle East and Central Asia Regional Economic... |
+| 216 | EQ        | Export Quality (EQ)                               |
+| 220 | IL        | International Liquidity (IL)                      |
+| 223 | TEG       | Trade in Low Carbon Technology Goods (TEG)        |
 
-101 rows × 2 columns
+102 rows × 2 columns
 
 
 Three IMF databases were used: World Economic Outlook (WEO), and National Economic Accounts (QNEA, ANEA).
@@ -240,9 +240,9 @@ databases[databases['id'].isin(['QNEA','ANEA','WEO'])][['id', 'name']]
 
 |     | id   | name                                             |
 |-----|------|--------------------------------------------------|
-| 24  | QNEA | National Economic Accounts (NEA), Quarterly Data |
-| 75  | ANEA | National Economic Accounts (NEA), Annual Data    |
-| 133 | WEO  | World Economic Outlook (WEO)                     |
+| 12  | ANEA | National Economic Accounts (NEA), Annual Data    |
+| 69  | QNEA | National Economic Accounts (NEA), Quarterly Data |
+| 213 | WEO  | World Economic Outlook (WEO)                     |
 
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -925,12 +925,12 @@ combined_data.describe()
 |  | GII | GII_change | Deflator | Nominal | Population | Real GDP | Real GDP per Capita | GDP_change |
 |----|----|----|----|----|----|----|----|----|
 | count | 922.000000 | 922.000000 | 922.000000 | 9.220000e+02 | 9.220000e+02 | 9.220000e+02 | 9.220000e+02 | 922.000000 |
-| mean | 0.237489 | -0.024436 | 84.808912 | 8.155676e+13 | 4.447125e+07 | 8.133570e+13 | 1.235291e+06 | 0.025206 |
-| std | 0.147233 | 0.057674 | 21.285750 | 5.994168e+14 | 1.247087e+08 | 5.526724e+14 | 4.125740e+06 | 0.041461 |
-| min | 0.011528 | -0.755003 | 3.606147 | 4.005511e+09 | 2.679580e+05 | 5.215120e+09 | 1.874531e+03 | -0.154112 |
-| 25% | 0.130455 | -0.032271 | 73.031804 | 1.272696e+11 | 4.553935e+06 | 1.666646e+11 | 2.011554e+04 | 0.005204 |
-| 50% | 0.187590 | -0.012222 | 88.340877 | 8.221407e+11 | 1.030006e+07 | 1.073837e+12 | 3.674988e+04 | 0.024033 |
-| 75% | 0.329860 | -0.003514 | 99.976527 | 2.597820e+12 | 4.461940e+07 | 2.952054e+12 | 2.739035e+05 | 0.045011 |
+| mean | 0.237489 | -0.024436 | 84.808483 | 8.155675e+13 | 4.446825e+07 | 8.133569e+13 | 1.235306e+06 | 0.025302 |
+| std | 0.147233 | 0.057674 | 21.284192 | 5.994168e+14 | 1.247094e+08 | 5.526724e+14 | 4.125738e+06 | 0.041414 |
+| min | 0.011528 | -0.755003 | 3.606565 | 4.005511e+09 | 2.679580e+05 | 5.215120e+09 | 1.937371e+03 | -0.154112 |
+| 25% | 0.130455 | -0.032271 | 73.055588 | 1.272696e+11 | 4.548955e+06 | 1.666646e+11 | 2.011554e+04 | 0.005294 |
+| 50% | 0.187590 | -0.012222 | 88.340877 | 8.221407e+11 | 1.030006e+07 | 1.073837e+12 | 3.674984e+04 | 0.024101 |
+| 75% | 0.329860 | -0.003514 | 99.980221 | 2.597820e+12 | 4.461940e+07 | 2.952054e+12 | 2.739035e+05 | 0.044974 |
 | max | 0.788954 | 0.597437 | 208.383254 | 9.546134e+15 | 1.295830e+09 | 7.914684e+15 | 3.180912e+07 | 0.218229 |
 
 
@@ -990,9 +990,9 @@ model.summary()
 |-------------------|------------------|---------------------|--------|
 | Dep. Variable:    | GII_change       | R-squared:          | 0.001  |
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
-| Method:           | Least Squares    | F-statistic:        | 0.8240 |
-| Date:             | Thu, 24 Sep 2026 | Prob (F-statistic): | 0.364  |
-| Time:             | 19:32:25         | Log-Likelihood:     | 1323.1 |
+| Method:           | Least Squares    | F-statistic:        | 0.7604 |
+| Date:             | Thu, 22 Oct 2026 | Prob (F-statistic): | 0.383  |
+| Time:             | 20:01:48         | Log-Likelihood:     | 1323.0 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2632. |
 | Df Model:         | 1                |                     |        |
@@ -1003,15 +1003,15 @@ OLS Regression Results {.simpletable}
 |            |         |         |         |          |         |         |
 |------------|---------|---------|---------|----------|---------|---------|
 |            | coef    | std err | t       | P\>\|t\| | \[0.025 | 0.975\] |
-| const      | -0.0255 | 0.002   | -11.462 | 0.000    | -0.030  | -0.021  |
-| GDP_change | 0.0416  | 0.046   | 0.908   | 0.364    | -0.048  | 0.132   |
+| const      | -0.0254 | 0.002   | -11.430 | 0.000    | -0.030  | -0.021  |
+| GDP_change | 0.0400  | 0.046   | 0.872   | 0.383    | -0.050  | 0.130   |
 
 |                |         |                   |            |
 |----------------|---------|-------------------|------------|
-| Omnibus:       | 812.728 | Durbin-Watson:    | 1.510      |
-| Prob(Omnibus): | 0.000   | Jarque-Bera (JB): | 121865.031 |
-| Skew:          | -3.343  | Prob(JB):         | 0.00       |
-| Kurtosis:      | 58.924  | Cond. No.         | 24.1       |
+| Omnibus:       | 812.504 | Durbin-Watson:    | 1.510      |
+| Prob(Omnibus): | 0.000   | Jarque-Bera (JB): | 121841.519 |
+| Skew:          | -3.341  | Prob(JB):         | 0.00       |
+| Kurtosis:      | 58.919  | Cond. No.         | 24.2       |
 
 \
 \
@@ -1073,8 +1073,8 @@ adf_test(GDP['Value'])
     ADF Statistic: -14.389003678493355
     p-value: 8.889678684263258e-27
     Series is stationary
-    ADF Statistic: -11.560684750856439
-    p-value: 3.275914907309841e-21
+    ADF Statistic: -11.550130980300182
+    p-value: 3.463621129063122e-21
     Series is stationary
 
 
@@ -1127,60 +1127,60 @@ time_model_fitted.summary()
     ==================================
     Model:                         VAR
     Method:                        OLS
-    Date:           Thu, 24, Sep, 2026
-    Time:                     19:32:25
+    Date:           Thu, 22, Oct, 2026
+    Time:                     20:01:48
     --------------------------------------------------------------------
-    No. of Equations:         2.00000    BIC:                   -12.0457
-    Nobs:                     638.000    HQIC:                  -12.1739
-    Log likelihood:           2128.88    FPE:                4.75978e-06
-    AIC:                     -12.2553    Det(Omega_mle):     4.54362e-06
+    No. of Equations:         2.00000    BIC:                   -12.0495
+    Nobs:                     638.000    HQIC:                  -12.1778
+    Log likelihood:           2130.10    FPE:                4.74164e-06
+    AIC:                     -12.2591    Det(Omega_mle):     4.52630e-06
     --------------------------------------------------------------------
     Results for equation GII_change
     ================================================================================
                        coefficient       std. error           t-stat            prob
     --------------------------------------------------------------------------------
-    const                -0.023919         0.004145           -5.770           0.000
-    L1.GII_change         0.197420         0.040009            4.934           0.000
-    L1.GDP_change        -0.028065         0.051015           -0.550           0.582
-    L2.GII_change        -0.090238         0.040683           -2.218           0.027
-    L2.GDP_change         0.024108         0.051266            0.470           0.638
-    L3.GII_change         0.066510         0.040851            1.628           0.104
-    L3.GDP_change         0.041800         0.051031            0.819           0.413
-    L4.GII_change        -0.003831         0.040870           -0.094           0.925
-    L4.GDP_change         0.072188         0.050998            1.415           0.157
-    L5.GII_change        -0.001395         0.040678           -0.034           0.973
-    L5.GDP_change        -0.005062         0.051094           -0.099           0.921
-    L6.GII_change         0.076311         0.040649            1.877           0.060
-    L6.GDP_change        -0.001650         0.050915           -0.032           0.974
-    L7.GII_change        -0.015493         0.040024           -0.387           0.699
-    L7.GDP_change         0.065868         0.050283            1.310           0.190
+    const                -0.023642         0.004145           -5.704           0.000
+    L1.GII_change         0.197730         0.040017            4.941           0.000
+    L1.GDP_change        -0.029321         0.051185           -0.573           0.567
+    L2.GII_change        -0.090193         0.040693           -2.216           0.027
+    L2.GDP_change         0.019544         0.051401            0.380           0.704
+    L3.GII_change         0.066955         0.040859            1.639           0.101
+    L3.GDP_change         0.037401         0.051146            0.731           0.465
+    L4.GII_change        -0.003419         0.040880           -0.084           0.933
+    L4.GDP_change         0.072580         0.051108            1.420           0.156
+    L5.GII_change        -0.001283         0.040694           -0.032           0.975
+    L5.GDP_change         0.000343         0.051199            0.007           0.995
+    L6.GII_change         0.076367         0.040668            1.878           0.060
+    L6.GDP_change        -0.001868         0.051034           -0.037           0.971
+    L7.GII_change        -0.014827         0.040046           -0.370           0.711
+    L7.GDP_change         0.060995         0.050433            1.209           0.227
     ================================================================================
 
     Results for equation GDP_change
     ================================================================================
                        coefficient       std. error           t-stat            prob
     --------------------------------------------------------------------------------
-    const                 0.013015         0.003231            4.028           0.000
-    L1.GII_change        -0.003507         0.031188           -0.112           0.910
-    L1.GDP_change         0.121736         0.039767            3.061           0.002
-    L2.GII_change        -0.008444         0.031714           -0.266           0.790
-    L2.GDP_change         0.067192         0.039963            1.681           0.093
-    L3.GII_change        -0.008711         0.031844           -0.274           0.784
-    L3.GDP_change         0.092168         0.039780            2.317           0.021
-    L4.GII_change         0.003784         0.031859            0.119           0.905
-    L4.GDP_change         0.092247         0.039754            2.320           0.020
-    L5.GII_change         0.057581         0.031710            1.816           0.069
-    L5.GDP_change         0.032563         0.039829            0.818           0.414
-    L6.GII_change         0.060080         0.031687            1.896           0.058
-    L6.GDP_change         0.065771         0.039689            1.657           0.097
-    L7.GII_change        -0.091310         0.031200           -2.927           0.003
-    L7.GDP_change         0.023368         0.039197            0.596           0.551
+    const                 0.013002         0.003222            4.036           0.000
+    L1.GII_change        -0.003293         0.031106           -0.106           0.916
+    L1.GDP_change         0.119923         0.039787            3.014           0.003
+    L2.GII_change        -0.008020         0.031631           -0.254           0.800
+    L2.GDP_change         0.066460         0.039954            1.663           0.096
+    L3.GII_change        -0.008144         0.031760           -0.256           0.798
+    L3.GDP_change         0.091073         0.039757            2.291           0.022
+    L4.GII_change         0.002667         0.031777            0.084           0.933
+    L4.GDP_change         0.090812         0.039727            2.286           0.022
+    L5.GII_change         0.058015         0.031632            1.834           0.067
+    L5.GDP_change         0.038903         0.039798            0.978           0.328
+    L6.GII_change         0.060141         0.031611            1.903           0.057
+    L6.GDP_change         0.073154         0.039669            1.844           0.065
+    L7.GII_change        -0.087834         0.031128           -2.822           0.005
+    L7.GDP_change         0.021551         0.039202            0.550           0.582
     ================================================================================
 
     Correlation matrix of residuals
                   GII_change  GDP_change
-    GII_change      1.000000   -0.000609
-    GDP_change     -0.000609    1.000000
+    GII_change      1.000000   -0.001503
+    GDP_change     -0.001503    1.000000
 
 
 ### VAR Model: Forecasting
@@ -1251,8 +1251,8 @@ print(f'Mean Absolute Error for GDP: {mae_gdp}')
 ```
 
 
-    Mean Absolute Error for GII: 0.029208793607252696
-    Mean Absolute Error for GDP: 0.027414176188644123
+    Mean Absolute Error for GII: 0.029197716886799924
+    Mean Absolute Error for GDP: 0.027432539542909896
 
 
 ``` python
@@ -1266,8 +1266,8 @@ print(f'RMSE for GDP: {rmse_gdp}')
 ```
 
 
-    RMSE for GII: 0.06687458561242178
-    RMSE for GDP: 0.038319282317419254
+    RMSE for GII: 0.0668708535989767
+    RMSE for GDP: 0.038335322521007374
 
 
 ### VAR Model: Granger causality test
@@ -1287,24 +1287,24 @@ test_result = grangercausalitytests(train_data[['GII_change', 'GDP_change']], ma
 
     Granger Causality
     number of lags (no zero) 1
-    ssr based F test:         F=0.0222  , p=0.8817  , df_denom=641, df_num=1
-    ssr based chi2 test:   chi2=0.0223  , p=0.8814  , df=1
-    likelihood ratio test: chi2=0.0223  , p=0.8814  , df=1
-    parameter F test:         F=0.0222  , p=0.8817  , df_denom=641, df_num=1
+    ssr based F test:         F=0.0138  , p=0.9064  , df_denom=641, df_num=1
+    ssr based chi2 test:   chi2=0.0139  , p=0.9061  , df=1
+    likelihood ratio test: chi2=0.0139  , p=0.9061  , df=1
+    parameter F test:         F=0.0138  , p=0.9064  , df_denom=641, df_num=1
 
     Granger Causality
     number of lags (no zero) 2
-    ssr based F test:         F=0.2516  , p=0.7777  , df_denom=638, df_num=2
-    ssr based chi2 test:   chi2=0.5070  , p=0.7761  , df=2
-    likelihood ratio test: chi2=0.5068  , p=0.7761  , df=2
-    parameter F test:         F=0.2516  , p=0.7777  , df_denom=638, df_num=2
+    ssr based F test:         F=0.1881  , p=0.8286  , df_denom=638, df_num=2
+    ssr based chi2 test:   chi2=0.3791  , p=0.8273  , df=2
+    likelihood ratio test: chi2=0.3790  , p=0.8274  , df=2
+    parameter F test:         F=0.1881  , p=0.8286  , df_denom=638, df_num=2
 
     Granger Causality
     number of lags (no zero) 3
-    ssr based F test:         F=0.6714  , p=0.5698  , df_denom=635, df_num=3
-    ssr based chi2 test:   chi2=2.0365  , p=0.5649  , df=3
-    likelihood ratio test: chi2=2.0333  , p=0.5655  , df=3
-    parameter F test:         F=0.6714  , p=0.5698  , df_denom=635, df_num=3
+    ssr based F test:         F=0.5538  , p=0.6457  , df_denom=635, df_num=3
+    ssr based chi2 test:   chi2=1.6797  , p=0.6414  , df=3
+    likelihood ratio test: chi2=1.6775  , p=0.6419  , df=3
+    parameter F test:         F=0.5538  , p=0.6457  , df_denom=635, df_num=3
 
 
 # Conclusion
