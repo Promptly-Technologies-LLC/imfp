@@ -203,19 +203,19 @@ databases[
     Databases saved to data/databases.csv
 
 
-|     | id        | name                                              |
-|-----|-----------|---------------------------------------------------|
-| 7   | CO2E      | CO2 emissions embodied in domestic final deman... |
-| 8   | FM        | Fiscal Monitor (FM)                               |
-| 9   | GFS_COFOG | GFS Government Expenditures by Function           |
-| 10  | AEA       | Air Emissions Accounts (AEA)                      |
-| 11  | GDD       | Global Debt Database (GDD)                        |
-| ... | ...       | ...                                               |
-| 213 | WEO       | World Economic Outlook (WEO)                      |
-| 214 | MCDREO    | Middle East and Central Asia Regional Economic... |
-| 216 | EQ        | Export Quality (EQ)                               |
-| 220 | IL        | International Liquidity (IL)                      |
-| 223 | TEG       | Trade in Low Carbon Technology Goods (TEG)        |
+|     | id      | name                                              |
+|-----|---------|---------------------------------------------------|
+| 4   | GPT     | IMF Global Policy Tracker: How Countries are R... |
+| 7   | LS      | Labor Statistics (LS)                             |
+| 8   | MFS_DC  | Monetary and Financial Statistics (MFS), Depos... |
+| 10  | WHDREO  | Western Hemisphere Regional Economic Outlook (... |
+| 11  | BOP     | Balance of Payments (BOP)                         |
+| ... | ...     | ...                                               |
+| 216 | AEA     | Air Emissions Accounts (AEA)                      |
+| 218 | BOP_AGG | Balance of Payments and International Investme... |
+| 220 | WPFXI   | Working Paper Foreign Exchange Intervention (W... |
+| 221 | PIP     | Portfolio Investment Positions by Counterpart ... |
+| 222 | FSICDM  | Financial Soundness Indicators (FSI), Concentr... |
 
 102 rows × 2 columns
 
@@ -240,9 +240,9 @@ databases[databases['id'].isin(['QNEA','ANEA','WEO'])][['id', 'name']]
 
 |     | id   | name                                             |
 |-----|------|--------------------------------------------------|
-| 12  | ANEA | National Economic Accounts (NEA), Annual Data    |
-| 69  | QNEA | National Economic Accounts (NEA), Quarterly Data |
-| 213 | WEO  | World Economic Outlook (WEO)                     |
+| 74  | QNEA | National Economic Accounts (NEA), Quarterly Data |
+| 124 | ANEA | National Economic Accounts (NEA), Annual Data    |
+| 167 | WEO  | World Economic Outlook (WEO)                     |
 
 
 Parameters are dictionary key names to make requests from the databases. "country" is the ISO-3 code of the country. "indicator" refers to the code representing a specific dataset in the database.
@@ -992,7 +992,7 @@ model.summary()
 | Model:            | OLS              | Adj. R-squared:     | -0.000 |
 | Method:           | Least Squares    | F-statistic:        | 0.7604 |
 | Date:             | Thu, 22 Oct 2026 | Prob (F-statistic): | 0.383  |
-| Time:             | 20:01:48         | Log-Likelihood:     | 1323.0 |
+| Time:             | 20:01:55         | Log-Likelihood:     | 1323.0 |
 | No. Observations: | 922              | AIC:                | -2642. |
 | Df Residuals:     | 920              | BIC:                | -2632. |
 | Df Model:         | 1                |                     |        |
@@ -1128,7 +1128,7 @@ time_model_fitted.summary()
     Model:                         VAR
     Method:                        OLS
     Date:           Thu, 22, Oct, 2026
-    Time:                     20:01:48
+    Time:                     20:01:55
     --------------------------------------------------------------------
     No. of Equations:         2.00000    BIC:                   -12.0495
     Nobs:                     638.000    HQIC:                  -12.1778

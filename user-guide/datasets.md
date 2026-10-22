@@ -166,7 +166,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > Time filtering happens server-side, and at present only datasets published by `IMF.STA` support it. For datasets published by other departments, [imf_get](../reference/imf_get.md#imfp.imf_get) warns you and returns the full time range:
 >
-> <div id="6ee90e2d" class="cell" data-execution_count="9">
+> <div id="b531a7fa" class="cell" data-execution_count="9">
 >
 > ``` python
 > df = imfp.imf_get(
@@ -186,7 +186,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > A query that matches nothing returns an empty DataFrame and warns, rather than raising. This keeps a query that legitimately has no data from breaking an automated pipeline:
 >
-> <div id="6fc2cfba" class="cell" data-execution_count="11">
+> <div id="7c9ab7ce" class="cell" data-execution_count="11">
 >
 > ``` python
 > df = imfp.imf_get("PCPS", indicator="PCOAL", frequency="A", data_transformation="USD")
@@ -204,7 +204,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > [imf_get](../reference/imf_get.md#imfp.imf_get) checks that the *dimensions* you name belong to the dataset:
 >
-> <div id="ba1367b7" class="cell" data-execution_count="12">
+> <div id="5d07956c" class="cell" data-execution_count="12">
 >
 > ``` python
 > try:
@@ -229,7 +229,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > `print_url=True` prints the URL being requested, which is the most useful thing to include when reporting a problem with a particular query:
 >
-> <div id="bf474308" class="cell" data-execution_count="13">
+> <div id="5ce1c847" class="cell" data-execution_count="13">
 >
 > ``` python
 > df = imfp.imf_get(
@@ -248,7 +248,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > For the unparsed SDMX-JSON response, use `return_raw=True`:
 >
-> <div id="beb9f33f" class="cell" data-execution_count="14">
+> <div id="4bdf1c87" class="cell" data-execution_count="14">
 >
 > ``` python
 > raw = imfp.imf_get(
@@ -272,7 +272,7 @@ A bare year is widened to cover the whole year at the frequency you asked for: w
 >
 > `max_tries` controls how many times a failed request is retried with exponential backoff. The default is 3:
 >
-> <div id="e0c4b541" class="cell" data-execution_count="15">
+> <div id="a558e406" class="cell" data-execution_count="15">
 >
 > ``` python
 > df = imfp.imf_get("PCPS", indicator="PCOAL", max_tries=5)

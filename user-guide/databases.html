@@ -325,7 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="listing-dataflows" class="level1">
 <h1>Listing Dataflows</h1>
 <p><a href="../reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a> returns the full catalogue as a tidy DataFrame:</p>
-<div id="e17110dc" class="cell" data-execution_count="1">
+<div id="93fd25fb" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
@@ -373,7 +373,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div id="fa1b73dd" class="cell" data-execution_count="2">
+<div id="9d72381b" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dataflows[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"last_updated"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -433,7 +433,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="finding-the-dataset-you-want" class="level1">
 <h1>Finding the Dataset You Want</h1>
 <p>Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the <code>name</code> column for a keyword:</p>
-<div id="9d83c418" class="cell" data-execution_count="3">
+<div id="0c48aa8a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataflows[dataflows[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)][</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
@@ -465,7 +465,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>description</code> column often contains terms the title does not, so it is worth searching too:</p>
-<div id="f91e513d" class="cell" data-execution_count="4">
+<div id="2f2700b8" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> dataflows[</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataflows[<span class="st">"description"</span>].<span class="bu">str</span>.contains(<span class="st">"balance of payments"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>]</span>
@@ -516,7 +516,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="checking-how-current-a-dataset-is" class="level1">
 <h1>Checking How Current a Dataset Is</h1>
 <p><code>last_updated</code> tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:</p>
-<div id="c861dddd" class="cell" data-execution_count="5">
+<div id="66407e3a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>recent <span class="op">=</span> dataflows.dropna(subset<span class="op">=</span>[<span class="st">"last_updated"</span>]).copy()</span>
@@ -574,7 +574,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reading-the-dataflow-id" class="level1">
 <h1>Reading the Dataflow ID</h1>
 <p>The <code>id</code> column is the value you pass everywhere else:</p>
-<div id="faa96d9f" class="cell" data-execution_count="6">
+<div id="18bbf74d" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pcps <span class="op">=</span> dataflows[dataflows[<span class="st">"id"</span>] <span class="op">==</span> <span class="st">"PCPS"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pcps[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"version"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
