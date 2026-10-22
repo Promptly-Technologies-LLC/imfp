@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v2.1.1 (2026-10-22)
+
+### Chores
+
+- **deps**: Bump the uv group across 1 directory with 4 updates
+  ([`9b544e2`](https://github.com/Promptly-Technologies-LLC/imfp/commit/9b544e2b5eaaa3d36b59d538af78b7bb5bd02c77))
+
+
 ## v2.1.0 (2026-09-24)
 
 ### Features
