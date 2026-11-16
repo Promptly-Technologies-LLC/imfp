@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.19">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,14 +75,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../user-guide/installation.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-2831bf1497d1717f036ff17e8ba883ac.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-665e95e798517d2e1f0feb2d8825e83a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -137,19 +138,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <meta name="twitter:description" content="The IMF publishes hundreds of separate datasets through its API. In SDMX — the standard the API speaks — a dataset is called a dataflow, and every...">
 </head>
 
-<body class="nav-sidebar floating nav-fixed quarto-light">
+<body class="nav-sidebar floating nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-09-24">v2.1.0</span></span>
+    <span class="navbar-title">imfp <span class="version-badge" title="Released 2026-10-22">v2.1.1</span></span>
     </a>
   </div>
-            <div id="quarto-search" class=""></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -173,15 +173,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class=""></div>
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav">
+  <nav class="quarto-secondary-nav" aria-label="Toolbar">
     <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
         <h1 class="quarto-secondary-nav-title no-breadcrumbs">Discovering Datasets</h1>
-        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        <a class="flex-grow-1" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
   </nav>
@@ -189,15 +190,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" aria-label="Section">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Getting Started</span></a>
-</div>
-      <ul id="quarto-sidebar-section-1" class="list-unstyled sidebar-section depth1 show">  
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-controls="quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-1-label">Getting Started</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-1" aria-labelledby="quarto-sidebar-section-1-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/installation.html" class="sidebar-item-text sidebar-link">
@@ -208,10 +209,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Core Concepts</span></a>
-</div>
-      <ul id="quarto-sidebar-section-2" class="list-unstyled sidebar-section depth1 show">  
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-controls="quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-2-label">Core Concepts</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-2" aria-labelledby="quarto-sidebar-section-2-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/databases.html" class="sidebar-item-text sidebar-link active">
@@ -234,10 +235,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Usage</span></a>
-</div>
-      <ul id="quarto-sidebar-section-3" class="list-unstyled sidebar-section depth1 show">  
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-controls="quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-3-label">Usage</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-3" aria-labelledby="quarto-sidebar-section-3-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/usage.html" class="sidebar-item-text sidebar-link">
@@ -260,10 +261,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Examples</span></a>
-</div>
-      <ul id="quarto-sidebar-section-4" class="list-unstyled sidebar-section depth1 show">  
+            <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-controls="quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text" id="quarto-sidebar-section-4-label">Examples</span><i class="bi bi-chevron-right" aria-hidden="true"></i></button>
+      </div>
+      <ul id="quarto-sidebar-section-4" aria-labelledby="quarto-sidebar-section-4-label" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../user-guide/demo.html" class="sidebar-item-text sidebar-link">
@@ -278,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul class="collapse">
@@ -292,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -325,13 +326,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="listing-dataflows" class="level1">
 <h1>Listing Dataflows</h1>
 <p><a href="../reference/imf_get_dataflows.html#imfp.imf_get_dataflows" class="gdls-link gdls-code">imf_get_dataflows</a> returns the full catalogue as a tidy DataFrame:</p>
-<div id="93fd25fb" class="cell" data-execution_count="1">
+<div id="c7507fff" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> imfp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dataflows <span class="op">=</span> imfp.imf_get_dataflows()</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dataflows.shape</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>(225, 7)</code></pre>
+<pre><code>(231, 7)</code></pre>
 </div>
 </div>
 <p>Each row describes one dataset:</p>
@@ -373,7 +374,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<div id="9d72381b" class="cell" data-execution_count="2">
+<div id="48a3ff1a" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dataflows[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"last_updated"</span>]].head()</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -391,38 +392,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <tbody>
     <tr>
       <th>0</th>
-      <td>PI_WCA_2026_MAY_VINTAGE</td>
-      <td>Production Indexes, World and Country Group Ag...</td>
+      <td>FA_2026_FEB_VINTAGE</td>
+      <td>Fund Accounts (FA) 2026 February</td>
       <td>IMF.STA</td>
-      <td>2026-05-27T14:17:19.149352Z</td>
+      <td>2026-02-25T20:36:20.768093Z</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>FFS</td>
-      <td>Fossil Fuel Subsidies</td>
+      <td>MFS_OFC_2026_MAY_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Other...</td>
       <td>IMF.STA</td>
-      <td>2026-04-06T16:34:21.566778Z</td>
+      <td>2026-05-27T15:19:21.834692Z</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>COFER</td>
-      <td>Currency Composition of Official Foreign Excha...</td>
+      <td>LS</td>
+      <td>Labor Statistics (LS)</td>
       <td>IMF.STA</td>
-      <td>2025-12-19T16:09:51.115672Z</td>
+      <td>2025-03-28T06:32:20.590311Z</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>IL_2026_FEB_VINTAGE</td>
-      <td>International Liquidity (IL) 2026 February</td>
+      <td>MFS_FMP_2026_APR_VINTAGE</td>
+      <td>Monetary and Financial Statistics (MFS), Finan...</td>
       <td>IMF.STA</td>
-      <td>2026-02-25T20:31:17.183284Z</td>
+      <td>2026-04-27T15:17:35.127569Z</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>MFS_DC_2026_JAN_VINTAGE</td>
-      <td>Monetary and Financial Statistics (MFS), Depos...</td>
-      <td>IMF.STA</td>
-      <td>2026-02-09T20:07:05.015110Z</td>
+      <td>GPT</td>
+      <td>IMF Global Policy Tracker: How Countries are R...</td>
+      <td>IMF.SPR</td>
+      <td>2026-09-25T15:58:08.311607Z</td>
     </tr>
   </tbody>
 </table>
@@ -433,7 +434,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="finding-the-dataset-you-want" class="level1">
 <h1>Finding the Dataset You Want</h1>
 <p>Because the result is an ordinary DataFrame, searching it is an ordinary pandas filter. Search the <code>name</code> column for a keyword:</p>
-<div id="0c48aa8a" class="cell" data-execution_count="3">
+<div id="c24de562" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>dataflows[dataflows[<span class="st">"name"</span>].<span class="bu">str</span>.contains(<span class="st">"Commodity"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)][</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"id"</span>, <span class="st">"name"</span>]</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
@@ -450,14 +451,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>12</th>
-      <td>CTOT</td>
-      <td>Commodity Terms of Trade (CTOT)</td>
-    </tr>
-    <tr>
       <th>32</th>
       <td>PCPS</td>
       <td>Primary Commodity Price System&nbsp;(PCPS)</td>
+    </tr>
+    <tr>
+      <th>62</th>
+      <td>CTOT</td>
+      <td>Commodity Terms of Trade (CTOT)</td>
     </tr>
   </tbody>
 </table>
@@ -465,7 +466,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The <code>description</code> column often contains terms the title does not, so it is worth searching too:</p>
-<div id="2f2700b8" class="cell" data-execution_count="4">
+<div id="a51e3abd" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>matches <span class="op">=</span> dataflows[</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    dataflows[<span class="st">"description"</span>].<span class="bu">str</span>.contains(<span class="st">"balance of payments"</span>, case<span class="op">=</span><span class="va">False</span>, na<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>]</span>
@@ -483,29 +484,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>2</th>
-      <td>COFER</td>
-      <td>Currency Composition of Official Foreign Excha...</td>
+      <th>8</th>
+      <td>BOP</td>
+      <td>Balance of Payments (BOP)</td>
     </tr>
     <tr>
-      <th>28</th>
-      <td>BOP_2026_APR_VINTAGE</td>
-      <td>Balance of Payments (BOP) 2026 April</td>
-    </tr>
-    <tr>
-      <th>81</th>
-      <td>ITS</td>
-      <td>International Trade in Services (ITS)</td>
-    </tr>
-    <tr>
-      <th>102</th>
+      <th>67</th>
       <td>BOP_AGG</td>
       <td>Balance of Payments and International Investme...</td>
     </tr>
     <tr>
-      <th>118</th>
-      <td>BOP_2026_MAY_VINTAGE</td>
-      <td>Balance of Payments (BOP) 2026 May</td>
+      <th>70</th>
+      <td>BOP_2026_FEB_VINTAGE</td>
+      <td>Balance of Payments (BOP) 2026 February</td>
+    </tr>
+    <tr>
+      <th>80</th>
+      <td>BOP_2026_JAN_VINTAGE</td>
+      <td>Balance of Payments (BOP) 2026 January</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>ITS</td>
+      <td>International Trade in Services (ITS)</td>
     </tr>
   </tbody>
 </table>
@@ -516,7 +517,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="checking-how-current-a-dataset-is" class="level1">
 <h1>Checking How Current a Dataset Is</h1>
 <p><code>last_updated</code> tells you when each dataset was last refreshed, which is useful when you are deciding whether a series is current enough for your purposes:</p>
-<div id="66407e3a" class="cell" data-execution_count="5">
+<div id="6bbe5eda" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>recent <span class="op">=</span> dataflows.dropna(subset<span class="op">=</span>[<span class="st">"last_updated"</span>]).copy()</span>
@@ -536,34 +537,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </thead>
   <tbody>
     <tr>
-      <th>155</th>
+      <th>16</th>
+      <td>FAS</td>
+      <td>Financial Access Survey (FAS)</td>
+      <td>2026-11-05 16:47:40.333595+00:00</td>
+    </tr>
+    <tr>
+      <th>144</th>
+      <td>WPAIAX</td>
+      <td>AI Adoption Index (AIAX)</td>
+      <td>2026-10-26 16:54:14.859872+00:00</td>
+    </tr>
+    <tr>
+      <th>217</th>
       <td>FSI_COUNTRY_METADATA_TABLE_2</td>
       <td>Financial Soundness Indicators (FSI), Country ...</td>
       <td>2026-10-09 22:39:46.289903+00:00</td>
     </tr>
     <tr>
-      <th>133</th>
-      <td>FAS</td>
-      <td>Financial Access Survey (FAS)</td>
-      <td>2026-10-09 19:09:56.991362+00:00</td>
-    </tr>
-    <tr>
-      <th>72</th>
+      <th>203</th>
       <td>AFRREO_2026_APR_VINTAGE</td>
       <td>Sub-Saharan Africa Regional Economic Outlook (...</td>
       <td>2026-10-07 19:23:15.996650+00:00</td>
     </tr>
     <tr>
-      <th>222</th>
+      <th>160</th>
       <td>WEO_2026_APR_VINTAGE</td>
       <td>World Economic Outlook (WEO) 2026 April</td>
       <td>2026-10-05 21:05:13.368993+00:00</td>
-    </tr>
-    <tr>
-      <th>79</th>
-      <td>CSR</td>
-      <td>Comprehensive Surveillance Review (CSR)</td>
-      <td>2026-10-02 14:31:23.878915+00:00</td>
     </tr>
   </tbody>
 </table>
@@ -574,7 +575,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reading-the-dataflow-id" class="level1">
 <h1>Reading the Dataflow ID</h1>
 <p>The <code>id</code> column is the value you pass everywhere else:</p>
-<div id="18bbf74d" class="cell" data-execution_count="6">
+<div id="2f2d7ede" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>pcps <span class="op">=</span> dataflows[dataflows[<span class="st">"id"</span>] <span class="op">==</span> <span class="st">"PCPS"</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>pcps[[<span class="st">"id"</span>, <span class="st">"name"</span>, <span class="st">"agency"</span>, <span class="st">"version"</span>]]</span></code></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
@@ -629,7 +630,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -638,8 +640,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -653,6 +716,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -815,44 +879,54 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -951,7 +1025,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
   });
   </script>
-<nav class="page-navigation">
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+<nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
       <a href="../user-guide/installation.html" class="pagination-link" aria-label="Installation">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Installation</span>

@@ -24,7 +24,7 @@ dataflows.shape
 ```
 
 
-    (225, 7)
+    (231, 7)
 
 
 Each row describes one dataset:
@@ -47,11 +47,11 @@ dataflows[["id", "name", "agency", "last_updated"]].head()
 
 |  | id | name | agency | last_updated |
 |----|----|----|----|----|
-| 0 | PI_WCA_2026_MAY_VINTAGE | Production Indexes, World and Country Group Ag... | IMF.STA | 2026-05-27T14:17:19.149352Z |
-| 1 | FFS | Fossil Fuel Subsidies | IMF.STA | 2026-04-06T16:34:21.566778Z |
-| 2 | COFER | Currency Composition of Official Foreign Excha... | IMF.STA | 2025-12-19T16:09:51.115672Z |
-| 3 | IL_2026_FEB_VINTAGE | International Liquidity (IL) 2026 February | IMF.STA | 2026-02-25T20:31:17.183284Z |
-| 4 | MFS_DC_2026_JAN_VINTAGE | Monetary and Financial Statistics (MFS), Depos... | IMF.STA | 2026-02-09T20:07:05.015110Z |
+| 0 | FA_2026_FEB_VINTAGE | Fund Accounts (FA) 2026 February | IMF.STA | 2026-02-25T20:36:20.768093Z |
+| 1 | MFS_OFC_2026_MAY_VINTAGE | Monetary and Financial Statistics (MFS), Other... | IMF.STA | 2026-05-27T15:19:21.834692Z |
+| 2 | LS | Labor Statistics (LS) | IMF.STA | 2025-03-28T06:32:20.590311Z |
+| 3 | MFS_FMP_2026_APR_VINTAGE | Monetary and Financial Statistics (MFS), Finan... | IMF.STA | 2026-04-27T15:17:35.127569Z |
+| 4 | GPT | IMF Global Policy Tracker: How Countries are R... | IMF.SPR | 2026-09-25T15:58:08.311607Z |
 
 
 # Finding the Dataset You Want
@@ -68,8 +68,8 @@ dataflows[dataflows["name"].str.contains("Commodity", case=False, na=False)][
 
 |     | id   | name                                  |
 |-----|------|---------------------------------------|
-| 12  | CTOT | Commodity Terms of Trade (CTOT)       |
 | 32  | PCPS | Primary Commodity Price System (PCPS) |
+| 62  | CTOT | Commodity Terms of Trade (CTOT)       |
 
 
 The `description` column often contains terms the title does not, so it is worth searching too:
@@ -85,11 +85,11 @@ matches[["id", "name"]].head()
 
 |     | id                   | name                                              |
 |-----|----------------------|---------------------------------------------------|
-| 2   | COFER                | Currency Composition of Official Foreign Excha... |
-| 28  | BOP_2026_APR_VINTAGE | Balance of Payments (BOP) 2026 April              |
-| 81  | ITS                  | International Trade in Services (ITS)             |
-| 102 | BOP_AGG              | Balance of Payments and International Investme... |
-| 118 | BOP_2026_MAY_VINTAGE | Balance of Payments (BOP) 2026 May                |
+| 8   | BOP                  | Balance of Payments (BOP)                         |
+| 67  | BOP_AGG              | Balance of Payments and International Investme... |
+| 70  | BOP_2026_FEB_VINTAGE | Balance of Payments (BOP) 2026 February           |
+| 80  | BOP_2026_JAN_VINTAGE | Balance of Payments (BOP) 2026 January            |
+| 84  | ITS                  | International Trade in Services (ITS)             |
 
 
 # Checking How Current a Dataset Is
@@ -108,11 +108,11 @@ recent.sort_values("last_updated", ascending=False)[["id", "name", "last_updated
 
 |  | id | name | last_updated |
 |----|----|----|----|
-| 155 | FSI_COUNTRY_METADATA_TABLE_2 | Financial Soundness Indicators (FSI), Country ... | 2026-10-09 22:39:46.289903+00:00 |
-| 133 | FAS | Financial Access Survey (FAS) | 2026-10-09 19:09:56.991362+00:00 |
-| 72 | AFRREO_2026_APR_VINTAGE | Sub-Saharan Africa Regional Economic Outlook (... | 2026-10-07 19:23:15.996650+00:00 |
-| 222 | WEO_2026_APR_VINTAGE | World Economic Outlook (WEO) 2026 April | 2026-10-05 21:05:13.368993+00:00 |
-| 79 | CSR | Comprehensive Surveillance Review (CSR) | 2026-10-02 14:31:23.878915+00:00 |
+| 16 | FAS | Financial Access Survey (FAS) | 2026-11-05 16:47:40.333595+00:00 |
+| 144 | WPAIAX | AI Adoption Index (AIAX) | 2026-10-26 16:54:14.859872+00:00 |
+| 217 | FSI_COUNTRY_METADATA_TABLE_2 | Financial Soundness Indicators (FSI), Country ... | 2026-10-09 22:39:46.289903+00:00 |
+| 203 | AFRREO_2026_APR_VINTAGE | Sub-Saharan Africa Regional Economic Outlook (... | 2026-10-07 19:23:15.996650+00:00 |
+| 160 | WEO_2026_APR_VINTAGE | World Economic Outlook (WEO) 2026 April | 2026-10-05 21:05:13.368993+00:00 |
 
 
 # Reading the Dataflow ID
